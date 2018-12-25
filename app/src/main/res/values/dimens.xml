@@ -6,5 +6,6 @@
 
     <!-- 默认分割线的宽度或者高度 -->
     <dimen name="line_size">1px</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

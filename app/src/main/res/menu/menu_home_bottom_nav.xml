@@ -7,9 +7,9 @@
         android:title="@string/home_nav_index"/>
 
     <item
-        android:id="@+id/home_found"
+        android:id="@+id/home_meeting"
         android:icon="@drawable/ic_selector_selectable_home_found"
-        android:title="@string/home_nav_found"/>
+        android:title="@string/home_nav_meeting"/>
 
     <item
         android:id="@+id/home_message"
