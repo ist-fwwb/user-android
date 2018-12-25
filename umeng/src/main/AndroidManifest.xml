@@ -1,4 +1,4 @@
-<manifest package="com.hjq.umeng" xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest package="com.huangtao.umeng" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- 友盟统计 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
