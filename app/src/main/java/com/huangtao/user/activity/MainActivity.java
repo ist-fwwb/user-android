@@ -1,4 +1,4 @@
-package com.huangtao.user.ui.activity;
+package com.huangtao.user.activity;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -6,20 +6,14 @@ import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 
 import com.huangtao.user.R;
+import com.huangtao.user.adapter.MainFragmentAdapter;
 import com.huangtao.user.common.MyActivity;
 import com.huangtao.user.helper.ActivityStackManager;
 import com.huangtao.user.helper.DoubleClickHelper;
-import com.huangtao.user.ui.adapter.HomeFragmentAdapter;
 
 import butterknife.BindView;
 
-/**
- *    author : Android 轮子哥
- *    github : https://github.com/getActivity/AndroidProject
- *    time   : 2018/10/18
- *    desc   : 主页界面
- */
-public class HomeActivity extends MyActivity implements
+public class MainActivity extends MyActivity implements
         ViewPager.OnPageChangeListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.vp_home_pager)
@@ -27,11 +21,11 @@ public class HomeActivity extends MyActivity implements
     @BindView(R.id.bv_home_navigation)
     BottomNavigationView mBottomNavigationView;
 
-    private HomeFragmentAdapter mPagerAdapter;
+    private MainFragmentAdapter mPagerAdapter;
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_home;
+        return R.layout.activity_main;
     }
 
     @Override
@@ -50,7 +44,7 @@ public class HomeActivity extends MyActivity implements
 
     @Override
     protected void initData() {
-        mPagerAdapter = new HomeFragmentAdapter(this);
+        mPagerAdapter = new MainFragmentAdapter(this);
         mViewPager.setAdapter(mPagerAdapter);
 
         // 限制页面数量
