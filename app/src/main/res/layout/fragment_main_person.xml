@@ -18,7 +18,7 @@
         <com.huangtao.user.widget.XCollapsingToolbarLayout
             android:id="@+id/ctl_bar"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="230dp"
             app:contentScrim="@color/white"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -35,13 +35,14 @@
                     android:src="@mipmap/bg_launcher" />
 
                 <Button
-                    android:layout_width="130dp"
-                    android:layout_height="40dp"
-                    android:background="@color/white"
+                    android:id="@+id/login"
+                    android:layout_width="140dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/shape_main_personal_login"
                     android:layout_centerInParent="true"
                     android:text="登录/注册"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"/>
+                    android:textColor="@color/black60"
+                    android:textSize="14sp" />
 
             </RelativeLayout>
 

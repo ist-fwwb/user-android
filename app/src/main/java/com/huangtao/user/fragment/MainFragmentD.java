@@ -2,10 +2,12 @@ package com.huangtao.user.fragment;
 
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.hjq.bar.TitleBar;
 import com.huangtao.user.R;
+import com.huangtao.user.activity.LoginActivity;
 import com.huangtao.user.common.MyLazyFragment;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
 
@@ -20,6 +22,8 @@ public class MainFragmentD extends MyLazyFragment
     Toolbar mToolbar;
     @BindView(R.id.title_bar)
     TitleBar mTitleBar;
+    @BindView(R.id.login)
+    Button login;
 
     public static MainFragmentD newInstance() {
         return new MainFragmentD();
@@ -48,6 +52,8 @@ public class MainFragmentD extends MyLazyFragment
 
         //设置渐变监听
         mCollapsingToolbarLayout.setOnScrimsListener(this);
+
+        login.setOnClickListener(this);
     }
 
     @Override
@@ -60,19 +66,9 @@ public class MainFragmentD extends MyLazyFragment
      */
     @Override
     public void onClick(View v) {
-//        if (v == mDialogView) {
-//            startActivity(DialogActivity.class);
-//        }else if (v == mLoginView) {
-//            startActivity(LoginActivity.class);
-//        }else if (v == mRegisterView) {
-//            startActivity(RegisterActivity.class);
-//        }else if (v == mAboutView) {
-//            startActivity(AboutActivity.class);
-//        }else if (v == mBrowserView) {
-//            IntentExtraUtils.getInstance(WebActivity.class)
-//                    .putString("https://github.com/getActivity/")
-//                    .startActivity(getActivity());
-//        }
+        if(v == login){
+            startActivity(LoginActivity.class);
+        }
     }
 
     @Override

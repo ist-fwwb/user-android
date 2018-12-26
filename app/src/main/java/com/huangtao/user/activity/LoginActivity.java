@@ -1,4 +1,4 @@
-package com.huangtao.user.ui.activity;
+package com.huangtao.user.activity;
 
 import android.view.View;
 import android.widget.Button;
@@ -11,12 +11,6 @@ import com.hjq.toast.ToastUtils;
 
 import butterknife.BindView;
 
-/**
- *    author : Android 轮子哥
- *    github : https://github.com/getActivity/AndroidProject
- *    time   : 2018/10/18
- *    desc   : 登录界面
- */
 public class LoginActivity extends MyActivity
         implements View.OnClickListener {
 
@@ -69,12 +63,6 @@ public class LoginActivity extends MyActivity
     protected void onDestroy() {
         mEditTextInputHelper.removeViews();
         super.onDestroy();
-    }
-
-    @Override
-    public boolean isSupportSwipeBack() {
-        //不使用侧滑功能
-        return !super.isSupportSwipeBack();
     }
 
     /**
