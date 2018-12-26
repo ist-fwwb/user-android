@@ -5,7 +5,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "com.huangtao.user"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 10
         versionName "1.0"
@@ -81,20 +81,25 @@ android {
 
 // api 与 implementation的区别：https://www.jianshu.com/p/8962d6ba936e
 dependencies {
+
     // 依赖 libs 目录下所有 Jar 包
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     // 基础库（不包任何第三方框架）
     implementation project(':base')
+
     // 自定义 View
     implementation project(':widget')
+
     // 友盟
     implementation project(':umeng')
+
     // Dialog
     implementation project(':dialog')
 
     // 示例：添加一个 aar 包
-    // implementation(name: 'password_dialog', ext: 'aar')
 
+    // implementation(name: 'password_dialog', ext: 'aar')
     implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
     implementation "com.android.support:design:$rootProject.ext.supportLibraryVersion"
     implementation "com.android.support:support-v4:$rootProject.ext.supportLibraryVersion"
@@ -111,13 +116,16 @@ dependencies {
 
     // 状态栏沉浸：https://github.com/gyf-dev/ImmersionBar
     implementation 'com.gyf.immersionbar:immersionbar:2.3.3-beta09'
+
     // 侧滑功能：https://github.com/bingoogolapple/BGASwipeBackLayout-Android
     implementation 'cn.bingoogolapple:bga-swipebacklayout:1.2.0'
 
     // 权限请求框架：https://github.com/getActivity/XXPermissions
     implementation 'com.hjq:xxpermissions:5.2'
+
     // 标题栏：https://github.com/getActivity/TitleBar
     implementation 'com.hjq:titlebar:5.0'
+
     // 吐司工具类：https://github.com/getActivity/ToastUtils
     implementation 'com.hjq:toast:5.2'
 
@@ -125,11 +133,22 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
     // RecyclerView：https://github.com/CymChad/BaseRecyclerViewAdapterHelper
+
     // 工具类集合：https://github.com/Blankj/AndroidUtilCode
+
     // 图片选择：https://github.com/zhihu/Matisse
+
     // 上拉下拉：https://github.com/bingoogolapple/BGARefreshLayout-Android
+
     // 轮播图：https://github.com/bingoogolapple/BGABanner-Android
+
     // 二维码：https://github.com/bingoogolapple/BGAQRCode-Android
+
+    // arcsoft
+    implementation files('libs/arcsoft_face.jar')
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
 }
 
 repositories {

@@ -5,6 +5,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.huangtao.user.R;
+import com.huangtao.user.arcsoft.RegisterAndRecognizeActivity;
 import com.huangtao.user.common.MyActivity;
 import com.huangtao.user.helper.EditTextInputHelper;
 import com.huangtao.widget.CountdownView;
@@ -24,9 +25,11 @@ public class RegisterActivity extends MyActivity
 
     @BindView(R.id.et_register_password1)
     EditText mPasswordView1;
-    @BindView(R.id.et_register_password2)
-    EditText mPasswordView2;
+    @BindView(R.id.real_name)
+    EditText realName;
 
+    @BindView(R.id.face)
+    Button face;
     @BindView(R.id.btn_register_commit)
     Button mCommitView;
 
@@ -45,10 +48,11 @@ public class RegisterActivity extends MyActivity
     @Override
     protected void initView() {
         mCountdownView.setOnClickListener(this);
+        face.setOnClickListener(this);
         mCommitView.setOnClickListener(this);
 
         mEditTextInputHelper = new EditTextInputHelper(mCommitView);
-        mEditTextInputHelper.addViews(mPhoneView, mCodeView, mPasswordView1, mPasswordView2);
+        mEditTextInputHelper.addViews(mPhoneView, mCodeView, mPasswordView1, realName);
     }
 
     @Override
@@ -67,27 +71,19 @@ public class RegisterActivity extends MyActivity
     @Override
     public void onClick(View v) {
         if (v == mCountdownView) { //获取验证码
-
             if (mPhoneView.getText().toString().length() != 11) {
                 // 重置验证码倒计时控件
                 mCountdownView.resetState();
                 toast(getResources().getString(R.string.phone_input_error));
                 return;
             }
-
             toast(getResources().getString(R.string.countdown_code_send_succeed));
-
-        }else if (v == mCommitView) { //提交注册
-
+        } else if (v == mCommitView) { //提交注册
             if (mPhoneView.getText().toString().length() != 11) {
                 toast(getResources().getString(R.string.phone_input_error));
-                return;
             }
-
-            if (!mPasswordView1.getText().toString().equals(mPasswordView2.getText().toString())) {
-                toast(getResources().getString(R.string.two_password_input_error));
-                return;
-            }
+        } else if (v == face){
+            startActivity(RegisterAndRecognizeActivity.class);
         }
     }
 

@@ -103,7 +103,7 @@
             <View style="@style/HorizontalLineStyle" />
 
             <EditText
-                android:id="@+id/et_register_password2"
+                android:id="@+id/real_name"
                 style="@style/EditTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
