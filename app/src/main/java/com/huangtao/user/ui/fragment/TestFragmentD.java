@@ -7,8 +7,8 @@ import com.huangtao.user.R;
 import com.huangtao.user.common.MyLazyFragment;
 import com.huangtao.user.ui.activity.AboutActivity;
 import com.huangtao.user.ui.activity.DialogActivity;
-import com.huangtao.user.ui.activity.LoginActivity;
-import com.huangtao.user.ui.activity.RegisterActivity;
+import com.huangtao.user.activity.LoginActivity;
+import com.huangtao.user.activity.RegisterActivity;
 import com.huangtao.user.ui.activity.WebActivity;
 import com.huangtao.user.helper.IntentExtraUtils;
 
