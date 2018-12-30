@@ -1,138 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
     tools:context=".activity.RegisterActivity">
 
-    <com.hjq.bar.TitleBar
-        android:id="@+id/tb_register_title"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/space_100"
-        app:backButton="false"
-        app:barStyle="transparent"
-        app:leftColor="@color/colorAccent"
-        app:leftTitle="@string/register_login"
-        app:title="" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <android.support.v4.widget.NestedScrollView
+        <com.hjq.bar.TitleBar
+            android:id="@+id/tb_register_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/space_100"
+            app:backButton="false"
+            app:barStyle="transparent"
+            app:leftColor="@color/colorAccent"
+            app:leftTitle="@string/register_login"
+            app:title="" />
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/space_80"
+                android:layout_marginRight="@dimen/space_80"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_20"
+                    android:text="@string/register_text"
+                    android:textColor="@color/black60"
+                    android:textSize="@dimen/font_size_46px" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_40"
+                    android:text="@string/register_hint"
+                    android:textColor="@color/black20"
+                    android:textSize="@dimen/font_size_28px" />
+
+                <LinearLayout
+                    android:id="@+id/ll_register_edit1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_50"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/et_register_phone"
+                        style="@style/EditTextStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/register_phone_input_hint"
+                        android:inputType="phone"
+                        android:maxLength="11"
+                        android:maxLines="1" />
+
+                    <com.huangtao.widget.CountdownView
+                        android:id="@+id/cv_register_countdown"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/space_20"
+                        android:text="@string/register_send_code"
+                        android:textColor="@color/colorAccent" />
+                </LinearLayout>
+
+                <View style="@style/HorizontalLineStyle" />
+
+                <EditText
+                    android:id="@+id/et_register_code"
+                    style="@style/EditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_30"
+                    android:hint="@string/register_code_input_hint"
+                    android:inputType="number"
+                    android:maxLength="8"
+                    android:maxLines="1" />
+
+                <View style="@style/HorizontalLineStyle" />
+
+                <EditText
+                    android:id="@+id/et_register_password1"
+                    style="@style/EditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_30"
+                    android:hint="@string/register_password_input_hint1"
+                    android:inputType="textPassword"
+                    android:maxLength="20"
+                    android:maxLines="1" />
+
+                <View style="@style/HorizontalLineStyle" />
+
+                <EditText
+                    android:id="@+id/real_name"
+                    style="@style/EditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_30"
+                    android:hint="真实姓名"
+                    android:maxLength="5"
+                    android:maxLines="1" />
+
+                <View style="@style/HorizontalLineStyle" />
+
+                <EditText
+                    android:id="@+id/enterprise"
+                    style="@style/EditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_30"
+                    android:hint="公司编号"
+                    android:maxLength="5"
+                    android:maxLines="1" />
+
+                <View style="@style/HorizontalLineStyle" />
+
+                <Button
+                    android:id="@+id/face"
+                    style="@style/ButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_50"
+                    android:text="采集人脸信息" />
+
+                <Button
+                    android:id="@+id/btn_register_commit"
+                    style="@style/ButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_30"
+                    android:enabled="false"
+                    android:text="@string/register_text" />
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/loading_framework"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/douban_gray_transparent_20"
+        android:visibility="gone">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/space_80"
-            android:layout_marginRight="@dimen/space_80"
-            android:gravity="center_horizontal"
+            android:layout_width="200dp"
+            android:layout_height="120dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/shape_main_personal_login"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_20"
-                android:text="@string/register_text"
-                android:textColor="@color/black60"
-                android:textSize="@dimen/font_size_46px" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:text="加载中"
+                android:textSize="15sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_40"
-                android:text="@string/register_hint"
-                android:textColor="@color/black20"
-                android:textSize="@dimen/font_size_28px" />
-
-            <LinearLayout
-                android:id="@+id/ll_register_edit1"
+            <com.victor.loading.newton.NewtonCradleLoading
+                android:id="@+id/loading"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_60"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/et_register_phone"
-                    style="@style/EditTextStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/register_phone_input_hint"
-                    android:inputType="phone"
-                    android:maxLength="11"
-                    android:maxLines="1" />
-
-                <com.huangtao.widget.CountdownView
-                    android:id="@+id/cv_register_countdown"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/space_20"
-                    android:text="@string/register_send_code"
-                    android:textColor="@color/colorAccent" />
-            </LinearLayout>
-
-            <View style="@style/HorizontalLineStyle" />
-
-            <EditText
-                android:id="@+id/et_register_code"
-                style="@style/EditTextStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_40"
-                android:hint="@string/register_code_input_hint"
-                android:inputType="number"
-                android:maxLength="8"
-                android:maxLines="1" />
-
-            <View style="@style/HorizontalLineStyle" />
-
-            <EditText
-                android:id="@+id/et_register_password1"
-                style="@style/EditTextStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_40"
-                android:hint="@string/register_password_input_hint1"
-                android:inputType="textPassword"
-                android:maxLength="20"
-                android:maxLines="1" />
-
-            <View style="@style/HorizontalLineStyle" />
-
-            <EditText
-                android:id="@+id/real_name"
-                style="@style/EditTextStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_40"
-                android:hint="真实姓名"
-                android:maxLength="5"
-                android:maxLines="1" />
-
-            <View style="@style/HorizontalLineStyle" />
-
-            <Button
-                android:id="@+id/face"
-                style="@style/ButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_60"
-                android:text="采集人脸信息" />
-
-            <Button
-                android:id="@+id/btn_register_commit"
-                style="@style/ButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_60"
-                android:text="@string/register_text"
-                android:enabled="false"/>
-
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal" />
         </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
-
-</LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

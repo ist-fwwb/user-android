@@ -2,8 +2,6 @@ package com.huangtao.user.model;
 
 import com.huangtao.user.model.meta.Type;
 
-import java.util.Arrays;
-
 public class User {
     String _id;
     String enterpriceId;
@@ -11,8 +9,8 @@ public class User {
     String password;
     String name;
     Type type;
-    Byte[] faceFile;
-    Byte[] featureFile;
+    String faceFile;
+    String featureFile;
 
     public String get_id() {
         return _id;
@@ -38,19 +36,19 @@ public class User {
         this.type = type;
     }
 
-    public Byte[] getFaceFile() {
+    public String getFaceFile() {
         return faceFile;
     }
 
-    public void setFaceFile(Byte[] faceFile) {
+    public void setFaceFile(String faceFile) {
         this.faceFile = faceFile;
     }
 
-    public Byte[] getFeatureFile() {
+    public String getFeatureFile() {
         return featureFile;
     }
 
-    public void setFeatureFile(Byte[] featureFile) {
+    public void setFeatureFile(String featureFile) {
         this.featureFile = featureFile;
     }
 
@@ -87,8 +85,8 @@ public class User {
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", type=" + type +
-                ", faceFile=" + Arrays.toString(faceFile) +
-                ", featureFile=" + Arrays.toString(featureFile) +
+                ", faceFile='" + faceFile + '\'' +
+                ", featureFile='" + featureFile + '\'' +
                 '}';
     }
 }

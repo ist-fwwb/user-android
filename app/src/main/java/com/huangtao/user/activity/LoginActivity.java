@@ -75,11 +75,10 @@ public class LoginActivity extends MyActivity
 
             showProgressBar();
 
-            User user = new User();
-            user.setPhone(mPhoneView.getText().toString());
-            user.setPassword(mPasswordView.getText().toString());
+            String phone = mPhoneView.getText().toString();
+            String password = mPasswordView.getText().toString();
 
-            Network.getInstance().login(user).enqueue(new Callback<User>() {
+            Network.getInstance().login(phone, password).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     hideProgressBar();
@@ -98,6 +97,7 @@ public class LoginActivity extends MyActivity
                 public void onFailure(Call<User> call, Throwable t) {
                     hideProgressBar();
                     toast("登录失败");
+                    t.printStackTrace();
                 }
             });
 
