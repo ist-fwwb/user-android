@@ -1,84 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
     tools:context=".activity.LoginActivity">
 
-    <com.hjq.bar.TitleBar
-        android:id="@+id/tb_login_title"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/space_100"
-        app:backButton="false"
-        app:barStyle="transparent"
-        app:rightColor="@color/colorAccent"
-        app:rightTitle="@string/login_register"
-        app:title="" />
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="@dimen/space_200"
-        android:layout_height="@dimen/space_200"
-        android:layout_margin="@dimen/space_60"
-        android:src="@mipmap/icon" />
+        <com.hjq.bar.TitleBar
+            android:id="@+id/tb_login_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/space_100"
+            app:backButton="false"
+            app:barStyle="transparent"
+            app:rightColor="@color/colorAccent"
+            app:rightTitle="@string/login_register"
+            app:title="" />
 
-    <com.huangtao.widget.ClearEditText
-        android:id="@+id/et_login_phone"
-        style="@style/EditTextStyle"
+        <ImageView
+            android:layout_width="@dimen/space_200"
+            android:layout_height="@dimen/space_200"
+            android:layout_margin="@dimen/space_60"
+            android:src="@mipmap/icon" />
+
+        <com.huangtao.widget.ClearEditText
+            android:id="@+id/et_login_phone"
+            style="@style/EditTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/space_80"
+            android:layout_marginTop="@dimen/space_20"
+            android:layout_marginRight="@dimen/space_80"
+            android:hint="@string/login_phone_input_hint"
+            android:inputType="phone"
+            android:maxLength="11"
+            android:maxLines="1" />
+
+        <View
+            style="@style/HorizontalLineStyle"
+            android:layout_marginLeft="@dimen/space_80"
+            android:layout_marginRight="@dimen/space_80" />
+
+        <com.huangtao.widget.ClearEditText
+            android:id="@+id/et_login_password"
+            style="@style/EditTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/space_80"
+            android:layout_marginTop="@dimen/space_40"
+            android:layout_marginRight="@dimen/space_80"
+            android:hint="@string/login_password_input_hint"
+            android:inputType="textPassword"
+            android:maxLength="20"
+            android:maxLines="1" />
+
+        <View
+            style="@style/HorizontalLineStyle"
+            android:layout_marginLeft="@dimen/space_80"
+            android:layout_marginRight="@dimen/space_80" />
+
+        <TextView
+            android:id="@+id/tv_login_forget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginLeft="@dimen/space_80"
+            android:layout_marginTop="@dimen/space_30"
+            android:layout_marginRight="@dimen/space_120"
+            android:text="@string/login_forget"
+            android:textColor="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/btn_login_commit"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/space_80"
+            android:layout_marginTop="@dimen/space_60"
+            android:layout_marginRight="@dimen/space_80"
+            android:text="@string/login_text" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/loading_framework"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/space_80"
-        android:layout_marginTop="@dimen/space_20"
-        android:layout_marginRight="@dimen/space_80"
-        android:hint="@string/login_phone_input_hint"
-        android:inputType="phone"
-        android:maxLength="11"
-        android:maxLines="1" />
+        android:layout_height="match_parent"
+        android:background="@color/douban_gray_transparent_20"
+        android:visibility="gone">
 
-    <View
-        style="@style/HorizontalLineStyle"
-        android:layout_marginLeft="@dimen/space_80"
-        android:layout_marginRight="@dimen/space_80" />
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="120dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/shape_main_personal_login"
+            android:orientation="vertical">
 
-    <com.huangtao.widget.ClearEditText
-        android:id="@+id/et_login_password"
-        style="@style/EditTextStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/space_80"
-        android:layout_marginTop="@dimen/space_40"
-        android:layout_marginRight="@dimen/space_80"
-        android:hint="@string/login_password_input_hint"
-        android:inputType="textPassword"
-        android:maxLength="20"
-        android:maxLines="1" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:text="加载中"
+                android:textSize="15sp" />
 
-    <View
-        style="@style/HorizontalLineStyle"
-        android:layout_marginLeft="@dimen/space_80"
-        android:layout_marginRight="@dimen/space_80" />
-
-    <TextView
-        android:id="@+id/tv_login_forget"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginLeft="@dimen/space_80"
-        android:layout_marginTop="@dimen/space_30"
-        android:layout_marginRight="@dimen/space_120"
-        android:text="@string/login_forget"
-        android:textColor="@color/colorAccent" />
-
-    <Button
-        android:id="@+id/btn_login_commit"
-        style="@style/ButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/space_80"
-        android:layout_marginTop="@dimen/space_60"
-        android:layout_marginRight="@dimen/space_80"
-        android:text="@string/login_text" />
-</LinearLayout>
+            <com.victor.loading.newton.NewtonCradleLoading
+                android:id="@+id/loading"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,12 +1,12 @@
 package com.huangtao.user.arcsoft;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.hardware.Camera;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -117,11 +117,9 @@ public class RegisterAndRecognizeActivity extends AppCompatActivity implements V
         //保持亮屏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WindowManager.LayoutParams attributes = getWindow().getAttributes();
-            attributes.systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-            getWindow().setAttributes(attributes);
-        }
+        WindowManager.LayoutParams attributes = getWindow().getAttributes();
+        attributes.systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        getWindow().setAttributes(attributes);
 
         // Activity启动后就锁定为启动时的方向
         switch (getResources().getConfiguration().orientation) {
@@ -198,7 +196,7 @@ public class RegisterAndRecognizeActivity extends AppCompatActivity implements V
                                 cameraHelper.start();
                             }
                         } else {
-                            Toast.makeText(RegisterAndRecognizeActivity.this, "激活失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterAndRecognizeActivity.this, "激活失败 " + activeCode, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -367,7 +365,7 @@ public class RegisterAndRecognizeActivity extends AppCompatActivity implements V
                     Observable.create(new ObservableOnSubscribe<Boolean>() {
                         @Override
                         public void subscribe(ObservableEmitter<Boolean> emitter) {
-                            boolean success = FaceServer.getInstance().register(RegisterAndRecognizeActivity.this, nv21.clone(), previewSize.width, previewSize.height, "registered " + faceHelper.getCurrentTrackId());
+                            boolean success = FaceServer.getInstance().register(RegisterAndRecognizeActivity.this, nv21.clone(), previewSize.width, previewSize.height, "register");
                             emitter.onNext(success);
                         }
                     })
@@ -382,7 +380,14 @@ public class RegisterAndRecognizeActivity extends AppCompatActivity implements V
                                 @Override
                                 public void onNext(Boolean success) {
                                     String result = success ? "register success!" : "register failed!";
-                                    Toast.makeText(RegisterAndRecognizeActivity.this, result, Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(RegisterAndRecognizeActivity.this, result, Toast.LENGTH_SHORT).show();
+                                    if(success){
+                                        Toast.makeText(RegisterAndRecognizeActivity.this, "人脸采集成功", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent();
+                                        intent.putExtra("result", true);
+                                        setResult(RESULT_OK, intent);
+                                        finish();
+                                    }
                                     registerStatus = REGISTER_STATUS_DONE;
                                 }
 
@@ -587,6 +592,7 @@ public class RegisterAndRecognizeActivity extends AppCompatActivity implements V
      * @param view 注册按钮
      */
     public void register(View view) {
+        Log.i("register", "register");
         if (registerStatus == REGISTER_STATUS_DONE) {
             registerStatus = REGISTER_STATUS_READY;
         }

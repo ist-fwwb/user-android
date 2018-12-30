@@ -2,13 +2,18 @@ package com.huangtao.user.common;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import com.gyf.barlibrary.ImmersionBar;
-import com.huangtao.user.R;
 import com.huangtao.base.BaseActivity;
+import com.huangtao.user.R;
+import com.victor.loading.newton.NewtonCradleLoading;
 
+import butterknife.BindView;
 import cn.bingoogolapple.swipebacklayout.BGASwipeBackHelper;
 
 /**
@@ -24,6 +29,13 @@ public abstract class UIActivity extends BaseActivity
     private ImmersionBar mImmersionBar;//状态栏沉浸
     private BGASwipeBackHelper mSwipeBackHelper;//侧滑返回
 
+
+    NewtonCradleLoading loading;
+
+    @Nullable
+    @BindView(R.id.loading_framework)
+    RelativeLayout loadingFramework;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // 在 super.onCreate(savedInstanceState) 之前调用该方法
@@ -35,6 +47,7 @@ public abstract class UIActivity extends BaseActivity
     protected void initLayout() {
         super.initLayout();
         initImmersion();
+        initProgressBar();
     }
 
     /**
@@ -49,6 +62,35 @@ public abstract class UIActivity extends BaseActivity
             if (getTitleBarId() > 0) {
                 ImmersionBar.setTitleBar(this, findViewById(getTitleBarId()));
             }
+        }
+    }
+
+    /**
+     * 初始化加载条
+     */
+    private void initProgressBar() {
+        loading = findViewById(R.id.loading);
+        if(loading != null) {
+            loading.start();
+            loading.setLoadingColor(getColor(R.color.douban_blue_80_percent));
+        }
+    }
+
+    protected void showProgressBar() {
+        if(loadingFramework != null) {
+            loadingFramework.setVisibility(View.VISIBLE);
+        }
+        if(loading != null) {
+            loading.start();
+        }
+    }
+
+    protected void hideProgressBar() {
+        if(loadingFramework != null) {
+            loadingFramework.setVisibility(View.GONE);
+        }
+        if(loading != null) {
+            loading.stop();
         }
     }
 
