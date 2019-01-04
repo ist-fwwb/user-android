@@ -1,5 +1,6 @@
 package com.huangtao.user.activity;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -87,6 +88,8 @@ public class LoginActivity extends MyActivity
                         Constants.user = result;
                         toast("登录成功");
                         // TODO 发送广播，通知首页修改ui
+                        Intent intent = new Intent("login");
+                        sendBroadcast(intent);
                         finish();
                     } else {
                         toast("登录失败");
@@ -100,6 +103,11 @@ public class LoginActivity extends MyActivity
                     t.printStackTrace();
                 }
             });
+//
+//            toast("登录成功");
+//            Intent intent = new Intent("login");
+//            sendBroadcast(intent);
+//            finish();
 
         }
     }

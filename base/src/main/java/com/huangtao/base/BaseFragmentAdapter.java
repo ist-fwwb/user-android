@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.List;
  *    time   : 2018/10/18
  *    desc   : FragmentPagerAdapter 基类
  */
-public abstract class BaseFragmentAdapter<T extends Fragment> extends FragmentPagerAdapter {
+public abstract class BaseFragmentAdapter<T extends Fragment> extends FragmentStatePagerAdapter {
 
     private List<T> mFragmentSet = new ArrayList<>(); // Fragment集合
 
@@ -75,5 +75,10 @@ public abstract class BaseFragmentAdapter<T extends Fragment> extends FragmentPa
      */
     public T getCurrentFragment() {
         return mCurrentFragment;
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 }

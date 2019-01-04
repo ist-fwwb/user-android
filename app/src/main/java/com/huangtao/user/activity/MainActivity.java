@@ -1,13 +1,19 @@
 package com.huangtao.user.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.huangtao.user.R;
 import com.huangtao.user.adapter.MainFragmentAdapter;
 import com.huangtao.user.common.MyActivity;
+import com.huangtao.user.fragment.MainFragmentDLogin;
 import com.huangtao.user.helper.ActivityStackManager;
 import com.huangtao.user.helper.DoubleClickHelper;
 
@@ -22,6 +28,8 @@ public class MainActivity extends MyActivity implements
     BottomNavigationView mBottomNavigationView;
 
     private MainFragmentAdapter mPagerAdapter;
+
+    private BroadcastReceiver receiver;
 
     @Override
     protected int getLayoutId() {
@@ -49,6 +57,17 @@ public class MainActivity extends MyActivity implements
 
         // 限制页面数量
         mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount());
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("login");
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mPagerAdapter.refresh(3, MainFragmentDLogin.newInstance());
+                Log.i("login", "refresh");
+            }
+        };
+        registerReceiver(receiver, intentFilter);
     }
 
     /**
@@ -125,6 +144,7 @@ public class MainActivity extends MyActivity implements
         mViewPager.removeOnPageChangeListener(this);
         mViewPager.setAdapter(null);
         mBottomNavigationView.setOnNavigationItemSelectedListener(null);
+        unregisterReceiver(receiver);
         super.onDestroy();
     }
 
@@ -133,4 +153,5 @@ public class MainActivity extends MyActivity implements
         // 不使用侧滑功能
         return !super.isSupportSwipeBack();
     }
+
 }

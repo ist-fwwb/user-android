@@ -3,7 +3,7 @@ package com.huangtao.user.model;
 import com.huangtao.user.model.meta.Type;
 
 public class User {
-    String _id;
+    String id;
     String enterpriceId;
     String phone;
     String password;
@@ -12,12 +12,12 @@ public class User {
     String faceFile;
     String featureFile;
 
-    public String get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -79,7 +79,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "_id='" + _id + '\'' +
+                "id='" + id + '\'' +
                 ", enterpriceId='" + enterpriceId + '\'' +
                 ", phone='" + phone + '\'' +
                 ", password='" + password + '\'' +

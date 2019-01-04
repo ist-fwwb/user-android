@@ -25,4 +25,10 @@ public final class MainFragmentAdapter extends BaseFragmentAdapter<MyLazyFragmen
         list.add(MainFragmentC.newInstance());
         list.add(MainFragmentD.newInstance());
     }
+
+    public void refresh(int pos, MyLazyFragment fragment){
+        getAllFragment().remove(pos);
+        getAllFragment().add(pos, fragment);
+        notifyDataSetChanged();
+    }
 }
