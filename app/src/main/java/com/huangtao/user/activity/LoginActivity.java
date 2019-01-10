@@ -87,7 +87,6 @@ public class LoginActivity extends MyActivity
                     if(result != null){
                         Constants.user = result;
                         toast("登录成功");
-                        // TODO 发送广播，通知首页修改ui
                         Intent intent = new Intent("login");
                         sendBroadcast(intent);
                         finish();
@@ -103,12 +102,6 @@ public class LoginActivity extends MyActivity
                     t.printStackTrace();
                 }
             });
-//
-//            toast("登录成功");
-//            Intent intent = new Intent("login");
-//            sendBroadcast(intent);
-//            finish();
-
         }
     }
 }

@@ -2,6 +2,7 @@ package com.huangtao.user.activity;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,17 +12,13 @@ import com.huangtao.user.arcsoft.FaceServer;
 import com.huangtao.user.arcsoft.RegisterAndRecognizeActivity;
 import com.huangtao.user.common.MyActivity;
 import com.huangtao.user.model.User;
+import com.huangtao.user.network.FileManagement;
 import com.huangtao.user.network.Network;
 import com.huangtao.widget.CountdownView;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -103,33 +100,37 @@ public class RegisterActivity extends MyActivity
             }
 
             showProgressBar();
-            // TODO 这段写的及其丑
+
+            String enterpriseId = enterprise.getText().toString();
+            String phone = mPhoneView.getText().toString();
+            String fileName = enterpriseId + phone;
+
             File face = new File(FaceServer.SAVE_IMG_DIR + File.separator + "register.jpg");
             File feature = new File(FaceServer.SAVE_FEATURE_DIR + File.separator + "register");
 
-            List<MultipartBody.Part> parts = new ArrayList<>();
+            boolean faceResult = FileManagement.upload(getApplicationContext(), face, fileName + ".jpg");
+            Log.i("upload", "face upload complete " + faceResult);
 
-            RequestBody requestBody1 = RequestBody.create(MediaType.parse("image/png"), face);
-            MultipartBody.Part part1 = MultipartBody.Part.createFormData("faceFile", face.getName(),
-                    requestBody1);
-            parts.add(part1);
+            boolean featureResult = FileManagement.upload(getApplicationContext(), feature, fileName);
+            Log.i("upload", "feature upload complete " + featureResult);
 
-            RequestBody requestBody2 = RequestBody.create(MediaType.parse("image/png"), feature);
-            MultipartBody.Part part2 = MultipartBody.Part.createFormData("fetureFile", feature
-                            .getName(),
-                    requestBody2);
-            parts.add(part2);
+            if(!faceResult || !featureResult){
+                toast("注册失败");
+                return;
+            }
 
-            Network.getInstance().register(enterprise.getText().toString(), mPhoneView.getText()
-                    .toString(), mPasswordView1.getText().toString(), realName.getText().toString
-                    (), parts).enqueue(new Callback<User>() {
+            Network.getInstance().register(enterpriseId, phone, mPasswordView1.getText().toString
+                    (), realName.getText().toString(), fileName + ".jpg", fileName).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
+                    hideProgressBar();
                     User user = response.body();
                     if (user != null) {
-                        hideProgressBar();
                         toast("注册成功");
                         finish();
+                    } else {
+                        toast("注册失败");
+                        Log.e("register", response.toString());
                     }
                 }
 

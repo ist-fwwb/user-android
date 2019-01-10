@@ -57,13 +57,32 @@
                         android:layout_marginTop="75dp"
                         android:layout_marginLeft="20dp">
 
-                        <TextView
-                            android:id="@+id/name"
+                        <RelativeLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="黄涛"
-                            android:textColor="@color/white"
-                            android:textSize="27sp"/>
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="黄涛"
+                                android:textColor="@color/white"
+                                android:textSize="27sp" />
+
+                            <TextView
+                                android:id="@+id/unactive"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBottom="@id/name"
+                                android:layout_toRightOf="@id/name"
+                                android:text="未激活"
+                                android:textColor="@color/white60"
+                                android:textSize="12sp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginBottom="4dp"
+                                android:visibility="gone"/>
+
+                        </RelativeLayout>
 
                         <TextView
                             android:layout_width="match_parent"

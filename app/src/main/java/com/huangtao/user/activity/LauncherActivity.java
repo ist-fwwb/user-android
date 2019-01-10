@@ -12,6 +12,7 @@ import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.huangtao.user.R;
 import com.huangtao.user.common.MyActivity;
+import com.huangtao.user.network.FileManagement;
 
 import java.util.List;
 
@@ -50,7 +51,9 @@ public class LauncherActivity extends MyActivity
     }
 
     @Override
-    protected void initData() {}
+    protected void initData() {
+        FileManagement.init(getApplicationContext());
+    }
 
     private static final int ANIM_TIME = 1000;
 

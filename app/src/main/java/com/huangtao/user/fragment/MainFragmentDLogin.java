@@ -1,5 +1,7 @@
 package com.huangtao.user.fragment;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
@@ -9,7 +11,12 @@ import com.hjq.bar.TitleBar;
 import com.huangtao.user.R;
 import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyLazyFragment;
+import com.huangtao.user.helper.CommonUtils;
+import com.huangtao.user.model.meta.Type;
+import com.huangtao.user.network.FileManagement;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
+
+import java.io.File;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -27,6 +34,8 @@ public class MainFragmentDLogin extends MyLazyFragment
     CircleImageView head;
     @BindView(R.id.name)
     TextView name;
+    @BindView(R.id.unactive)
+    TextView unactive;
     @BindView(R.id.company)
     TextView company;
     @BindView(R.id.phone)
@@ -64,10 +73,26 @@ public class MainFragmentDLogin extends MyLazyFragment
         if(Constants.user != null){
             name.setText(Constants.user.getName());
             phone.setText(Constants.user.getPhone());
+            if(Constants.user.getType().equals(Type.UNACTIVATE)){
+                unactive.setVisibility(View.VISIBLE);
+            }
 
-//            CommonUtils.getFile(Constants.user.getFaceFile().getBytes(), Constants.HEAD_PATH, Constants.user.getId() + ".jpg");
-//            head.setImageBitmap(CommonUtils.getLoacalBitmap(Constants.HEAD_PATH + File.separator + Constants.user.getId() + ".jpg"));
-
+            final String fileName = Constants.user.getEnterpriceId() + Constants.user.getPhone() + ".jpg";
+            File head = new File(Constants.HEAD_DIR + fileName);
+            if(!head.exists()){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean result = FileManagement.download(getFragmentActivity().getApplicationContext(),
+                                fileName, Constants.HEAD_DIR);
+                        if(result){
+                            new HeadHandler().sendEmptyMessage(0);
+                        }
+                    }
+                }).start();
+            } else {
+                refreshHead(head);
+            }
         }
     }
 
@@ -106,4 +131,20 @@ public class MainFragmentDLogin extends MyLazyFragment
             getStatusBarConfig().statusBarDarkFont(false).init();
         }
     }
+
+    private void refreshHead(File file){
+        head.setImageBitmap(CommonUtils.getLoacalBitmap(file.getAbsolutePath()));
+    }
+
+    private class HeadHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            String fileName = Constants.user.getEnterpriceId() + Constants.user.getPhone() + ".jpg";
+            File head = new File(Constants.HEAD_DIR + fileName);
+            if (!head.exists())
+                refreshHead(head);
+        }
+    }
+
 }

@@ -12,7 +12,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    //APK 签名的那些事：https://www.jianshu.com/p/a1f8e5896aa2
+        //APK 签名的那些事：https://www.jianshu.com/p/a1f8e5896aa2
 //    signingConfigs {
 //        release {
 //            keyAlias '密钥别称'
@@ -28,48 +28,48 @@ android {
 //            storePassword '密钥库密码'
 //        }
 //    }
-    buildTypes {
-        release {
-            // 不显示Log
-            buildConfigField "boolean", "LOG_DEBUG", "false"
-            // 移除无用的resource文件，前提minifyEnabled必须打开
-            shrinkResources true
-            // ZipAlign优化
-            zipAlignEnabled true
-            // 设置混淆
-            minifyEnabled true
-            //加载默认混淆配置涵
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            // 正式环境签名
-            //signingConfig signingConfigs.release
-        }
-
-        debug {
-            //ZipAlign优化
-            zipAlignEnabled false
-            //设置混淆
-            minifyEnabled false
-            //加载默认混淆配置涵
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            // 开发环境签名
-            //signingConfig signingConfigs.debug
-        }
-    }
-
-    flavorDimensions "default"//这个名字貌似随便取，也可以有多个，总之一定要有
-    //多渠道打包
-    productFlavors {
-        kuan {}     //酷安
-        tencent {}  //应用宝
-        baidu {}    //百度
-        xiaomi {}   //小米
-        huawei {}   //华为
-        google {}   //谷歌
-
-        productFlavors.all { flavor ->
-            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
-        }
-    }
+//    buildTypes {
+//        release {
+//            // 不显示Log
+//            buildConfigField "boolean", "LOG_DEBUG", "false"
+//            // 移除无用的resource文件，前提minifyEnabled必须打开
+//            shrinkResources true
+//            // ZipAlign优化
+//            zipAlignEnabled true
+//            // 设置混淆
+//            minifyEnabled true
+//            //加载默认混淆配置涵
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            // 正式环境签名
+//            //signingConfig signingConfigs.release
+//        }
+//
+//        debug {
+//            //ZipAlign优化
+//            zipAlignEnabled false
+//            //设置混淆
+//            minifyEnabled false
+//            //加载默认混淆配置涵
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            // 开发环境签名
+//            //signingConfig signingConfigs.debug
+//        }
+//    }
+//
+//    flavorDimensions "default"//这个名字貌似随便取，也可以有多个，总之一定要有
+//    //多渠道打包
+//    productFlavors {
+//        kuan {}     //酷安
+//        tencent {}  //应用宝
+//        baidu {}    //百度
+//        xiaomi {}   //小米
+//        huawei {}   //华为
+//        google {}   //谷歌
+//
+//        productFlavors.all { flavor ->
+//            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+//        }
+//    }
 
     // JNI 目录
     sourceSets {
@@ -156,6 +156,11 @@ dependencies {
 
     // progress bar
     implementation 'com.victor:lib:1.0.4'
+
+    // oss
+    implementation 'com.aliyun.dpa:oss-android-sdk:+'
+
+
 }
 
 repositories {
