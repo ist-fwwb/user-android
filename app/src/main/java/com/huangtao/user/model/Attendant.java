@@ -3,17 +3,17 @@ package com.huangtao.user.model;
 import java.util.Date;
 
 public class Attendant {
-    String _id;
+    String id;
 
     String userId;
     Date signInTime;
 
-    public String get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUserId() {

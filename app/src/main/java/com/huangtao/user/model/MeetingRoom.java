@@ -1,29 +1,29 @@
 package com.huangtao.user.model;
 
+import com.huangtao.user.model.meta.MeetingRoomUtils;
 import com.huangtao.user.model.meta.Size;
 
-import java.util.Map;
+import java.util.Set;
 
 public class MeetingRoom {
-    String _id;
-
-    Map<String, String> utils;
+    String id;
+    Set<MeetingRoomUtils> utils;
     Size size;
     String location;
 
-    public String get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setId(String _id) {
+        this.id = id;
     }
 
-    public Map<String, String> getUtils() {
+    public Set<MeetingRoomUtils> getUtils() {
         return utils;
     }
 
-    public void setUtils(Map<String, String> utils) {
+    public void setUtils(Set<MeetingRoomUtils> utils) {
         this.utils = utils;
     }
 

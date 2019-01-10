@@ -1,28 +1,31 @@
 package com.huangtao.user.model;
 
+import com.huangtao.user.model.meta.MeetingType;
 import com.huangtao.user.model.meta.Status;
-import com.huangtao.user.model.meta.Type;
 
 import java.util.List;
 
 public class Meeting {
-    String _id;
+    String id;
 
     String heading;
     String description;
+    String location;
+    int startTime;
+    int endTime;
     String hostId;
     List<String> attendants;
     boolean needSignIn;
     String attendantNum;  // a four digit number to attend the meeting
     Status status;
-    Type type;
+    MeetingType type;
 
-    public String get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setId(String _id) {
+        this.id = id;
     }
 
     public String getHeading() {
@@ -81,11 +84,35 @@ public class Meeting {
         this.status = status;
     }
 
-    public Type getType() {
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+    public int getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(int endTime) {
+        this.endTime = endTime;
+    }
+
+    public MeetingType getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(MeetingType type) {
         this.type = type;
     }
 }

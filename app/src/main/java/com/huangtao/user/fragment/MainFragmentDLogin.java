@@ -1,5 +1,6 @@
 package com.huangtao.user.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.Toolbar;
@@ -77,7 +78,7 @@ public class MainFragmentDLogin extends MyLazyFragment
                 unactive.setVisibility(View.VISIBLE);
             }
 
-            final String fileName = Constants.user.getEnterpriceId() + Constants.user.getPhone() + ".jpg";
+            final String fileName = Constants.user.getFaceFile();
             File head = new File(Constants.HEAD_DIR + fileName);
             if(!head.exists()){
                 new Thread(new Runnable() {
@@ -136,11 +137,12 @@ public class MainFragmentDLogin extends MyLazyFragment
         head.setImageBitmap(CommonUtils.getLoacalBitmap(file.getAbsolutePath()));
     }
 
+    @SuppressLint("HandlerLeak")
     private class HeadHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            String fileName = Constants.user.getEnterpriceId() + Constants.user.getPhone() + ".jpg";
+            String fileName = Constants.user.getFaceFile();
             File head = new File(Constants.HEAD_DIR + fileName);
             if (!head.exists())
                 refreshHead(head);
