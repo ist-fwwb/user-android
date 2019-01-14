@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.hjq.bar.TitleBar;
 import com.huangtao.user.R;
+import com.huangtao.user.activity.MeetingroomListActivity;
 import com.huangtao.user.common.MyLazyFragment;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
 
@@ -57,6 +58,11 @@ public class MainFragmentA extends MyLazyFragment
 
         //设置渐变监听
         mCollapsingToolbarLayout.setOnScrimsListener(this);
+
+        mSearchView.setOnClickListener(this);
+        appoint.setOnClickListener(this);
+        appointSmart.setOnClickListener(this);
+        addMeeting.setOnClickListener(this);
     }
 
     @Override
@@ -96,7 +102,7 @@ public class MainFragmentA extends MyLazyFragment
         if (v == mSearchView) {
 
         } else if (v == appoint) {
-
+            startActivity(MeetingroomListActivity.class);
         } else if (v == appointSmart) {
 
         } else if (v == addMeeting) {
