@@ -2,6 +2,8 @@ package com.huangtao.user.fragment;
 
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
@@ -13,7 +15,7 @@ import com.huangtao.user.widget.XCollapsingToolbarLayout;
 import butterknife.BindView;
 
 public class MainFragmentA extends MyLazyFragment
-        implements XCollapsingToolbarLayout.OnScrimsListener {
+        implements XCollapsingToolbarLayout.OnScrimsListener, View.OnClickListener {
 
     @BindView(R.id.abl_test_bar)
     AppBarLayout mAppBarLayout;
@@ -24,10 +26,15 @@ public class MainFragmentA extends MyLazyFragment
     @BindView(R.id.tb_test_a_bar)
     TitleBar mTitleBar;
 
-    @BindView(R.id.tv_test_address)
-    TextView mAddressView;
     @BindView(R.id.tv_test_search)
     TextView mSearchView;
+
+    @BindView(R.id.appoint)
+    LinearLayout appoint;
+    @BindView(R.id.appoint_smart)
+    LinearLayout appointSmart;
+    @BindView(R.id.add_meeting)
+    LinearLayout addMeeting;
 
     public static MainFragmentA newInstance() {
         return new MainFragmentA();
@@ -35,7 +42,7 @@ public class MainFragmentA extends MyLazyFragment
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_test_a;
+        return R.layout.fragment_main_home;
     }
 
     @Override
@@ -75,13 +82,25 @@ public class MainFragmentA extends MyLazyFragment
     public void onScrimsStateChange(boolean shown) {
         // CollapsingToolbarLayout 发生了渐变
         if (shown) {
-            mAddressView.setTextColor(getResources().getColor(R.color.black));
             mSearchView.setBackgroundResource(R.drawable.bg_home_search_bar_gray);
             getStatusBarConfig().statusBarDarkFont(true).init();
         }else {
-            mAddressView.setTextColor(getResources().getColor(R.color.white));
             mSearchView.setBackgroundResource(R.drawable.bg_home_search_bar_transparent);
             getStatusBarConfig().statusBarDarkFont(false).init();
+        }
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        if (v == mSearchView) {
+
+        } else if (v == appoint) {
+
+        } else if (v == appointSmart) {
+
+        } else if (v == addMeeting) {
+
         }
     }
 }
