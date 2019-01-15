@@ -5,16 +5,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.huangtao.user.R;
+import com.huangtao.user.model.MeetingRoom;
+import com.huangtao.user.model.meta.MeetingRoomUtils;
+
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MeetingroomListAdapter extends RecyclerView.Adapter<MeetingroomListAdapter.MeetingroomVH> {
 
-//    List<BluetoothDevice> data;
+    List<MeetingRoom> data;
 
-//    public BluetoothListAdapter(List<BluetoothDevice> data) {
-//        this.data = data;
-//    }
+    public MeetingroomListAdapter(List<MeetingRoom> data) {
+        this.data = data;
+    }
 
     @NonNull
     @Override
@@ -25,6 +34,29 @@ public class MeetingroomListAdapter extends RecyclerView.Adapter<MeetingroomList
 
     @Override
     public void onBindViewHolder(@NonNull MeetingroomVH viewHolder, final int i) {
+        MeetingRoom meetingRoom = data.get(i);
+
+        viewHolder.location.setText(meetingRoom.getLocation());
+
+        for(MeetingRoomUtils utils : meetingRoom.getUtils()){
+            switch (utils){
+                case AIRCONDITIONER:
+                    viewHolder.airConditioner.setVisibility(View.VISIBLE);
+                    break;
+                case TABLE:
+                    viewHolder.desk.setVisibility(View.VISIBLE);
+                    break;
+                case PROJECTOR:
+                    viewHolder.projector.setVisibility(View.VISIBLE);
+                    break;
+                case BLACKBOARD:
+                    viewHolder.blackboard.setVisibility(View.VISIBLE);
+                    break;
+                case POWERSUPPLY:
+                    viewHolder.power.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,13 +68,7 @@ public class MeetingroomListAdapter extends RecyclerView.Adapter<MeetingroomList
 
     @Override
     public int getItemCount() {
-        return 10;
-    }
-
-    public static class MeetingroomVH extends RecyclerView.ViewHolder{
-        public MeetingroomVH(@NonNull View itemView) {
-            super(itemView);
-        }
+        return data.size();
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -53,6 +79,38 @@ public class MeetingroomListAdapter extends RecyclerView.Adapter<MeetingroomList
 
     public interface OnItemClickListener {
         void onItemClick(int position);
+    }
+
+    public static class MeetingroomVH extends RecyclerView.ViewHolder{
+
+        @BindView(R.id.pic)
+        ImageView pic;
+
+        @BindView(R.id.location)
+        TextView location;
+
+        @BindView(R.id.status)
+        TextView status;
+
+        @BindView(R.id.air_conditioner)
+        ImageView airConditioner;
+
+        @BindView(R.id.blackboard)
+        ImageView blackboard;
+
+        @BindView(R.id.desk)
+        ImageView desk;
+
+        @BindView(R.id.projector)
+        ImageView projector;
+
+        @BindView(R.id.power)
+        ImageView power;
+
+        public MeetingroomVH(@NonNull View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
     }
 
 }

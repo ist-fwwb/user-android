@@ -1,6 +1,8 @@
 package com.huangtao.user.network;
 
 import com.huangtao.user.model.User;
+import com.huangtao.user.model.meta.Size;
+import com.huangtao.user.network.model.ApiMeetingrooms;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -20,5 +22,9 @@ public interface Api {
                         @Query("password") String password, @Query("name") String name, @Query
                                 ("faceFile") String faceFile, @Query("featureFile") String
                                 featureFile);
+
+    @GET("meetingroom/")
+    Call<ApiMeetingrooms> queryMeetingroom(@Query("pageNumber") int pageNumber, @Query("pageSize") int
+            pageSize, @Query("utils") String utils, @Query("size") Size size);
 
 }
