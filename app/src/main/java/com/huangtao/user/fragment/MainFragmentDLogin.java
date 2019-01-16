@@ -144,7 +144,7 @@ public class MainFragmentDLogin extends MyLazyFragment
             super.handleMessage(msg);
             String fileName = Constants.user.getFaceFile();
             File head = new File(Constants.HEAD_DIR + fileName);
-            if (!head.exists())
+            if (head.exists())
                 refreshHead(head);
         }
     }

@@ -75,7 +75,8 @@
         <activity
             android:name=".arcsoft.RegisterAndRecognizeActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".activity.MeetingroomListActivity"></activity>
+        <activity android:name=".activity.MeetingroomListActivity" />
+        <activity android:name=".activity.MeetingRoomActivity"></activity>
     </application>
 
 </manifest>

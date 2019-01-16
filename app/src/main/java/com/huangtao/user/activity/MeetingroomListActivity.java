@@ -1,5 +1,6 @@
 package com.huangtao.user.activity;
 
+import android.content.Intent;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -78,7 +79,9 @@ public class MeetingroomListActivity extends MyActivity {
         meetingroomListAdapter.setOnItemClickListener(new MeetingroomListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-
+                Intent intent = new Intent(MeetingroomListActivity.this, MeetingRoomActivity.class);
+                intent.putExtra("meetingroom", datas.get(position));
+                startActivity(intent);
             }
         });
 

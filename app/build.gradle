@@ -12,7 +12,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-        //APK 签名的那些事：https://www.jianshu.com/p/a1f8e5896aa2
+    //APK 签名的那些事：https://www.jianshu.com/p/a1f8e5896aa2
 //    signingConfigs {
 //        release {
 //            keyAlias '密钥别称'
@@ -160,6 +160,8 @@ dependencies {
     // oss
     implementation 'com.aliyun.dpa:oss-android-sdk:+'
 
+    // table
+    implementation 'com.kelin.scrollablepanel:library:1.2.0'
 
 }
 
