@@ -3,9 +3,10 @@ package com.huangtao.user.model;
 import com.huangtao.user.model.meta.MeetingRoomUtils;
 import com.huangtao.user.model.meta.Size;
 
+import java.io.Serializable;
 import java.util.Set;
 
-public class MeetingRoom {
+public class MeetingRoom implements Serializable {
     String id;
     Set<MeetingRoomUtils> utils;
     Size size;
