@@ -10,6 +10,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class CommonUtils {
 
@@ -91,6 +95,49 @@ public class CommonUtils {
             System.out.println("文件不存在！");
         }
         return null;
+    }
+
+    public static List<String> getDayOfWeek(long curTime) {
+        List<String> result = new ArrayList<>();
+        String[] days = new String[]{"Error", "日", "一", "二", "三", "四", "五", "六"};
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date(curTime));
+
+        int today = cal.get(Calendar.DAY_OF_WEEK);
+
+        while (true) {
+            if (result.size() >= 5)
+                break;
+            if (today != 1 && today != 7) {
+                // 跳过周六周日
+                result.add(days[today]);
+            }
+            today = today % 7 + 1;
+        }
+
+        return result;
+    }
+
+    public static List<String> getDateOfWeek(long curTime) {
+        List<String> result = new ArrayList<>();
+        long day = 1000 * 60 * 60 * 24;
+
+        Calendar cal = Calendar.getInstance();
+        for (int i = 0; i < 7; i++) {
+            cal.setTime(new Date(curTime + i * day));
+            int week = cal.get(Calendar.DAY_OF_WEEK);
+
+            if (week == 1 || week == 7) {
+                // 跳过周六周日
+                continue;
+            }
+
+            String mMonth = String.valueOf(cal.get(Calendar.MONTH) + 1);// 获取当前月份
+            String mDay = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));// 获取当前月份的日期号码
+            result.add(mMonth + "." + mDay);
+        }
+        return result;
     }
 
 }

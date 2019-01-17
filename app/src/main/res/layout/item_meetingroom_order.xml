@@ -4,14 +4,49 @@
     android:layout_height="wrap_content"
     android:background="@color/white">
 
-    <TextView
-        android:id="@+id/time"
+    <RelativeLayout
+        android:id="@+id/time_container"
         android:layout_width="80dp"
         android:layout_height="60dp"
-        android:layout_centerInParent="true"
-        android:text="12:00"
-        android:textColor="@color/douban_gray"
-        android:textSize="14sp"
-        android:gravity="center"/>
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="12:00"
+            android:textColor="@color/douban_gray"
+            android:textSize="14sp"
+            android:gravity="center"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/day_container"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="五"
+            android:textColor="@color/douban_gray"
+            android:textSize="14sp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/day"
+            android:text="1.17"
+            android:textColor="@color/douban_gray_55_percent"
+            android:textSize="10sp"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

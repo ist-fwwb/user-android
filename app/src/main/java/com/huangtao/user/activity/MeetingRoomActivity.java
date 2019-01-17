@@ -4,8 +4,8 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
@@ -13,15 +13,23 @@ import com.hjq.bar.TitleBar;
 import com.huangtao.user.R;
 import com.huangtao.user.adapter.MeetingRoomOrderAdapter;
 import com.huangtao.user.common.MyActivity;
+import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.model.MeetingRoom;
+import com.huangtao.user.model.TimeSlice;
 import com.huangtao.user.model.meta.MeetingRoomUtils;
+import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
 import com.kelin.scrollablepanel.library.ScrollablePanel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MeetingRoomActivity extends MyActivity implements View.OnClickListener, XCollapsingToolbarLayout.OnScrimsListener {
     @BindView(R.id.appbar)
@@ -40,7 +48,9 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
     NestedScrollView scrollView;
 
     @BindView(R.id.order)
-    Button order;
+    RelativeLayout order;
+    @BindView(R.id.btn_time)
+    TextView btnTime;
 
     @BindView(R.id.name)
     TextView name;
@@ -70,7 +80,8 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
 
     private MeetingRoom meetingRoom;
     private boolean dateSelected = false;
-    private List<List<Boolean>> datas;
+    private Map<String, List<Boolean>> datas;
+    MeetingRoomOrderAdapter orderAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -91,10 +102,7 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
         mCollapsingToolbarLayout.setOnScrimsListener(this);
         getStatusBarConfig().statusBarDarkFont(false).init();
 
-        datas = new ArrayList<>();
-
-        MeetingRoomOrderAdapter orderAdapter = new MeetingRoomOrderAdapter(datas, (int) ((getWindowManager().getDefaultDisplay().getWidth() * 0.9) / 5));
-        scrollablePanel.setPanelAdapter(orderAdapter);
+        datas = new HashMap<>();
     }
 
     @Override
@@ -125,6 +133,38 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
                     break;
             }
         }
+
+        // 初始化预定表格
+        List<String> dates = CommonUtils.getDateOfWeek(System.currentTimeMillis());
+        for(final String date : dates){
+            Network.getInstance().queryTimeSlice(date.replace(".", "-"), meetingRoom.getId()).enqueue(new Callback<TimeSlice>() {
+                @Override
+                public void onResponse(Call<TimeSlice> call, Response<TimeSlice> response) {
+                    TimeSlice timeSlice = response.body();
+                    List<Boolean> canOrder = new ArrayList<>();
+                    for(String slice : timeSlice.getTimeSlice()){
+                        if(slice == null){
+                            canOrder.add(true);
+                        } else {
+                            canOrder.add(false);
+                        }
+                    }
+                    datas.put(date, canOrder);
+
+                    if(datas.size() >= 5){
+                        orderAdapter = new MeetingRoomOrderAdapter(MeetingRoomActivity.this, datas, (int) ((getWindowManager().getDefaultDisplay().getWidth() * 0.9) / 5), btnTime);
+                        scrollablePanel.setPanelAdapter(orderAdapter);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<TimeSlice> call, Throwable t) {
+                    toast("网络请求失败");
+                    t.printStackTrace();
+                }
+            });
+        }
+
 
     }
 

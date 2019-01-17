@@ -1,6 +1,7 @@
 package com.huangtao.user.network;
 
 import com.huangtao.user.model.MeetingRoom;
+import com.huangtao.user.model.TimeSlice;
 import com.huangtao.user.model.User;
 import com.huangtao.user.model.meta.Size;
 import com.huangtao.user.network.model.ApiMeetingrooms;
@@ -31,5 +32,8 @@ public interface Api {
 
     @GET("meetingroom/{id}")
     Call<MeetingRoom> queryMeetingroomById(@Path("id") String id);
+
+    @GET("timeSlice/")
+    Call<TimeSlice> queryTimeSlice(@Query("date") String date, @Query("roomId") String roomId);
 
 }
