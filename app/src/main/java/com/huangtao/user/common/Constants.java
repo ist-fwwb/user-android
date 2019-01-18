@@ -9,6 +9,9 @@ import java.io.File;
 public class Constants {
 
     public static User user;
+    public static String uid;
+
+    public static String KEY_UID = "uid";
 
     // arcsoft
     public static final String APP_ID = "F1vNFhZAoVSdhNXaCzpLvBvcMW9aeqH6e68aSH5GUB3C";

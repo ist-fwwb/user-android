@@ -2,7 +2,6 @@ package com.huangtao.user.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +32,7 @@ public class MeetingRoomOrderAdapter extends PanelAdapter {
     List<String> weeks;
     List<String> dates;
 
-    int selectedColumn = -1, selectedRowFirst, selectedRowLast;
+    public int selectedColumn = -1, selectedRowFirst, selectedRowLast;
 
     OrderViewHolder[][] cells = new OrderViewHolder[48][5];
 
@@ -59,7 +58,6 @@ public class MeetingRoomOrderAdapter extends PanelAdapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int row, final int column) {
-        Log.i("select", "onBindViewHolder " + row + " " + column);
         if(column == 0){
             holder.itemView.setVisibility(View.GONE);
             return;
@@ -159,7 +157,7 @@ public class MeetingRoomOrderAdapter extends PanelAdapter {
         String last = (selectedRowLast + 1) / 2 + ":" + ((selectedRowLast+2) % 2 == 0 ? "30" : "00");
         btnTime.setText("周" + weeks.get(selectedColumn) + " " + first + "-" + last);
 
-        if(selectedColumn > 0) {
+        if(selectedColumn >= 0) {
             for (int i = selectedRowFirst; i <= selectedRowLast; i++) {
                 cells[i][selectedColumn].time.setBackgroundColor(context.getColor(R.color.douban_yellow_50_percent));
             }

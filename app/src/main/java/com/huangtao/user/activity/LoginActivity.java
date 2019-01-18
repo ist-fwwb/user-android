@@ -9,6 +9,7 @@ import com.hjq.toast.ToastUtils;
 import com.huangtao.user.R;
 import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyActivity;
+import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.helper.EditTextInputHelper;
 import com.huangtao.user.model.User;
 import com.huangtao.user.network.Network;
@@ -85,6 +86,9 @@ public class LoginActivity extends MyActivity
                     hideProgressBar();
                     User result = response.body();
                     if(result != null){
+                        Constants.uid = result.getId();
+                        CommonUtils.saveSharedPreference(LoginActivity.this, Constants.KEY_UID, result.getId());
+
                         Constants.user = result;
                         toast("登录成功");
                         Intent intent = new Intent("login");

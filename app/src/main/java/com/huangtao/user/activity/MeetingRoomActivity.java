@@ -1,5 +1,6 @@
 package com.huangtao.user.activity;
 
+import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
@@ -79,7 +80,6 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
     ScrollablePanel scrollablePanel;
 
     private MeetingRoom meetingRoom;
-    private boolean dateSelected = false;
     private Map<String, List<Boolean>> datas;
     MeetingRoomOrderAdapter orderAdapter;
 
@@ -135,35 +135,40 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
         }
 
         // 初始化预定表格
-        List<String> dates = CommonUtils.getDateOfWeek(System.currentTimeMillis());
-        for(final String date : dates){
-            Network.getInstance().queryTimeSlice(date.replace(".", "-"), meetingRoom.getId()).enqueue(new Callback<TimeSlice>() {
-                @Override
-                public void onResponse(Call<TimeSlice> call, Response<TimeSlice> response) {
-                    TimeSlice timeSlice = response.body();
-                    List<Boolean> canOrder = new ArrayList<>();
-                    for(String slice : timeSlice.getTimeSlice()){
-                        if(slice == null){
-                            canOrder.add(true);
-                        } else {
-                            canOrder.add(false);
+        final List<String> dates = CommonUtils.getDateOfWeek(System.currentTimeMillis());
+        Network.getInstance().queryTimeSlice(null, meetingRoom.getId()).enqueue(new Callback<List<TimeSlice>>() {
+            @Override
+            public void onResponse(Call<List<TimeSlice>> call, Response<List<TimeSlice>> response) {
+                if (response.body() != null) {
+                    List<TimeSlice> slices = response.body();
+
+                    for (TimeSlice slice : slices) {
+                        String month = slice.getDate().split("-")[1];
+                        String day = slice.getDate().split("-")[2];
+                        if (!dates.contains(month + "." + day)) {
+                            continue;
                         }
+                        List<Boolean> canOrder = new ArrayList<>();
+                        for (String sliceStr : slice.getTimeSlice()) {
+                            if (sliceStr == null) {
+                                canOrder.add(true);
+                            } else {
+                                canOrder.add(false);
+                            }
+                        }
+                        datas.put(month + "." + day, canOrder);
                     }
-                    datas.put(date, canOrder);
-
-                    if(datas.size() >= 5){
-                        orderAdapter = new MeetingRoomOrderAdapter(MeetingRoomActivity.this, datas, (int) ((getWindowManager().getDefaultDisplay().getWidth() * 0.9) / 5), btnTime);
-                        scrollablePanel.setPanelAdapter(orderAdapter);
-                    }
+                    orderAdapter = new MeetingRoomOrderAdapter(MeetingRoomActivity.this, datas, (int) ((getWindowManager().getDefaultDisplay().getWidth() * 0.9) / 5), btnTime);
+                    scrollablePanel.setPanelAdapter(orderAdapter);
                 }
+            }
 
-                @Override
-                public void onFailure(Call<TimeSlice> call, Throwable t) {
-                    toast("网络请求失败");
-                    t.printStackTrace();
-                }
-            });
-        }
+            @Override
+            public void onFailure(Call<List<TimeSlice>> call, Throwable t) {
+                toast("网络请求失败");
+                t.printStackTrace();
+            }
+        });
 
 
     }
@@ -172,8 +177,14 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if(v == order){
-            if(dateSelected){
-
+            if(orderAdapter.selectedColumn >= 0){
+                Intent intent = new Intent(this, AppointActivity.class);
+                intent.putExtra("meetingroom", meetingRoom);
+                intent.putExtra("date", CommonUtils.getDateOfWeek(System.currentTimeMillis()).get(orderAdapter.selectedColumn));
+                intent.putExtra("week", "周" + CommonUtils.getDayOfWeek(System.currentTimeMillis()).get(orderAdapter.selectedColumn));
+                intent.putExtra("start", orderAdapter.selectedRowFirst);
+                intent.putExtra("end", orderAdapter.selectedRowLast);
+                startActivity(intent);
             } else {
                 appBarLayout.setExpanded(false);
                 int y = order.getTop();

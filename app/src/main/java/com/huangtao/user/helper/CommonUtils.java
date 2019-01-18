@@ -1,5 +1,7 @@
 package com.huangtao.user.helper;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -134,10 +136,28 @@ public class CommonUtils {
             }
 
             String mMonth = String.valueOf(cal.get(Calendar.MONTH) + 1);// 获取当前月份
+            if(mMonth.length() == 1){
+                mMonth = 0 + mMonth;
+            }
             String mDay = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));// 获取当前月份的日期号码
+            if(mDay.length() == 1){
+                mDay = 0 + mDay;
+            }
             result.add(mMonth + "." + mDay);
         }
         return result;
+    }
+
+    public static void saveSharedPreference(Context context, String key, String value){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("meeting", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public static String getStringFromSharedPreference(Context context, String key){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("meeting", Context.MODE_PRIVATE);
+        return sharedPreferences.getString(key, null);
     }
 
 }
