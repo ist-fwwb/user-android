@@ -29,6 +29,9 @@ public interface Api {
                                 ("faceFile") String faceFile, @Query("featureFile") String
                                 featureFile);
 
+    @GET("user/{id}")
+    Call<User> queryUserById(@Path("id") String id);
+
     @GET("meetingroom/")
     Call<List<MeetingRoom>> queryMeetingroom(@Query("utils") String utils, @Query("size") Size size);
 
@@ -42,6 +45,9 @@ public interface Api {
     Call<Meeting> queryMeeting(@Query("pageNumber") int pageNumber, @Query("pageSize") int
             pageSize, @Query("date") String date, @Query("roomId") String roomId, @Query("time")
             int time);
+
+    @GET("meeting/{id}")
+    Call<Meeting> queryMeetingById(@Path("id") String id);
 
     @POST("meeting/")
     Call<Meeting> appointMeetingroom(@Body Meeting meeting);

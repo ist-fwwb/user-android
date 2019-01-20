@@ -12,12 +12,18 @@ import android.view.MenuItem;
 
 import com.huangtao.user.R;
 import com.huangtao.user.adapter.MainFragmentAdapter;
+import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyActivity;
 import com.huangtao.user.fragment.MainFragmentDLogin;
 import com.huangtao.user.helper.ActivityStackManager;
 import com.huangtao.user.helper.DoubleClickHelper;
+import com.huangtao.user.model.User;
+import com.huangtao.user.network.Network;
 
 import butterknife.BindView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends MyActivity implements
         ViewPager.OnPageChangeListener, BottomNavigationView.OnNavigationItemSelectedListener {
@@ -68,6 +74,21 @@ public class MainActivity extends MyActivity implements
             }
         };
         registerReceiver(receiver, intentFilter);
+
+        if(Constants.uid != null){
+            Network.getInstance().queryUserById(Constants.uid).enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if(response.body() != null)
+                        Constants.user = response.body();
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+
+                }
+            });
+        }
     }
 
     /**

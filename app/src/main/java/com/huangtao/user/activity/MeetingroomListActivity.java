@@ -1,6 +1,9 @@
 package com.huangtao.user.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +32,8 @@ public class MeetingroomListActivity extends MyActivity {
     MeetingroomListAdapter meetingroomListAdapter;
 
     List<MeetingRoom> datas;
+
+    BroadcastReceiver receiver;
 
     @Override
     protected int getLayoutId() {
@@ -85,5 +90,20 @@ public class MeetingroomListActivity extends MyActivity {
             }
         });
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("appointSuccess");
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                finish();
+            }
+        };
+        registerReceiver(receiver, intentFilter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 }

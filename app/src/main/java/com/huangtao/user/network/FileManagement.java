@@ -18,6 +18,7 @@ import com.alibaba.sdk.android.oss.model.GetObjectResult;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.huangtao.user.common.Constants;
+import com.huangtao.user.model.User;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -170,6 +171,17 @@ public class FileManagement {
 
         task.waitUntilFinished(); // 等待任务完成。
         return downloadResult[0];
+    }
+
+    public static String getUserHead(Context context, User user) {
+        boolean result = FileManagement.download(context, user.getFaceFile(), Constants.HEAD_DIR);
+        if (result) {
+            File head = new File(Constants.HEAD_DIR + user.getFaceFile());
+            if (head.exists()) {
+                return head.getAbsolutePath();
+            }
+        }
+        return "";
     }
 
 

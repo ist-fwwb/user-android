@@ -1,5 +1,6 @@
 package com.huangtao.user.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
@@ -71,7 +72,7 @@ public class AppointActivity extends MyActivity {
         location.setText(meetingRoom.getLocation());
 
         String first = start / 2 + ":" + ((start + 1) % 2 == 0 ? "30" : "00");
-        String last = (end + 1) / 2 + ":" + ((end + 2) % 2 == 0 ? "30" : "00");
+        String last = end / 2 + ":" + ((end + 1) % 2 == 0 ? "30" : "00");
         time.setText(date + " " + week + " " + first + "-" + last);
 
         submit.setOnClickListener(new View.OnClickListener() {
@@ -100,11 +101,21 @@ public class AppointActivity extends MyActivity {
                         if(response.body() != null) {
                             Meeting result = response.body();
 
-                            Intent intent = new Intent(AppointActivity.this, AppointSuccessActivity.class);
+                            final Intent intent = new Intent(AppointActivity.this, MeetingActivity.class);
                             intent.putExtra("meeting", result);
-                            startActivity(intent);
-                            //TODO broadcast 前面的activity全都finish
-                            finish();
+
+                            showDialog("预定成功！", "确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(intent);
+
+                                    // 前面的activity全都finish
+                                    Intent finishIntent = new Intent("appointSuccess");
+                                    sendBroadcast(finishIntent);
+
+                                    finish();
+                                }
+                            });
                         }
 
                     }

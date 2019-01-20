@@ -78,7 +78,8 @@
         <activity android:name=".activity.MeetingroomListActivity" />
         <activity android:name=".activity.MeetingRoomActivity" />
         <activity android:name=".activity.AppointActivity" />
-        <activity android:name=".activity.AppointSuccessActivity"></activity>
+        <activity android:name=".activity.MeetingActivity">
+        </activity>
     </application>
 
 </manifest>

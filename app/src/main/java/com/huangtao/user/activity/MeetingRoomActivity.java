@@ -1,6 +1,9 @@
 package com.huangtao.user.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
@@ -82,6 +85,8 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
     private MeetingRoom meetingRoom;
     private Map<String, List<Boolean>> datas;
     MeetingRoomOrderAdapter orderAdapter;
+
+    BroadcastReceiver receiver;
 
     @Override
     protected int getLayoutId() {
@@ -170,7 +175,15 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
             }
         });
 
-
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("appointSuccess");
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                finish();
+            }
+        };
+        registerReceiver(receiver, intentFilter);
     }
 
 
@@ -183,7 +196,8 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
                 intent.putExtra("date", CommonUtils.getDateOfWeek(System.currentTimeMillis()).get(orderAdapter.selectedColumn));
                 intent.putExtra("week", "周" + CommonUtils.getDayOfWeek(System.currentTimeMillis()).get(orderAdapter.selectedColumn));
                 intent.putExtra("start", orderAdapter.selectedRowFirst);
-                intent.putExtra("end", orderAdapter.selectedRowLast);
+                // 左闭右开
+                intent.putExtra("end", orderAdapter.selectedRowLast + 1);
                 startActivity(intent);
             } else {
                 appBarLayout.setExpanded(false);
@@ -206,5 +220,11 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
             titleBar.setLeftIcon(null);
             getStatusBarConfig().statusBarDarkFont(false).init();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 }
