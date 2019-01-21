@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -18,6 +19,7 @@ import com.huangtao.user.R;
 import com.huangtao.user.adapter.MeetingRoomOrderAdapter;
 import com.huangtao.user.common.MyActivity;
 import com.huangtao.user.helper.CommonUtils;
+import com.huangtao.user.model.Meeting;
 import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.model.TimeSlice;
 import com.huangtao.user.model.meta.MeetingRoomUtils;
@@ -25,9 +27,12 @@ import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
 import com.kelin.scrollablepanel.library.ScrollablePanel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -75,6 +80,11 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
     LinearLayout network;
     @BindView(R.id.tv)
     LinearLayout tv;
+
+    @BindView(R.id.meeting_container)
+    LinearLayout meetingContainer;
+    @BindView(R.id.no_meeting)
+    TextView noMeeting;
 
     @BindView(R.id.order_layout)
     LinearLayout orderLayout;
@@ -138,6 +148,67 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
                     break;
             }
         }
+
+        // 今日会议
+        Date dt = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        Network.getInstance().queryMeeting(sdf.format(dt), meetingRoom.getId()).enqueue(new Callback<List<Meeting>>() {
+            @Override
+            public void onResponse(Call<List<Meeting>> call, Response<List<Meeting>> response) {
+                List<Meeting> meetings = response.body();
+                if (meetings.size() > 0) {
+                    noMeeting.setVisibility(View.GONE);
+
+                    for (final Meeting meeting : meetings) {
+                        View v = LayoutInflater.from(MeetingRoomActivity.this).inflate(R.layout.layout_meetingroom_meeting, null);
+
+                        TextView name = v.findViewById(R.id.name);
+                        TextView host = v.findViewById(R.id.host);
+                        TextView time = v.findViewById(R.id.time);
+                        TextView status = v.findViewById(R.id.status);
+
+                        name.setText(meeting.getHeading());
+                        time.setText(CommonUtils.getFormatTime(meeting.getStartTime(), meeting.getEndTime()));
+
+                        switch (meeting.getStatus()){
+                            case Pending:
+                                status.setText("未开始");
+                                status.setTextColor(MeetingRoomActivity.this.getColor(R.color.douban_green));
+                                break;
+                            case Running:
+                                status.setText("进行中");
+                                break;
+                            case Stopped:
+                                status.setText("已结束");
+                                status.setTextColor(MeetingRoomActivity.this.getColor(R.color.douban_gray));
+                                break;
+                            case Cancelled:
+                                status.setText("已取消");
+                                status.setTextColor(MeetingRoomActivity.this.getColor(R.color.douban_gray));
+                                break;
+                        }
+
+                        v.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(MeetingRoomActivity.this, MeetingActivity.class);
+                                intent.putExtra("meeting", meeting);
+                                startActivity(intent);
+                            }
+                        });
+
+                        meetingContainer.addView(v);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Meeting>> call, Throwable t) {
+
+            }
+        });
+
 
         // 初始化预定表格
         final List<String> dates = CommonUtils.getDateOfWeek(System.currentTimeMillis());

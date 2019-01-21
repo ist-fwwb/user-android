@@ -86,12 +86,12 @@ public class MeetingActivity extends MyActivity {
 
     @Override
     protected void initData() {
-        if ((meeting = getIntent().getParcelableExtra("meeting")) == null) {
+        if ((meeting = (Meeting) getIntent().getSerializableExtra("meeting")) == null) {
             String id;
             if ((id = getIntent().getStringExtra("id")) == null) {
-//                finish();
+                finish();
             }
-            id = "5c41d7e41bdd3400130912d7";
+//            id = "5c41d7e41bdd3400130912d7";
             Network.getInstance().queryMeetingById(id).enqueue(new Callback<Meeting>() {
                 @Override
                 public void onResponse(Call<Meeting> call, Response<Meeting> response) {

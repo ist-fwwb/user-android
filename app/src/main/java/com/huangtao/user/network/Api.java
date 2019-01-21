@@ -20,6 +20,7 @@ public interface Api {
     @GET("testMongoFindUser")
     Call<Boolean> test(@Query("key") String test);
 
+    // user
     @POST("user/login")
     Call<User> login(@Query("phone") String phone, @Query("password") String password);
 
@@ -32,19 +33,26 @@ public interface Api {
     @GET("user/{id}")
     Call<User> queryUserById(@Path("id") String id);
 
+    @GET("user/{id}/meeting/{date}")
+    Call<List<Meeting>> queryMeetingByUid(@Path("id") String id, @Path("date") String date);
+
+    // meeting room
     @GET("meetingroom/")
     Call<List<MeetingRoom>> queryMeetingroom(@Query("utils") String utils, @Query("size") Size size);
 
     @GET("meetingroom/{id}")
     Call<MeetingRoom> queryMeetingroomById(@Path("id") String id);
 
+    // time slice
     @GET("timeSlice/")
     Call<List<TimeSlice>> queryTimeSlice(@Query("date") String date, @Query("roomId") String roomId);
 
+
+    // meeting
     @GET("meeting/")
-    Call<Meeting> queryMeeting(@Query("pageNumber") int pageNumber, @Query("pageSize") int
-            pageSize, @Query("date") String date, @Query("roomId") String roomId, @Query("time")
-            int time);
+    Call<List<Meeting>> queryMeeting(@Query("date") String date, @Query("roomId") String roomId, @Query("time") int time);
+    @GET("meeting/")
+    Call<List<Meeting>> queryMeeting(@Query("date") String date, @Query("roomId") String roomId);
 
     @GET("meeting/{id}")
     Call<Meeting> queryMeetingById(@Path("id") String id);

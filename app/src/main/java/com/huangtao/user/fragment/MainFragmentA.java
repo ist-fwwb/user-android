@@ -1,7 +1,9 @@
 package com.huangtao.user.fragment;
 
+import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -9,11 +11,24 @@ import android.widget.TextView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.hjq.bar.TitleBar;
 import com.huangtao.user.R;
+import com.huangtao.user.activity.MeetingActivity;
 import com.huangtao.user.activity.MeetingroomListActivity;
+import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyLazyFragment;
+import com.huangtao.user.helper.CommonUtils;
+import com.huangtao.user.model.Meeting;
+import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import butterknife.BindView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainFragmentA extends MyLazyFragment
         implements XCollapsingToolbarLayout.OnScrimsListener, View.OnClickListener {
@@ -36,6 +51,11 @@ public class MainFragmentA extends MyLazyFragment
     LinearLayout appointSmart;
     @BindView(R.id.add_meeting)
     LinearLayout addMeeting;
+
+    @BindView(R.id.no_meeting)
+    TextView noMeeting;
+    @BindView(R.id.meeting_container)
+    LinearLayout meetingContainer;
 
     public static MainFragmentA newInstance() {
         return new MainFragmentA();
@@ -67,7 +87,68 @@ public class MainFragmentA extends MyLazyFragment
 
     @Override
     protected void initData() {
+        if(!Constants.uid.isEmpty()){
+            // 今日会议
+            Date dt = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+            Network.getInstance().queryMeetingByUid(Constants.uid, sdf.format(dt)).enqueue(new Callback<List<Meeting>>() {
+                @Override
+                public void onResponse(Call<List<Meeting>> call, Response<List<Meeting>> response) {
+                    List<Meeting> meetings = response.body();
+                    if (meetings.size() > 0) {
+                        noMeeting.setVisibility(View.GONE);
 
+                        for (final Meeting meeting : meetings) {
+                            View v = LayoutInflater.from(getFragmentActivity()).inflate(R.layout.layout_main_meeting, null);
+
+                            TextView name = v.findViewById(R.id.name);
+                            TextView location = v.findViewById(R.id.location);
+                            TextView time = v.findViewById(R.id.time);
+                            TextView status = v.findViewById(R.id.status);
+
+                            name.setText(meeting.getHeading());
+                            location.setText(meeting.getLocation());
+                            time.setText(CommonUtils.getFormatTime(meeting.getStartTime(), meeting.getEndTime()));
+
+                            switch (meeting.getStatus()){
+                                case Pending:
+                                    status.setText("未开始");
+                                    status.setTextColor(getFragmentActivity().getColor(R.color.douban_green));
+                                    break;
+                                case Running:
+                                    status.setText("进行中");
+                                    break;
+                                case Stopped:
+                                    status.setText("已结束");
+                                    status.setTextColor(getFragmentActivity().getColor(R.color.douban_gray));
+                                    break;
+                                case Cancelled:
+                                    status.setText("已取消");
+                                    status.setTextColor(getFragmentActivity().getColor(R.color.douban_gray));
+                                    break;
+                            }
+
+                            v.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(getFragmentActivity(), MeetingActivity.class);
+                                    intent.putExtra("meeting", meeting);
+                                    startActivity(intent);
+                                }
+                            });
+
+                            meetingContainer.addView(v);
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Meeting>> call, Throwable t) {
+
+                }
+            });
+        }
     }
 
     @Override
