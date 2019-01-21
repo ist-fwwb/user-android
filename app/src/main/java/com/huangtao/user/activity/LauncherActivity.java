@@ -15,6 +15,7 @@ import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyActivity;
 import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.network.FileManagement;
+import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 import java.util.List;
 
@@ -56,6 +57,7 @@ public class LauncherActivity extends MyActivity
     protected void initData() {
         FileManagement.init(getApplicationContext());
         Constants.uid = CommonUtils.getStringFromSharedPreference(this, Constants.KEY_UID);
+        ZXingLibrary.initDisplayOpinion(this);
     }
 
     private static final int ANIM_TIME = 1000;
@@ -82,6 +84,7 @@ public class LauncherActivity extends MyActivity
     private void requestFilePermission() {
         XXPermissions.with(this)
                 .permission(Permission.Group.STORAGE)
+                .permission(Permission.CAMERA)
                 .request(this);
     }
 

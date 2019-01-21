@@ -10,6 +10,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -59,5 +60,16 @@ public interface Api {
 
     @POST("meeting/")
     Call<Meeting> appointMeetingroom(@Body Meeting meeting);
+
+    @GET("meeting/{id}/attendants")
+    Call<List<User>> queryAttendantsFromMeeting(@Path("id") String id);
+
+    @POST("meeting/{attendantNum}/attendants")
+    Call<Meeting> joinMeeting(@Path("attendantNum") String attendantNum, @Query("userId") String uid);
+
+    @DELETE("meeting/{id}/attendants/{userId}")
+    Call<String> exitMeeting(@Path("id") String id, @Path("userId") String userId);
+
+
 
 }

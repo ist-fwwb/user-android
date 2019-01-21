@@ -1,5 +1,7 @@
 package com.huangtao.user.activity;
 
+import android.content.DialogInterface;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
@@ -18,6 +20,8 @@ import com.huangtao.user.network.FileManagement;
 import com.huangtao.user.network.Network;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
+import java.util.List;
+
 import butterknife.BindView;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -27,6 +31,7 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class MeetingActivity extends MyActivity {
 
@@ -86,31 +91,30 @@ public class MeetingActivity extends MyActivity {
 
     @Override
     protected void initData() {
-        if ((meeting = (Meeting) getIntent().getSerializableExtra("meeting")) == null) {
-            String id;
-            if ((id = getIntent().getStringExtra("id")) == null) {
-                finish();
-            }
-//            id = "5c41d7e41bdd3400130912d7";
+        String id;
+        if ((id = getIntent().getStringExtra("id")) == null) {
+            finish();
+        } else {
+            showProgressBar();
             Network.getInstance().queryMeetingById(id).enqueue(new Callback<Meeting>() {
                 @Override
                 public void onResponse(Call<Meeting> call, Response<Meeting> response) {
-                    if(response.body() != null) {
+                    if (response.body() != null) {
                         meeting = response.body();
                         init();
                     } else {
                         toast("返回值为空");
                     }
+                    hideProgressBar();
                 }
 
                 @Override
                 public void onFailure(Call<Meeting> call, Throwable t) {
                     toast("网络请求失败");
                     t.printStackTrace();
+                    hideProgressBar();
                 }
             });
-        } else {
-            init();
         }
     }
 
@@ -151,8 +155,35 @@ public class MeetingActivity extends MyActivity {
         content.setText(!meeting.getDescription().isEmpty() ? meeting.getDescription() : "无内容");
 
         // 参会者
-        participantNumber.setText("参会者：\n   (" + meeting.getAttendants().size() + ")");
-        // TODO 参会者信息
+        participantNumber.setText("参会者: \n(" + meeting.getAttendants().size() + ")");
+        Network.getInstance().queryAttendantsFromMeeting(meeting.getId()).enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                List<User> users = response.body();
+                for(User user : users) {
+                    addParticipantView(user);
+                }
+
+                View v = LayoutInflater.from(MeetingActivity.this).inflate(R.layout.item_meeting_user, null);
+                TextView attendantName = v.findViewById(R.id.name);
+                ImageView attendantHead = v.findViewById(R.id.head);
+                attendantName.setText("");
+                attendantHead.setImageResource(R.mipmap.ic_add_gray);
+                participantContainer.addView(v);
+                // 添加参会者
+                v.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+
+            }
+        });
 
         // 是否需要签到
         if(!meeting.isNeedSignIn()){
@@ -175,17 +206,21 @@ public class MeetingActivity extends MyActivity {
         // 按钮
         if(meeting.getAttendants().keySet().contains(Constants.uid)){
             enter.setText("退出会议");
+            enter.setBackground(getDrawable(R.drawable.selector_meeting_exit_button));
+            enter.setTextColor(getColor(R.color.douban_red_80_percent));
             enter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    // 退出会议
+                    exit();
                 }
             });
         } else {
             enter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO 加入会议
+                    // 加入会议
+                    join();
                 }
             });
         }
@@ -254,5 +289,115 @@ public class MeetingActivity extends MyActivity {
             }
         });
 
+    }
+
+    private void join() {
+        showDialog("确定要加入该会议吗？", "加入", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Network.getInstance().joinMeeting(meeting.getAttendantNum(), Constants.uid).enqueue(new Callback<Meeting>() {
+                    @Override
+                    public void onResponse(Call<Meeting> call, Response<Meeting> response) {
+                        toast("加入成功");
+
+                        meeting = response.body();
+                        participantNumber.setText("参会者: \n(" + meeting.getAttendants().size() + ")");
+                        View v = participantContainer.getChildAt(participantContainer.getChildCount() - 1);
+                        participantContainer.removeView(v);
+                        addParticipantView(Constants.user);
+                        participantContainer.addView(v);
+
+                        enter.setText("退出会议");
+                        enter.setBackground(getDrawable(R.drawable.selector_meeting_exit_button));
+                        enter.setTextColor(getColor(R.color.douban_red_80_percent));
+                        enter.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                exit();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(Call<Meeting> call, Throwable t) {
+                        toast("加入失败");
+                    }
+                });
+            }
+        }, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void exit() {
+        showDialog("确定要退出该会议吗？", "退出", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Network.getInstance(ScalarsConverterFactory.create()).exitMeeting(meeting.getId(), Constants.uid).enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        showDialog("退出会议成功", "确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        toast("退出会议失败");
+                        t.printStackTrace();
+                    }
+                });
+            }
+        }, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void addParticipantView (User user) {
+        if(user == null) {
+            return;
+        }
+
+        View v = LayoutInflater.from(MeetingActivity.this).inflate(R.layout.item_meeting_user, null);
+        TextView attendantName = v.findViewById(R.id.name);
+        final ImageView attendantHead = v.findViewById(R.id.head);
+
+        attendantName.setText(user.getName());
+        Observable.just(FileManagement.getUserHead(MeetingActivity.this, user))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        if(!s.isEmpty()){
+                            attendantHead.setImageBitmap(CommonUtils.getLoacalBitmap(s));
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+        participantContainer.addView(v);
     }
 }

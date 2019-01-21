@@ -22,6 +22,7 @@ import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.model.Meeting;
 import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.model.TimeSlice;
+import com.huangtao.user.model.User;
 import com.huangtao.user.model.meta.MeetingRoomUtils;
 import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
@@ -29,6 +30,7 @@ import com.kelin.scrollablepanel.library.ScrollablePanel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -163,11 +165,11 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
                         View v = LayoutInflater.from(MeetingRoomActivity.this).inflate(R.layout.layout_meetingroom_meeting, null);
 
                         TextView name = v.findViewById(R.id.name);
-                        TextView host = v.findViewById(R.id.host);
+                        final TextView host = v.findViewById(R.id.host);
                         TextView time = v.findViewById(R.id.time);
                         TextView status = v.findViewById(R.id.status);
 
-                        name.setText(meeting.getHeading());
+                        name.setText(!meeting.getHeading().isEmpty() ? meeting.getHeading() : "无主题");
                         time.setText(CommonUtils.getFormatTime(meeting.getStartTime(), meeting.getEndTime()));
 
                         switch (meeting.getStatus()){
@@ -188,11 +190,25 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
                                 break;
                         }
 
+                        Network.getInstance().queryUserById(meeting.getHostId()).enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(Call<User> call, Response<User> response) {
+                                if(response.body() != null){
+                                    host.setText(response.body().getName());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<User> call, Throwable t) {
+
+                            }
+                        });
+
                         v.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Intent intent = new Intent(MeetingRoomActivity.this, MeetingActivity.class);
-                                intent.putExtra("meeting", meeting);
+                                intent.putExtra("id", meeting.getId());
                                 startActivity(intent);
                             }
                         });
@@ -218,6 +234,9 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
                 if (response.body() != null) {
                     List<TimeSlice> slices = response.body();
 
+                    Calendar calendar = Calendar.getInstance();
+                    int now = calendar.get(Calendar.HOUR_OF_DAY) * 2 + calendar.get(Calendar.MINUTE) / 30;
+
                     for (TimeSlice slice : slices) {
                         String month = slice.getDate().split("-")[1];
                         String day = slice.getDate().split("-")[2];
@@ -225,8 +244,14 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
                             continue;
                         }
                         List<Boolean> canOrder = new ArrayList<>();
-                        for (String sliceStr : slice.getTimeSlice()) {
-                            if (sliceStr == null) {
+                        for (int i = 0; i < slice.getTimeSlice().size(); i++) {
+                            // 当天已经过了时间
+                            if (Integer.parseInt(day) == calendar.get(Calendar.DAY_OF_MONTH) && i <= now) {
+                                canOrder.add(false);
+                                continue;
+                            }
+
+                            if (slice.getTimeSlice().get(i) == null) {
                                 canOrder.add(true);
                             } else {
                                 canOrder.add(false);
