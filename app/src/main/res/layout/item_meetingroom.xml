@@ -10,8 +10,8 @@
         android:layout_height="85dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
-        android:src="@mipmap/bg_launcher"
-        android:scaleType="fitXY"/>
+        android:src="@mipmap/pic_meetingroom5302"
+        android:scaleType="centerCrop"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
             android:textSize="12sp"
             android:textColor="@color/douban_gray_55_percent"
             android:layout_marginTop="3dp"
-            android:text="空闲中 12:00开始"
+            android:text="空闲中"
             android:layout_marginLeft="20dp"/>
 
         <LinearLayout

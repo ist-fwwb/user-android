@@ -377,6 +377,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/meeting_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -389,6 +390,15 @@
                     android:layout_height="wrap_content"
                     android:text="今日会议"
                     android:textSize="17sp"
+                    android:textColor="@color/douban_gray_55_percent"/>
+
+                <TextView
+                    android:id="@+id/no_meeting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="14sp"
+                    android:text="暂无会议"
                     android:textColor="@color/douban_gray_55_percent"/>
 
             </LinearLayout>
