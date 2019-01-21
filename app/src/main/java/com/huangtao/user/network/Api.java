@@ -1,11 +1,15 @@
 package com.huangtao.user.network;
 
+import com.huangtao.user.model.Meeting;
 import com.huangtao.user.model.MeetingRoom;
+import com.huangtao.user.model.TimeSlice;
 import com.huangtao.user.model.User;
 import com.huangtao.user.model.meta.Size;
-import com.huangtao.user.network.model.ApiMeetingrooms;
+
+import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -25,11 +29,27 @@ public interface Api {
                                 ("faceFile") String faceFile, @Query("featureFile") String
                                 featureFile);
 
+    @GET("user/{id}")
+    Call<User> queryUserById(@Path("id") String id);
+
     @GET("meetingroom/")
-    Call<ApiMeetingrooms> queryMeetingroom(@Query("pageNumber") int pageNumber, @Query("pageSize") int
-            pageSize, @Query("utils") String utils, @Query("size") Size size);
+    Call<List<MeetingRoom>> queryMeetingroom(@Query("utils") String utils, @Query("size") Size size);
 
     @GET("meetingroom/{id}")
     Call<MeetingRoom> queryMeetingroomById(@Path("id") String id);
+
+    @GET("timeSlice/")
+    Call<List<TimeSlice>> queryTimeSlice(@Query("date") String date, @Query("roomId") String roomId);
+
+    @GET("meeting/")
+    Call<Meeting> queryMeeting(@Query("pageNumber") int pageNumber, @Query("pageSize") int
+            pageSize, @Query("date") String date, @Query("roomId") String roomId, @Query("time")
+            int time);
+
+    @GET("meeting/{id}")
+    Call<Meeting> queryMeetingById(@Path("id") String id);
+
+    @POST("meeting/")
+    Call<Meeting> appointMeetingroom(@Body Meeting meeting);
 
 }

@@ -3,18 +3,21 @@ package com.huangtao.user.model;
 import com.huangtao.user.model.meta.MeetingType;
 import com.huangtao.user.model.meta.Status;
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.Map;
 
-public class Meeting {
+public class Meeting implements Serializable {
     String id;
 
     String heading;
     String description;
+    String roomId;
+    String date;
     String location;
     int startTime;
     int endTime;
     String hostId;
-    List<String> attendants;
+    Map<String, String> attendants;
     boolean needSignIn;
     String attendantNum;  // a four digit number to attend the meeting
     Status status;
@@ -24,7 +27,7 @@ public class Meeting {
         return id;
     }
 
-    public void setId(String _id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -44,6 +47,46 @@ public class Meeting {
         this.description = description;
     }
 
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+    public int getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(int endTime) {
+        this.endTime = endTime;
+    }
+
     public String getHostId() {
         return hostId;
     }
@@ -52,11 +95,11 @@ public class Meeting {
         this.hostId = hostId;
     }
 
-    public List<String> getAttendants() {
+    public Map<String, String> getAttendants() {
         return attendants;
     }
 
-    public void setAttendants(List<String> attendants) {
+    public void setAttendants(Map<String, String> attendants) {
         this.attendants = attendants;
     }
 
@@ -84,35 +127,31 @@ public class Meeting {
         this.status = status;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public int getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(int startTime) {
-        this.startTime = startTime;
-    }
-
-    public int getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(int endTime) {
-        this.endTime = endTime;
-    }
-
     public MeetingType getType() {
         return type;
     }
 
     public void setType(MeetingType type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "Meeting{" +
+                "id='" + id + '\'' +
+                ", heading='" + heading + '\'' +
+                ", description='" + description + '\'' +
+                ", roomId='" + roomId + '\'' +
+                ", date='" + date + '\'' +
+                ", location='" + location + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", hostId='" + hostId + '\'' +
+                ", attendants=" + attendants +
+                ", needSignIn=" + needSignIn +
+                ", attendantNum='" + attendantNum + '\'' +
+                ", status=" + status +
+                ", type=" + type +
+                '}';
     }
 }

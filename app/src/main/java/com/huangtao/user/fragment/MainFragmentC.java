@@ -1,5 +1,6 @@
 package com.huangtao.user.fragment;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 
@@ -7,6 +8,7 @@ import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.huangtao.user.R;
+import com.huangtao.user.activity.MeetingActivity;
 import com.huangtao.user.common.MyLazyFragment;
 import com.huangtao.user.common.UIActivity;
 
@@ -71,7 +73,8 @@ public class MainFragmentC extends MyLazyFragment
     @Override
     public void onClick(View v) {
         if (v == mToastView) {
-            toast("我是吐司");
+            Intent intent = new Intent(getFragmentActivity(), MeetingActivity.class);
+            startActivity(intent);
         }else if (v == mPermissionView) {
             XXPermissions.with(getFragmentActivity())
                     //.constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝

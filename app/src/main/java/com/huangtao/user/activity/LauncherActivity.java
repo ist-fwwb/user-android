@@ -11,7 +11,9 @@ import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.huangtao.user.R;
+import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyActivity;
+import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.network.FileManagement;
 
 import java.util.List;
@@ -53,6 +55,7 @@ public class LauncherActivity extends MyActivity
     @Override
     protected void initData() {
         FileManagement.init(getApplicationContext());
+        Constants.uid = CommonUtils.getStringFromSharedPreference(this, Constants.KEY_UID);
     }
 
     private static final int ANIM_TIME = 1000;

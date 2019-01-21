@@ -86,7 +86,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@mipmap/ic_appoint" />
+                        android:src="@mipmap/ic_person_appoint" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -129,7 +129,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@mipmap/ic_msg" />
+                        android:src="@mipmap/ic_person_message" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -172,7 +172,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@mipmap/ic_queue" />
+                        android:src="@mipmap/ic_person_queue" />
 
                     <TextView
                         android:layout_width="wrap_content"

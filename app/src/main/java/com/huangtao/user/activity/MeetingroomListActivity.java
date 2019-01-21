@@ -1,6 +1,9 @@
 package com.huangtao.user.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +15,6 @@ import com.huangtao.user.adapter.MeetingroomListAdapter;
 import com.huangtao.user.common.MyActivity;
 import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.network.Network;
-import com.huangtao.user.network.model.ApiMeetingrooms;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,8 @@ public class MeetingroomListActivity extends MyActivity {
     MeetingroomListAdapter meetingroomListAdapter;
 
     List<MeetingRoom> datas;
+
+    BroadcastReceiver receiver;
 
     @Override
     protected int getLayoutId() {
@@ -59,20 +63,21 @@ public class MeetingroomListActivity extends MyActivity {
     protected void initData() {
         showProgressBar();
 
-        Network.getInstance().queryMeetingroom(1, 20, null, null).enqueue(new Callback<ApiMeetingrooms>() {
+        Network.getInstance().queryMeetingroom(null, null).enqueue(new Callback<List<MeetingRoom>>() {
             @Override
-            public void onResponse(Call<ApiMeetingrooms> call, Response<ApiMeetingrooms> response) {
+            public void onResponse(Call<List<MeetingRoom>> call, Response<List<MeetingRoom>> response) {
                 hideProgressBar();
-                if (response.body() != null && response.body().getContent() != null) {
-                    datas.addAll(response.body().getContent());
+                if (response.body() != null) {
+                    datas.addAll(response.body());
                     meetingroomListAdapter.notifyDataSetChanged();
                 }
             }
 
             @Override
-            public void onFailure(Call<ApiMeetingrooms> call, Throwable t) {
+            public void onFailure(Call<List<MeetingRoom>> call, Throwable t) {
                 hideProgressBar();
                 toast("加载失败");
+                t.printStackTrace();
             }
         });
 
@@ -85,5 +90,20 @@ public class MeetingroomListActivity extends MyActivity {
             }
         });
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("appointSuccess");
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                finish();
+            }
+        };
+        registerReceiver(receiver, intentFilter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 }

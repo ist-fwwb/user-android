@@ -1,10 +1,14 @@
 package com.huangtao.user.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
@@ -41,6 +45,9 @@ public class MainFragmentDLogin extends MyLazyFragment
     TextView company;
     @BindView(R.id.phone)
     TextView phone;
+
+    @BindView(R.id.logout)
+    RelativeLayout logout;
 
 
     public static MainFragmentDLogin newInstance() {
@@ -95,6 +102,8 @@ public class MainFragmentDLogin extends MyLazyFragment
                 refreshHead(head);
             }
         }
+
+        logout.setOnClickListener(this);
     }
 
     @Override
@@ -107,7 +116,26 @@ public class MainFragmentDLogin extends MyLazyFragment
      */
     @Override
     public void onClick(View v) {
-
+        if (v == logout) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getFragmentActivity());
+            builder.setMessage("确定要退出登录吗？");
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    CommonUtils.logout(getFragmentActivity());
+                    Intent intent = new Intent("login");
+                    intent.putExtra("isLogin", false);
+                    getFragmentActivity().sendBroadcast(intent);
+                }
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.show();
+        }
     }
 
     @Override

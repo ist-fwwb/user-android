@@ -143,12 +143,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="@color/white">
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="60dp"
+                android:background="@color/white">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -160,7 +160,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@mipmap/ic_appoint" />
+                        android:src="@mipmap/ic_person_appoint" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -191,7 +191,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="60dp"
+                android:background="@color/white">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -203,7 +204,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@mipmap/ic_msg" />
+                        android:src="@mipmap/ic_person_message" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -234,7 +235,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="60dp"
+                android:background="@color/white">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -246,13 +248,52 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@mipmap/ic_queue" />
+                        android:src="@mipmap/ic_person_queue" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="排队"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/ic_arrow_right"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/logout"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="10dp">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@mipmap/ic_logout" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="退出登录"
                         android:layout_gravity="center_vertical"
                         android:textSize="16sp"/>
 

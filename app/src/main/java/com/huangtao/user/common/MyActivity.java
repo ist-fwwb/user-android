@@ -1,5 +1,7 @@
 package com.huangtao.user.common;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.view.View;
 
@@ -131,5 +133,21 @@ public abstract class MyActivity extends UIActivity
 
     public void toast(Object object) {
         ToastUtils.show(object);
+    }
+
+    public void showDialog(String msg, String btnMsg, DialogInterface.OnClickListener listen){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(msg);
+        builder.setPositiveButton(btnMsg, listen);
+        builder.show();
+    }
+
+    public void showDialog(String msg, String posBtn, DialogInterface.OnClickListener posListen,
+                           String negBtn, DialogInterface.OnClickListener negListen) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(msg);
+        builder.setPositiveButton(posBtn, posListen);
+        builder.setNegativeButton(negBtn, negListen);
+        builder.show();
     }
 }

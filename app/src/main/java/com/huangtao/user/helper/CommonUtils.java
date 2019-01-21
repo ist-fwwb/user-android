@@ -1,7 +1,11 @@
 package com.huangtao.user.helper;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import com.huangtao.user.common.Constants;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -10,6 +14,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class CommonUtils {
 
@@ -91,6 +101,96 @@ public class CommonUtils {
             System.out.println("文件不存在！");
         }
         return null;
+    }
+
+    public static List<String> getDayOfWeek(long curTime) {
+        List<String> result = new ArrayList<>();
+        String[] days = new String[]{"Error", "日", "一", "二", "三", "四", "五", "六"};
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date(curTime));
+
+        int today = cal.get(Calendar.DAY_OF_WEEK);
+
+        while (true) {
+            if (result.size() >= 5)
+                break;
+            if (today != 1 && today != 7) {
+                // 跳过周六周日
+                result.add(days[today]);
+            }
+            today = today % 7 + 1;
+        }
+
+        return result;
+    }
+
+    public static List<String> getDateOfWeek(long curTime) {
+        List<String> result = new ArrayList<>();
+        long day = 1000 * 60 * 60 * 24;
+
+        Calendar cal = Calendar.getInstance();
+        for (int i = 0; i < 7; i++) {
+            cal.setTime(new Date(curTime + i * day));
+            int week = cal.get(Calendar.DAY_OF_WEEK);
+
+            if (week == 1 || week == 7) {
+                // 跳过周六周日
+                continue;
+            }
+
+            String mMonth = String.valueOf(cal.get(Calendar.MONTH) + 1);// 获取当前月份
+            if(mMonth.length() == 1){
+                mMonth = 0 + mMonth;
+            }
+            String mDay = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));// 获取当前月份的日期号码
+            if(mDay.length() == 1){
+                mDay = 0 + mDay;
+            }
+            result.add(mMonth + "." + mDay);
+        }
+        return result;
+    }
+
+    public static String dateToWeek(String datetime) {
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        String[] weekDays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+        Calendar cal = Calendar.getInstance(); // 获得一个日历
+        Date datet = null;
+        try {
+            datet = f.parse(datetime);
+            cal.setTime(datet);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int w = cal.get(Calendar.DAY_OF_WEEK) - 1; // 指示一个星期中的某天。
+        if (w < 0)
+            w = 0;
+        return weekDays[w];
+    }
+
+    public static void saveSharedPreference(Context context, String key, String value){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("meeting", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public static String getStringFromSharedPreference(Context context, String key){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("meeting", Context.MODE_PRIVATE);
+        return sharedPreferences.getString(key, "");
+    }
+
+    public static String getFormatTime(int start, int end) {
+        String first = start / 2 + ":" + ((start + 1) % 2 == 0 ? "30" : "00");
+        String last = end / 2 + ":" + ((end + 1) % 2 == 0 ? "30" : "00");
+        return first + "-" + last;
+    }
+
+    public static void logout(Context context) {
+        Constants.uid = "";
+        Constants.user = null;
+        saveSharedPreference(context, "uid", "");
     }
 
 }

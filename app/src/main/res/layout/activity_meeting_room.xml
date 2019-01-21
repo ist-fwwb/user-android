@@ -428,15 +428,42 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <Button
+    <RelativeLayout
         android:id="@+id/order"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         app:layout_anchor="@id/scrollView"
         app:layout_anchorGravity="bottom"
         android:background="@color/douban_blue_80_percent"
-        android:text="立即预定"
         android:textColor="@color/white"
-        android:textSize="16sp"/>
+        android:textSize="16sp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="立即预定"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/btn_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="周二 10:00-12:00"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

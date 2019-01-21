@@ -1,11 +1,15 @@
 package com.huangtao.user.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
@@ -13,15 +17,23 @@ import com.hjq.bar.TitleBar;
 import com.huangtao.user.R;
 import com.huangtao.user.adapter.MeetingRoomOrderAdapter;
 import com.huangtao.user.common.MyActivity;
+import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.model.MeetingRoom;
+import com.huangtao.user.model.TimeSlice;
 import com.huangtao.user.model.meta.MeetingRoomUtils;
+import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
 import com.kelin.scrollablepanel.library.ScrollablePanel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MeetingRoomActivity extends MyActivity implements View.OnClickListener, XCollapsingToolbarLayout.OnScrimsListener {
     @BindView(R.id.appbar)
@@ -40,7 +52,9 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
     NestedScrollView scrollView;
 
     @BindView(R.id.order)
-    Button order;
+    RelativeLayout order;
+    @BindView(R.id.btn_time)
+    TextView btnTime;
 
     @BindView(R.id.name)
     TextView name;
@@ -69,8 +83,10 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
     ScrollablePanel scrollablePanel;
 
     private MeetingRoom meetingRoom;
-    private boolean dateSelected = false;
-    private List<List<Boolean>> datas;
+    private Map<String, List<Boolean>> datas;
+    MeetingRoomOrderAdapter orderAdapter;
+
+    BroadcastReceiver receiver;
 
     @Override
     protected int getLayoutId() {
@@ -91,10 +107,7 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
         mCollapsingToolbarLayout.setOnScrimsListener(this);
         getStatusBarConfig().statusBarDarkFont(false).init();
 
-        datas = new ArrayList<>();
-
-        MeetingRoomOrderAdapter orderAdapter = new MeetingRoomOrderAdapter(datas, (int) ((getWindowManager().getDefaultDisplay().getWidth() * 0.9) / 5));
-        scrollablePanel.setPanelAdapter(orderAdapter);
+        datas = new HashMap<>();
     }
 
     @Override
@@ -126,14 +139,66 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
             }
         }
 
+        // 初始化预定表格
+        final List<String> dates = CommonUtils.getDateOfWeek(System.currentTimeMillis());
+        Network.getInstance().queryTimeSlice(null, meetingRoom.getId()).enqueue(new Callback<List<TimeSlice>>() {
+            @Override
+            public void onResponse(Call<List<TimeSlice>> call, Response<List<TimeSlice>> response) {
+                if (response.body() != null) {
+                    List<TimeSlice> slices = response.body();
+
+                    for (TimeSlice slice : slices) {
+                        String month = slice.getDate().split("-")[1];
+                        String day = slice.getDate().split("-")[2];
+                        if (!dates.contains(month + "." + day)) {
+                            continue;
+                        }
+                        List<Boolean> canOrder = new ArrayList<>();
+                        for (String sliceStr : slice.getTimeSlice()) {
+                            if (sliceStr == null) {
+                                canOrder.add(true);
+                            } else {
+                                canOrder.add(false);
+                            }
+                        }
+                        datas.put(month + "." + day, canOrder);
+                    }
+                    orderAdapter = new MeetingRoomOrderAdapter(MeetingRoomActivity.this, datas, (int) ((getWindowManager().getDefaultDisplay().getWidth() * 0.9) / 5), btnTime);
+                    scrollablePanel.setPanelAdapter(orderAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TimeSlice>> call, Throwable t) {
+                toast("网络请求失败");
+                t.printStackTrace();
+            }
+        });
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("appointSuccess");
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                finish();
+            }
+        };
+        registerReceiver(receiver, intentFilter);
     }
 
 
     @Override
     public void onClick(View v) {
         if(v == order){
-            if(dateSelected){
-
+            if(orderAdapter.selectedColumn >= 0){
+                Intent intent = new Intent(this, AppointActivity.class);
+                intent.putExtra("meetingroom", meetingRoom);
+                intent.putExtra("date", CommonUtils.getDateOfWeek(System.currentTimeMillis()).get(orderAdapter.selectedColumn));
+                intent.putExtra("week", "周" + CommonUtils.getDayOfWeek(System.currentTimeMillis()).get(orderAdapter.selectedColumn));
+                intent.putExtra("start", orderAdapter.selectedRowFirst);
+                // 左闭右开
+                intent.putExtra("end", orderAdapter.selectedRowLast + 1);
+                startActivity(intent);
             } else {
                 appBarLayout.setExpanded(false);
                 int y = order.getTop();
@@ -155,5 +220,11 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
             titleBar.setLeftIcon(null);
             getStatusBarConfig().statusBarDarkFont(false).init();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 }
