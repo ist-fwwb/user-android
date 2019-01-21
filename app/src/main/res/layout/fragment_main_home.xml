@@ -221,63 +221,17 @@
                     android:id="@+id/meeting_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="15dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginBottom="15dp">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/bg_home_meeting">
-
-                        <TextView
-                            android:id="@+id/meeting_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginTop="16dp"
-                            android:text="会议名称"
-                            android:textColor="@color/douban_gray"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:id="@+id/meeting_location"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/meeting_name"
-                            android:layout_alignLeft="@id/meeting_name"
-                            android:layout_marginTop="3dp"
-                            android:text="会议地点"
-                            android:textColor="@color/douban_gray_55_percent"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/meeting_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/meeting_name"
-                            android:layout_alignTop="@id/meeting_location"
-                            android:layout_marginLeft="5dp"
-                            android:layout_toRightOf="@id/meeting_location"
-                            android:text="会议时间"
-                            android:textColor="@color/douban_gray_55_percent"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/meeting_status"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="10dp"
-                            android:text="进行中"
-                            android:textColor="@color/douban_red"
-                            android:textSize="12sp" />
-
-                    </RelativeLayout>
-
+                    <TextView
+                        android:id="@+id/no_meeting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="14sp"
+                        android:text="暂无会议"
+                        android:textColor="@color/douban_gray_55_percent"/>
                 </LinearLayout>
 
             </LinearLayout>
