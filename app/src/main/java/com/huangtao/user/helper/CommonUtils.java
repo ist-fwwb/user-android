@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.huangtao.user.common.Constants;
+
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -183,6 +185,12 @@ public class CommonUtils {
         String first = start / 2 + ":" + ((start + 1) % 2 == 0 ? "30" : "00");
         String last = end / 2 + ":" + ((end + 1) % 2 == 0 ? "30" : "00");
         return first + "-" + last;
+    }
+
+    public static void logout(Context context) {
+        Constants.uid = "";
+        Constants.user = null;
+        saveSharedPreference(context, "uid", "");
     }
 
 }

@@ -141,4 +141,13 @@ public abstract class MyActivity extends UIActivity
         builder.setPositiveButton(btnMsg, listen);
         builder.show();
     }
+
+    public void showDialog(String msg, String posBtn, DialogInterface.OnClickListener posListen,
+                           String negBtn, DialogInterface.OnClickListener negListen) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(msg);
+        builder.setPositiveButton(posBtn, posListen);
+        builder.setNegativeButton(negBtn, negListen);
+        builder.show();
+    }
 }
