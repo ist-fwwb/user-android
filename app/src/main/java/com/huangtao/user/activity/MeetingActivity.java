@@ -118,9 +118,7 @@ public class MeetingActivity extends MyActivity {
      * 传入meeting对象 or id后，更新ui
      */
     private void init() {
-        String first = meeting.getStartTime() / 2 + ":" + ((meeting.getStartTime() + 1) % 2 == 0 ? "30" : "00");
-        String last = meeting.getEndTime() / 2 + ":" + ((meeting.getEndTime() + 1) % 2 == 0 ? "30" : "00");
-        time.setText(first+" - "+last);
+        time.setText(CommonUtils.getFormatTime(meeting.getStartTime(), meeting.getEndTime()));
 
         String month = meeting.getDate().split("-")[1];
         final String day = meeting.getDate().split("-")[2];

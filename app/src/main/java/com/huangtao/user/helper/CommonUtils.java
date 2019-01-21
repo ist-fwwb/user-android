@@ -176,7 +176,13 @@ public class CommonUtils {
 
     public static String getStringFromSharedPreference(Context context, String key){
         SharedPreferences sharedPreferences = context.getSharedPreferences("meeting", Context.MODE_PRIVATE);
-        return sharedPreferences.getString(key, null);
+        return sharedPreferences.getString(key, "");
+    }
+
+    public static String getFormatTime(int start, int end) {
+        String first = start / 2 + ":" + ((start + 1) % 2 == 0 ? "30" : "00");
+        String last = end / 2 + ":" + ((end + 1) % 2 == 0 ? "30" : "00");
+        return first + "-" + last;
     }
 
 }

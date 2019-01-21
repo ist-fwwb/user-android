@@ -14,6 +14,7 @@ import com.huangtao.user.R;
 import com.huangtao.user.adapter.MainFragmentAdapter;
 import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyActivity;
+import com.huangtao.user.fragment.MainFragmentD;
 import com.huangtao.user.fragment.MainFragmentDLogin;
 import com.huangtao.user.helper.ActivityStackManager;
 import com.huangtao.user.helper.DoubleClickHelper;
@@ -69,18 +70,27 @@ public class MainActivity extends MyActivity implements
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mPagerAdapter.refresh(3, MainFragmentDLogin.newInstance());
-                Log.i("login", "refresh");
+                if (intent.getBooleanExtra("isLogin", true)) {
+                    mPagerAdapter.refresh(3, MainFragmentDLogin.newInstance());
+                    Log.i("login", "refresh");
+                } else {
+                    mPagerAdapter.refresh(3, MainFragmentD.newInstance());
+                    Log.i("login", "log out");
+                }
             }
         };
         registerReceiver(receiver, intentFilter);
 
-        if(Constants.uid != null){
+        if(!Constants.uid.isEmpty()){
             Network.getInstance().queryUserById(Constants.uid).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-                    if(response.body() != null)
+                    if(response.body() != null) {
                         Constants.user = response.body();
+                        // 更新ui
+                        Intent intent = new Intent("login");
+                        sendBroadcast(intent);
+                    }
                 }
 
                 @Override
@@ -88,6 +98,8 @@ public class MainActivity extends MyActivity implements
 
                 }
             });
+        } else {
+            startActivity(LoginActivity.class);
         }
     }
 
