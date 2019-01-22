@@ -83,7 +83,7 @@ public class MeetingroomListAdapter extends RecyclerView.Adapter<MeetingroomList
                 (Calendar.HOUR) * 2 + calendar.get(Calendar.MINUTE) / 30).enqueue(new Callback<List<Meeting>>() {
             @Override
             public void onResponse(Call<List<Meeting>> call, Response<List<Meeting>> response) {
-                if (response.body().size() == 0) {
+                if (response.body() == null || response.body().size() == 0 || response.body().get(0) == null) {
                     viewHolder.status.setText("今日暂无会议");
                 } else {
                     Meeting meeting = response.body().get(0);

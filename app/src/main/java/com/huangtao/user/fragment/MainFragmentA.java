@@ -1,10 +1,15 @@
 package com.huangtao.user.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,8 +22,11 @@ import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyLazyFragment;
 import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.model.Meeting;
+import com.huangtao.user.model.meta.Status;
 import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
+import com.uuzuche.lib_zxing.activity.CaptureActivity;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -56,6 +64,8 @@ public class MainFragmentA extends MyLazyFragment
     TextView noMeeting;
     @BindView(R.id.meeting_container)
     LinearLayout meetingContainer;
+    @BindView(R.id.meeting_refresh)
+    ImageView meetingRefresh;
 
     public static MainFragmentA newInstance() {
         return new MainFragmentA();
@@ -83,72 +93,113 @@ public class MainFragmentA extends MyLazyFragment
         appoint.setOnClickListener(this);
         appointSmart.setOnClickListener(this);
         addMeeting.setOnClickListener(this);
+        meetingRefresh.setOnClickListener(this);
     }
 
     @Override
     protected void initData() {
         if(!Constants.uid.isEmpty()){
-            // 今日会议
-            Date dt = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
-            Network.getInstance().queryMeetingByUid(Constants.uid, sdf.format(dt)).enqueue(new Callback<List<Meeting>>() {
-                @Override
-                public void onResponse(Call<List<Meeting>> call, Response<List<Meeting>> response) {
-                    List<Meeting> meetings = response.body();
-                    if (meetings.size() > 0) {
-                        noMeeting.setVisibility(View.GONE);
+            initMeetingList(false);
+        }
+    }
 
-                        for (final Meeting meeting : meetings) {
-                            View v = LayoutInflater.from(getFragmentActivity()).inflate(R.layout.layout_main_meeting, null);
+    private void initMeetingList(final boolean isRefresh) {
+        // 今日会议
+        Date dt = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        Network.getInstance().queryMeetingByUid(Constants.uid, sdf.format(dt)).enqueue(new Callback<List<Meeting>>() {
+            @Override
+            public void onResponse(Call<List<Meeting>> call, Response<List<Meeting>> response) {
+                List<Meeting> meetings = response.body();
+                meetingContainer.removeAllViews();
+                if (meetings.size() > 0) {
+                    noMeeting.setVisibility(View.GONE);
 
-                            TextView name = v.findViewById(R.id.name);
-                            TextView location = v.findViewById(R.id.location);
-                            TextView time = v.findViewById(R.id.time);
-                            TextView status = v.findViewById(R.id.status);
+                    for (final Meeting meeting : meetings) {
+                        View v = LayoutInflater.from(getFragmentActivity()).inflate(R.layout.layout_main_meeting, null);
 
-                            name.setText(meeting.getHeading());
-                            location.setText(meeting.getLocation());
-                            time.setText(CommonUtils.getFormatTime(meeting.getStartTime(), meeting.getEndTime()));
+                        TextView name = v.findViewById(R.id.name);
+                        TextView location = v.findViewById(R.id.location);
+                        TextView time = v.findViewById(R.id.time);
+                        TextView status = v.findViewById(R.id.status);
 
-                            switch (meeting.getStatus()){
-                                case Pending:
-                                    status.setText("未开始");
-                                    status.setTextColor(getFragmentActivity().getColor(R.color.douban_green));
-                                    break;
-                                case Running:
-                                    status.setText("进行中");
-                                    break;
-                                case Stopped:
-                                    status.setText("已结束");
-                                    status.setTextColor(getFragmentActivity().getColor(R.color.douban_gray));
-                                    break;
-                                case Cancelled:
-                                    status.setText("已取消");
-                                    status.setTextColor(getFragmentActivity().getColor(R.color.douban_gray));
-                                    break;
-                            }
+                        name.setText(!meeting.getHeading().isEmpty() ? meeting.getHeading() : "无主题");
+                        location.setText(meeting.getLocation());
+                        time.setText(CommonUtils.getFormatTime(meeting.getStartTime(), meeting.getEndTime()));
 
-                            v.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(getFragmentActivity(), MeetingActivity.class);
-                                    intent.putExtra("meeting", meeting);
-                                    startActivity(intent);
-                                }
-                            });
-
-                            meetingContainer.addView(v);
+                        switch (meeting.getStatus()){
+                            case Pending:
+                                status.setText("未开始");
+                                status.setTextColor(getFragmentActivity().getColor(R.color.douban_green));
+                                break;
+                            case Running:
+                                status.setText("进行中");
+                                break;
+                            case Stopped:
+                                status.setText("已结束");
+                                status.setTextColor(getFragmentActivity().getColor(R.color.douban_gray_55_percent));
+                                break;
+                            case Cancelled:
+                                status.setText("已取消");
+                                status.setTextColor(getFragmentActivity().getColor(R.color.douban_gray_55_percent));
+                                break;
                         }
 
+                        v.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(getFragmentActivity(), MeetingActivity.class);
+                                intent.putExtra("id", meeting.getId());
+                                startActivity(intent);
+                            }
+                        });
+
+                        if(meeting.getStatus() != Status.Cancelled)
+                            meetingContainer.addView(v);
                     }
-                }
 
-                @Override
-                public void onFailure(Call<List<Meeting>> call, Throwable t) {
-
+                    if(isRefresh){
+                        toast("刷新成功");
+                    }
+                } else {
+                    noMeeting.setVisibility(View.VISIBLE);
                 }
-            });
-        }
+            }
+
+            @Override
+            public void onFailure(Call<List<Meeting>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void joinMeeting(String attendantNum) {
+        Network.getInstance().joinMeeting(attendantNum, Constants.uid).enqueue(new Callback<Meeting>() {
+            @Override
+            public void onResponse(Call<Meeting> call, final Response<Meeting> response) {
+                if (response != null && response.body() != null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getFragmentActivity());
+                    builder.setMessage("加入成功！");
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(getFragmentActivity(), MeetingActivity.class);
+                            intent.putExtra("id", response.body().getId());
+                            startActivity(intent);
+                        }
+                    });
+                    builder.show();
+                } else {
+                    toast("加入失败");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Meeting> call, Throwable t) {
+                toast("加入失败");
+                t.printStackTrace();
+            }
+        });
     }
 
     @Override
@@ -187,7 +238,54 @@ public class MainFragmentA extends MyLazyFragment
         } else if (v == appointSmart) {
 
         } else if (v == addMeeting) {
+            final String[] items = { "扫一扫","输入会议码"};
+            AlertDialog.Builder listDialog = new AlertDialog.Builder(getFragmentActivity());
+            listDialog.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case 0:
+                            Intent intent = new Intent(getFragmentActivity(), CaptureActivity.class);
+                            startActivityForResult(intent, 0);
+                            break;
+                        case 1:
+                            final EditText editText = new EditText(getFragmentActivity());
+                            AlertDialog.Builder inputDialog = new AlertDialog.Builder(getFragmentActivity());
+                            inputDialog.setTitle("请输入会议码").setView(editText);
+                            inputDialog.setPositiveButton("确定",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            joinMeeting(editText.getText().toString());
+                                        }
+                                    }).show();
+                            break;
+                    }
+                }
+            });
+            listDialog.show();
+        } else if (v == meetingRefresh) {
+            initMeetingList(true);
+        }
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        /**
+         * 处理二维码扫描结果
+         */
+        if (requestCode == 0) {
+            //处理扫描结果（在界面上显示）
+            if (null != data) {
+                Bundle bundle = data.getExtras();
+                if (bundle == null) {
+                    return;
+                }
+                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                    String result = bundle.getString(CodeUtils.RESULT_STRING);
+                    joinMeeting(result);
+                }
+            }
         }
     }
 }

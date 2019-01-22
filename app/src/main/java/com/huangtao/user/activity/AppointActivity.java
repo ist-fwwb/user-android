@@ -102,7 +102,7 @@ public class AppointActivity extends MyActivity {
                             Meeting result = response.body();
 
                             final Intent intent = new Intent(AppointActivity.this, MeetingActivity.class);
-                            intent.putExtra("meeting", result);
+                            intent.putExtra("id", result.getId());
 
                             showDialog("预定成功！", "确定", new DialogInterface.OnClickListener() {
                                 @Override
