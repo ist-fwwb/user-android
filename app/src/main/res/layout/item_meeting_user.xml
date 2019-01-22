@@ -14,7 +14,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
-            android:src="@mipmap/ic_launcher"
+            android:src="@mipmap/ic_person_default"
             app:civ_border_color="@color/douban_gray_28_percent"
             app:civ_border_width="1dp" />
 
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="2dp"
-            android:text="安卓人"
+            android:text="loading"
             android:textColor="@color/douban_gray"
             android:textSize="10sp" />
 

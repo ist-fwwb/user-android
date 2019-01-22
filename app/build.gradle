@@ -179,6 +179,9 @@ dependencies {
 
     // qrcode
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
+
+    // pinyin
+    implementation 'com.belerweb:pinyin4j:2.5.0'
 }
 
 repositories {

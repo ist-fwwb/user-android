@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <!-- 震动 -->
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".common.MyApplication"
@@ -81,8 +81,8 @@
         <activity android:name=".activity.MeetingroomListActivity" />
         <activity android:name=".activity.MeetingRoomActivity" />
         <activity android:name=".activity.AppointActivity" />
-        <activity android:name=".activity.MeetingActivity">
-        </activity>
+        <activity android:name=".activity.MeetingActivity"></activity>
+        <activity android:name=".activity.AddressBookActivity"></activity>
     </application>
 
 </manifest>

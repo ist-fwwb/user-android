@@ -1,8 +1,9 @@
 package com.huangtao.user.model;
 
+import com.huangtao.user.helper.ChineseUtils;
 import com.huangtao.user.model.meta.Type;
 
-public class User {
+public class User implements Comparable<User> {
     String id;
     String enterpriceId;
     String phone;
@@ -88,5 +89,22 @@ public class User {
                 ", faceFile='" + faceFile + '\'' +
                 ", featureFile='" + featureFile + '\'' +
                 '}';
+    }
+
+    public String getHeaderChar() {
+        String header = ChineseUtils.getUpperCase(name, false).substring(0, 1);
+        if (header.charAt(0) >= 'A' && header.charAt(0) <= 'Z')
+            return header;
+        return "#";
+    }
+
+    @Override
+    public int compareTo(User o) {
+        if (getHeaderChar().charAt(0) < o.getHeaderChar().charAt(0)) {
+            return -1;
+        } else if (getHeaderChar().charAt(0) == o.getHeaderChar().charAt(0)) {
+            return 0;
+        }
+        return 1;
     }
 }
