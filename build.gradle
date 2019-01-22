@@ -15,6 +15,9 @@ allprojects {
         google()
         maven {url "https://maven.google.com"}
         jcenter() { url 'http://jcenter.bintray.com/'}
+        maven{
+            url 'http://maven.aliyun.com/nexus/content/repositories/releases/'
+        }
     }
 
     //解决app:mockableAndroidJar错误的问题
