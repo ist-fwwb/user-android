@@ -5,6 +5,7 @@ import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.model.TimeSlice;
 import com.huangtao.user.model.User;
 import com.huangtao.user.model.meta.Size;
+import com.huangtao.user.model.meta.Type;
 
 import java.util.List;
 
@@ -30,6 +31,9 @@ public interface Api {
                         @Query("password") String password, @Query("name") String name, @Query
                                 ("faceFile") String faceFile, @Query("featureFile") String
                                 featureFile);
+
+    @GET("user/")
+    Call<List<User>> queryUser(@Query("type") Type type, @Query("ids") List<String> ids);
 
     @GET("user/{id}")
     Call<User> queryUserById(@Path("id") String id);

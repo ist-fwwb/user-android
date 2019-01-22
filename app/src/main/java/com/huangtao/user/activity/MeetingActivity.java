@@ -13,7 +13,6 @@ import com.huangtao.user.R;
 import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyActivity;
 import com.huangtao.user.helper.CommonUtils;
-import com.huangtao.user.helper.DimensUtils;
 import com.huangtao.user.model.Meeting;
 import com.huangtao.user.model.User;
 import com.huangtao.user.network.FileManagement;
@@ -173,7 +172,7 @@ public class MeetingActivity extends MyActivity {
                 v.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        startActivity(AddressBookActivity.class);
                     }
                 });
             }
@@ -282,8 +281,8 @@ public class MeetingActivity extends MyActivity {
                 QRCodeDialog.Builder builder = new QRCodeDialog.Builder(MeetingActivity.this);
                 builder.setMessage(meeting.getAttendantNum());
                 builder.setQrcode(CodeUtils.createImage(meeting.getAttendantNum(), 400, 400, null));
-                builder.setWidth((int) (DimensUtils.getScreenWidth(MeetingActivity.this) * 0.7));
-                builder.setHeight((int) (DimensUtils.getScreenHeight(MeetingActivity.this) * 0.5));
+//                builder.setWidth((int) (DimensUtils.getScreenWidth(MeetingActivity.this) * 0.7));
+//                builder.setHeight((int) (DimensUtils.getScreenHeight(MeetingActivity.this) * 0.5));
                 builder.create().show();
             }
         });
