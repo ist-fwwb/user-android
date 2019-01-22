@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.hjq.toast.ToastUtils;
 import com.huangtao.user.R;
 import com.huangtao.user.common.Constants;
@@ -80,7 +81,7 @@ public class LoginActivity extends MyActivity
             String phone = mPhoneView.getText().toString();
             String password = mPasswordView.getText().toString();
 
-            Network.getInstance().login(phone, password).enqueue(new Callback<User>() {
+            Network.getInstance().login(phone, password, PushServiceFactory.getCloudPushService().getDeviceId()).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     hideProgressBar();

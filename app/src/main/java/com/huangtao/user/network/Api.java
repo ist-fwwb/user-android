@@ -24,7 +24,7 @@ public interface Api {
 
     // user
     @POST("user/login")
-    Call<User> login(@Query("phone") String phone, @Query("password") String password);
+    Call<User> login(@Query("phone") String phone, @Query("password") String password, @Query("deviceId") String deviceId);
 
     @POST("user/")
     Call<User> register(@Query("enterpriseId") String enterpriseId, @Query("phone") String phone,

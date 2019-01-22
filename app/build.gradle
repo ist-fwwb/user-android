@@ -10,6 +10,10 @@ android {
         versionCode 10
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            //选择要添加的对应cpu类型的.so库。
+            abiFilters 'armeabi', 'x86'
+        }
     }
 
     //APK 签名的那些事：https://www.jianshu.com/p/a1f8e5896aa2
@@ -168,7 +172,9 @@ dependencies {
     implementation 'com.victor:lib:1.0.4'
 
     // oss
-    implementation 'com.aliyun.dpa:oss-android-sdk:+'
+    implementation ('com.aliyun.dpa:oss-android-sdk:+'){
+        exclude (module: 'alicloud-android-utdid')
+    }
 
     // table
     implementation 'com.kelin.scrollablepanel:library:1.2.0'
@@ -179,9 +185,15 @@ dependencies {
 
     // qrcode
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
+    
+    //push
+    implementation ('com.aliyun.ams:alicloud-android-push:3.1.4'){
+        exclude (module: 'alicloud-android-utdid')
+    }
 
     // pinyin
     implementation 'com.belerweb:pinyin4j:2.5.0'
+
 }
 
 repositories {
