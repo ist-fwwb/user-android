@@ -24,6 +24,7 @@ import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.model.TimeSlice;
 import com.huangtao.user.model.User;
 import com.huangtao.user.model.meta.MeetingRoomUtils;
+import com.huangtao.user.model.meta.Status;
 import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
 import com.kelin.scrollablepanel.library.ScrollablePanel;
@@ -182,11 +183,11 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
                                 break;
                             case Stopped:
                                 status.setText("已结束");
-                                status.setTextColor(MeetingRoomActivity.this.getColor(R.color.douban_gray));
+                                status.setTextColor(MeetingRoomActivity.this.getColor(R.color.douban_gray_55_percent));
                                 break;
                             case Cancelled:
                                 status.setText("已取消");
-                                status.setTextColor(MeetingRoomActivity.this.getColor(R.color.douban_gray));
+                                status.setTextColor(MeetingRoomActivity.this.getColor(R.color.douban_gray_55_percent));
                                 break;
                         }
 
@@ -213,7 +214,8 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
                             }
                         });
 
-                        meetingContainer.addView(v);
+                        if(meeting.getStatus() != Status.Cancelled)
+                            meetingContainer.addView(v);
                     }
 
                 }
@@ -297,7 +299,7 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
                 startActivity(intent);
             } else {
                 appBarLayout.setExpanded(false);
-                int y = order.getTop();
+                int y = orderLayout.getTop();
                 scrollView.smoothScrollTo(0, y);
             }
         }

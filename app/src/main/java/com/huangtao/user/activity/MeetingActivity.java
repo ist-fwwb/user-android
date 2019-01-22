@@ -105,7 +105,6 @@ public class MeetingActivity extends MyActivity {
                     } else {
                         toast("返回值为空");
                     }
-                    hideProgressBar();
                 }
 
                 @Override
@@ -288,6 +287,12 @@ public class MeetingActivity extends MyActivity {
                 builder.create().show();
             }
         });
+
+
+
+
+
+        hideProgressBar();
 
     }
 

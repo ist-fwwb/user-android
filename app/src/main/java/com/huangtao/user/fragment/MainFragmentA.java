@@ -22,6 +22,7 @@ import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyLazyFragment;
 import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.model.Meeting;
+import com.huangtao.user.model.meta.Status;
 import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
@@ -136,11 +137,11 @@ public class MainFragmentA extends MyLazyFragment
                                 break;
                             case Stopped:
                                 status.setText("已结束");
-                                status.setTextColor(getFragmentActivity().getColor(R.color.douban_gray));
+                                status.setTextColor(getFragmentActivity().getColor(R.color.douban_gray_55_percent));
                                 break;
                             case Cancelled:
                                 status.setText("已取消");
-                                status.setTextColor(getFragmentActivity().getColor(R.color.douban_gray));
+                                status.setTextColor(getFragmentActivity().getColor(R.color.douban_gray_55_percent));
                                 break;
                         }
 
@@ -153,7 +154,8 @@ public class MainFragmentA extends MyLazyFragment
                             }
                         });
 
-                        meetingContainer.addView(v);
+                        if(meeting.getStatus() != Status.Cancelled)
+                            meetingContainer.addView(v);
                     }
 
                     if(isRefresh){

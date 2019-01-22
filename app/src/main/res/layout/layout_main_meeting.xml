@@ -19,7 +19,8 @@
             android:layout_marginTop="16dp"
             android:text="会议名称"
             android:textColor="@color/douban_gray"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:maxLines="1"/>
 
         <TextView
             android:id="@+id/location"

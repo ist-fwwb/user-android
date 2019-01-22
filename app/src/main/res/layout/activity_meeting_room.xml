@@ -100,7 +100,8 @@
                     android:layout_marginTop="6dp"
                     android:textSize="14sp"
                     android:textColor="@color/douban_gray"
-                    android:text="该会议室位于上海交通大学软件学院5号楼3楼，隶属于软件学院IST实验室，但同时开放给所有人使用。实验室通风好，光线充足，但没网"/>
+                    android:lineHeight="22dp"
+                    android:text="该会议室位于上海交通大学软件学院5号楼3楼，隶属于软件学院IST实验室，但同时开放给所有人使用。会议室通风好，光线充足，但没网"/>
 
             </LinearLayout>
 
