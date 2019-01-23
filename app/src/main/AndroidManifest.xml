@@ -102,8 +102,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.MeetingActivity"></activity>
-        <activity android:name=".activity.AddressBookActivity"></activity>
+        <activity android:name=".activity.AddressBookActivity"/>
 
     </application>
 
