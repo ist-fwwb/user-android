@@ -1,6 +1,8 @@
 package com.huangtao.user.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -152,36 +154,7 @@ public class MeetingActivity extends MyActivity {
 
         content.setText(!meeting.getDescription().isEmpty() ? meeting.getDescription() : "无内容");
 
-        // 参会者
-        participantNumber.setText("参会者: \n(" + meeting.getAttendants().size() + ")");
-        Network.getInstance().queryAttendantsFromMeeting(meeting.getId()).enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                List<User> users = response.body();
-                for(User user : users) {
-                    addParticipantView(user);
-                }
-
-                View v = LayoutInflater.from(MeetingActivity.this).inflate(R.layout.item_meeting_user, null);
-                TextView attendantName = v.findViewById(R.id.name);
-                ImageView attendantHead = v.findViewById(R.id.head);
-                attendantName.setText("");
-                attendantHead.setImageResource(R.mipmap.ic_add_gray);
-                participantContainer.addView(v);
-                // 添加参会者
-                v.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(AddressBookActivity.class);
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-
-            }
-        });
+        initParticipant();
 
         // 是否需要签到
         if(!meeting.isNeedSignIn()){
@@ -295,6 +268,43 @@ public class MeetingActivity extends MyActivity {
 
     }
 
+    private void initParticipant() {
+        // 参会者
+        participantNumber.setText("参会者: \n(" + meeting.getAttendants().size() + ")");
+        Network.getInstance().queryAttendantsFromMeeting(meeting.getId()).enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                participantContainer.removeAllViews();
+
+                List<User> users = response.body();
+                for(User user : users) {
+                    addParticipantView(user);
+                }
+
+                View v = LayoutInflater.from(MeetingActivity.this).inflate(R.layout.item_meeting_user, null);
+                TextView attendantName = v.findViewById(R.id.name);
+                ImageView attendantHead = v.findViewById(R.id.head);
+                attendantName.setText("");
+                attendantHead.setImageResource(R.mipmap.ic_add_gray);
+                participantContainer.addView(v);
+                // 添加参会者
+                v.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MeetingActivity.this, AddressBookActivity.class);
+                        intent.putExtra("meeting", meeting);
+                        startActivityForResult(intent, 100);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+
+            }
+        });
+    }
+
     private void join() {
         showDialog("确定要加入该会议吗？", "加入", new DialogInterface.OnClickListener() {
             @Override
@@ -403,5 +413,16 @@ public class MeetingActivity extends MyActivity {
                     }
                 });
         participantContainer.addView(v);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 100 && resultCode == RESULT_OK){
+            meeting = (Meeting) data.getSerializableExtra("meeting");
+            initParticipant();
+        }
+
     }
 }

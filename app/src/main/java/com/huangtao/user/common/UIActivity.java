@@ -1,9 +1,9 @@
 package com.huangtao.user.common;
 
+import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -35,6 +35,8 @@ public abstract class UIActivity extends BaseActivity
     @Nullable
     @BindView(R.id.loading_framework)
     RelativeLayout loadingFramework;
+
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,30 +70,43 @@ public abstract class UIActivity extends BaseActivity
     /**
      * 初始化加载条
      */
+//    private void initProgressBar() {
+//        loading = findViewById(R.id.loading);
+//        if(loading != null) {
+//            loading.start();
+//            loading.setLoadingColor(getColor(R.color.douban_blue_80_percent));
+//        }
+//    }
+
     private void initProgressBar() {
-        loading = findViewById(R.id.loading);
-        if(loading != null) {
-            loading.start();
-            loading.setLoadingColor(getColor(R.color.douban_blue_80_percent));
-        }
+        dialog = new ProgressDialog(this);
+        dialog.setMessage("正在加载中…");
     }
+
+//    protected void showProgressBar() {
+//        if(loadingFramework != null) {
+//            loadingFramework.setVisibility(View.VISIBLE);
+//        }
+//        if(loading != null) {
+//            loading.start();
+//        }
+//    }
 
     protected void showProgressBar() {
-        if(loadingFramework != null) {
-            loadingFramework.setVisibility(View.VISIBLE);
-        }
-        if(loading != null) {
-            loading.start();
-        }
+        dialog.show();
     }
 
+//    protected void hideProgressBar() {
+//        if(loadingFramework != null) {
+//            loadingFramework.setVisibility(View.GONE);
+//        }
+//        if(loading != null) {
+//            loading.stop();
+//        }
+//    }
+
     protected void hideProgressBar() {
-        if(loadingFramework != null) {
-            loadingFramework.setVisibility(View.GONE);
-        }
-        if(loading != null) {
-            loading.stop();
-        }
+        dialog.dismiss();
     }
 
     public BGASwipeBackHelper getSwipeBackHelper() {

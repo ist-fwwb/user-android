@@ -5,6 +5,7 @@ import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.model.TimeSlice;
 import com.huangtao.user.model.User;
 import com.huangtao.user.model.meta.Size;
+import com.huangtao.user.model.meta.Status;
 import com.huangtao.user.model.meta.Type;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -38,8 +40,8 @@ public interface Api {
     @GET("user/{id}")
     Call<User> queryUserById(@Path("id") String id);
 
-    @GET("user/{id}/meeting/{date}")
-    Call<List<Meeting>> queryMeetingByUid(@Path("id") String id, @Path("date") String date);
+    @GET("user/{id}/meeting")
+    Call<List<Meeting>> queryMeetingByUid(@Path("id") String id, @Query("date") String date, @Query("status") Status status);
 
     // meeting room
     @GET("meetingroom/")
@@ -73,6 +75,9 @@ public interface Api {
 
     @DELETE("meeting/{id}/attendants/{userId}")
     Call<String> exitMeeting(@Path("id") String id, @Path("userId") String userId);
+
+    @PUT("meeting/{id}")
+    Call<Meeting> modifyMeeting(@Body Meeting meeting);
 
 
 

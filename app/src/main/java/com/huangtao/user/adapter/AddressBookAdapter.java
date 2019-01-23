@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -37,11 +38,14 @@ public class AddressBookAdapter extends BaseAdapter {
 
     private TitleBar titleBar;
 
-    public AddressBookAdapter(Context context, TitleBar titleBar) {
+    private Set<String> attendents;
+
+    public AddressBookAdapter(Context context, TitleBar titleBar, Set<String> attendents) {
         this.context = context;
         mContactList = new ArrayList<>();
         selectedPosition = new ArrayList<>();
         this.titleBar = titleBar;
+        this.attendents = attendents;
     }
 
     public void addData(List<User> list) {
@@ -97,8 +101,11 @@ public class AddressBookAdapter extends BaseAdapter {
 
         if(selectedPosition.contains(position)){
             holder.checkBox.setImageResource(R.mipmap.ic_addressbook_check);
-        } else {
+        } else if (!attendents.contains(contact.getId())){
             holder.checkBox.setImageResource(R.mipmap.ic_addressbook_uncheck);
+        } else {
+            holder.checkBox.setImageResource(R.mipmap.ic_addressbook_uncheckable);
+            convertView.setEnabled(false);
         }
 
         Observable.just(FileManagement.getUserHead(context, contact))
@@ -141,10 +148,10 @@ public class AddressBookAdapter extends BaseAdapter {
 
                 if(selectedPosition.size() == 0) {
                     titleBar.setRightTitle("提交");
-                    titleBar.getRightView().setClickable(false);
+                    titleBar.getRightView().setEnabled(false);
                 } else {
                     titleBar.setRightTitle("提交(" + selectedPosition.size() + ")");
-                    titleBar.getRightView().setClickable(true);
+                    titleBar.getRightView().setEnabled(true);
                 }
 
             }

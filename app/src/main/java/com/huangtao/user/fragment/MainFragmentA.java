@@ -107,13 +107,12 @@ public class MainFragmentA extends MyLazyFragment
         // 今日会议
         Date dt = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
-        Network.getInstance().queryMeetingByUid(Constants.uid, sdf.format(dt)).enqueue(new Callback<List<Meeting>>() {
+        Network.getInstance().queryMeetingByUid(Constants.uid, sdf.format(dt), null).enqueue(new Callback<List<Meeting>>() {
             @Override
             public void onResponse(Call<List<Meeting>> call, Response<List<Meeting>> response) {
                 List<Meeting> meetings = response.body();
                 meetingContainer.removeAllViews();
-                if (meetings.size() > 0) {
-                    noMeeting.setVisibility(View.GONE);
+                if (meetings != null && meetings.size() > 0) {
 
                     for (final Meeting meeting : meetings) {
                         View v = LayoutInflater.from(getFragmentActivity()).inflate(R.layout.layout_main_meeting, null);
@@ -156,6 +155,12 @@ public class MainFragmentA extends MyLazyFragment
 
                         if(meeting.getStatus() != Status.Cancelled)
                             meetingContainer.addView(v);
+                    }
+
+                    if(meetingContainer.getChildCount() > 0) {
+                        noMeeting.setVisibility(View.GONE);
+                    } else {
+                        noMeeting.setVisibility(View.VISIBLE);
                     }
 
                     if(isRefresh){
