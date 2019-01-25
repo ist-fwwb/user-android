@@ -77,7 +77,7 @@ public interface Api {
     Call<String> exitMeeting(@Path("id") String id, @Path("userId") String userId);
 
     @PUT("meeting/{id}")
-    Call<Meeting> modifyMeeting(@Body Meeting meeting);
+    Call<Meeting> modifyMeeting(@Body Meeting meeting, @Path("id") String id);
 
 
 

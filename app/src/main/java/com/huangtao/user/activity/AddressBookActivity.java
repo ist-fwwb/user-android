@@ -135,7 +135,7 @@ public class AddressBookActivity extends MyActivity implements SideBar.OnLetterS
     }
 
     private void modifyMeeting() {
-        Network.getInstance().modifyMeeting(meeting).enqueue(new Callback<Meeting>() {
+        Network.getInstance().modifyMeeting(meeting, meeting.getId()).enqueue(new Callback<Meeting>() {
             @Override
             public void onResponse(Call<Meeting> call, Response<Meeting> response) {
                 if(response.body() != null){
