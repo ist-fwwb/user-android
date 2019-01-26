@@ -27,6 +27,6 @@ public class Constants {
     public static final String OSS_DIR_FACE = OSS_BUCKET + "/face-file";
     public static final String OSS_DIR_FEATURE = "face-feature-file";
     public static final String OSS_endpoint = "http://oss-cn-shanghai.aliyuncs.com";
-    public static final String OSS_AUTH_SERVER = "http://129.211.119.51:7080/";
+    public static final String OSS_AUTH_SERVER = "http://47.106.8.44:7080/";
 
 }
