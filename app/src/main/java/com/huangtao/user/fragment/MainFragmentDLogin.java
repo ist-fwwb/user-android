@@ -49,6 +49,8 @@ public class MainFragmentDLogin extends MyLazyFragment
     @BindView(R.id.logout)
     RelativeLayout logout;
 
+    private HeadHandler headHandler = new HeadHandler();
+
 
     public static MainFragmentDLogin newInstance() {
         return new MainFragmentDLogin();
@@ -94,7 +96,7 @@ public class MainFragmentDLogin extends MyLazyFragment
                         boolean result = FileManagement.download(getFragmentActivity().getApplicationContext(),
                                 fileName, Constants.HEAD_DIR);
                         if(result){
-                            new HeadHandler().sendEmptyMessage(0);
+                            headHandler.sendEmptyMessage(0);
                         }
                     }
                 }).start();

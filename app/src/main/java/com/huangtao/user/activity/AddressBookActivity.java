@@ -1,7 +1,6 @@
 package com.huangtao.user.activity;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -114,14 +113,16 @@ public class AddressBookActivity extends MyActivity implements SideBar.OnLetterS
                 public void onResponse(Call<Meeting> call, Response<Meeting> response) {
                     meeting = response.body();
                     Map<String, String> attendents = meeting.getAttendants();
-                    Log.i(TAG, meeting.getAttendants().keySet().toString());
-                    for (User user : users) {
-                        Log.i(TAG, user.getName());
-                        if (!attendents.keySet().contains(user.getId())) {
-                            attendents.put(user.getId(), "123");
+                    for (String key : attendents.keySet()) {
+                        if (attendents.get(key) == null) {
+                            attendents.put(key, "");
                         }
                     }
-                    Log.i(TAG, meeting.getAttendants().keySet().toString());
+                    for (User user : users) {
+                        if (!attendents.keySet().contains(user.getId())) {
+                            attendents.put(user.getId(), "");
+                        }
+                    }
                     modifyMeeting();
                 }
 
@@ -134,12 +135,10 @@ public class AddressBookActivity extends MyActivity implements SideBar.OnLetterS
     }
 
     private void modifyMeeting() {
-        Network.getInstance().modifyMeeting(meeting).enqueue(new Callback<Meeting>() {
+        Network.getInstance().modifyMeeting(meeting, meeting.getId()).enqueue(new Callback<Meeting>() {
             @Override
             public void onResponse(Call<Meeting> call, Response<Meeting> response) {
                 if(response.body() != null){
-                    Log.i(TAG, meeting.getAttendants().keySet().toString());
-                    Log.i(TAG, response.body().getAttendants().keySet().toString());
                     Intent intent = new Intent();
                     intent.putExtra("meeting", response.body());
                     setResult(RESULT_OK, intent);
