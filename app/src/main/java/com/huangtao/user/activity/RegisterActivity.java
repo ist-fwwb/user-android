@@ -1,15 +1,17 @@
 package com.huangtao.user.activity;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.huangtao.user.R;
-import com.huangtao.user.arcsoft.FaceServer;
-import com.huangtao.user.arcsoft.RegisterAndRecognizeActivity;
+import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyActivity;
 import com.huangtao.user.model.User;
 import com.huangtao.user.network.FileManagement;
@@ -49,6 +51,8 @@ public class RegisterActivity extends MyActivity
     Button mCommitView;
 
 //    private EditTextInputHelper mEditTextInputHelper;
+
+    private static final String PATH_REGISTER = Constants.SAVE_IMG_DIR + "register.jpg";
 
     @Override
     protected int getLayoutId() {
@@ -105,17 +109,14 @@ public class RegisterActivity extends MyActivity
             String phone = mPhoneView.getText().toString();
             String fileName = enterpriseId + phone;
 
-            File face = new File(FaceServer.SAVE_IMG_DIR + File.separator + "register.jpg");
-            File feature = new File(FaceServer.SAVE_FEATURE_DIR + File.separator + "register");
+            File face = new File(PATH_REGISTER);
 
             boolean faceResult = FileManagement.upload(getApplicationContext(), face, fileName + ".jpg");
             Log.i("upload", "face upload complete " + faceResult);
 
-            boolean featureResult = FileManagement.upload(getApplicationContext(), feature, fileName);
-            Log.i("upload", "feature upload complete " + featureResult);
-
-            if(!faceResult || !featureResult){
+            if(!faceResult){
                 toast("注册失败");
+                hideProgressBar();
                 return;
             }
 
@@ -145,16 +146,28 @@ public class RegisterActivity extends MyActivity
 
 
         } else if (v == face) {
-            startActivityForResult(new Intent(this, RegisterAndRecognizeActivity.class), new
-                    ActivityCallback() {
-                @Override
-                public void onActivityResult(int resultCode, @Nullable Intent data) {
-                    if (resultCode == RESULT_OK) {
-                        face.setEnabled(false);
-                        mCommitView.setEnabled(true);
-                    }
-                }
-            });
+            Intent intent = new Intent();
+            // 指定开启系统相机的Action
+            intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            // 根据文件地址创建文件
+            File file = new File(PATH_REGISTER);
+            if (file.exists()) {
+                file.delete();
+            }
+            // 把文件地址转换成Uri格式
+            Uri uri = FileProvider.getUriForFile(RegisterActivity.this, "com.huangtao.user.fileprovider", file);
+            // 设置系统相机拍摄照片完成后图片文件的存放地址
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            startActivityForResult(intent, 0);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 0) {
+            face.setEnabled(false);
+            mCommitView.setEnabled(true);
         }
     }
 

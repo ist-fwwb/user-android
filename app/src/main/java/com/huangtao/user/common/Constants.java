@@ -17,8 +17,12 @@ public class Constants {
     public static final String APP_ID = "F1vNFhZAoVSdhNXaCzpLvBvcMW9aeqH6e68aSH5GUB3C";
     public static final String SDK_KEY = "7Lq9LdfNhCJxkw4zbBPk2hBz3KhbiuBSXhy3sGq3EogE";
 
-    public static String HEAD_DIR = Environment.getExternalStorageDirectory().getAbsolutePath()
-            + File.separator + "meeting" + File.separator + "head" + File.separator;
+    public static final String ROOT_DIR = Environment.getExternalStorageDirectory()
+            .getAbsolutePath() + File.separator + "meeting" + File.separator;
+
+    public static final String SAVE_IMG_DIR = ROOT_DIR + "imgs" + File.separator;
+    public static final String SAVE_FEATURE_DIR = ROOT_DIR + "features" + File.separator;
+    public static final String HEAD_DIR = ROOT_DIR + "head" + File.separator;
 
     // ali oss
     public static final String OSS_AccessKeyId = "LTAIqMIT5KX4oGAT";
