@@ -17,11 +17,13 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.hjq.bar.TitleBar;
 import com.huangtao.user.R;
 import com.huangtao.user.activity.MeetingActivity;
+import com.huangtao.user.activity.MeetingRoomActivity;
 import com.huangtao.user.activity.MeetingroomListActivity;
 import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyLazyFragment;
 import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.model.Meeting;
+import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.model.meta.Status;
 import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
@@ -279,18 +281,37 @@ public class MainFragmentA extends MyLazyFragment
         /**
          * 处理二维码扫描结果
          */
-        if (requestCode == 0) {
+        if (requestCode == 0 && data != null) {
             //处理扫描结果（在界面上显示）
-            if (null != data) {
-                Bundle bundle = data.getExtras();
-                if (bundle == null) {
-                    return;
-                }
-                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                    String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    joinMeeting(result);
-                }
+            Bundle bundle = data.getExtras();
+            if (bundle != null && bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                processResult(bundle.getString(CodeUtils.RESULT_STRING));
             }
         }
+    }
+
+    private void processResult(String result) {
+        if (isFourDigit(result)) joinMeeting(result);
+        //扫会议室端的码跳转到对应会议室
+        else {
+            Network.getInstance().queryMeetingroomById(result).enqueue(new Callback<MeetingRoom>() {
+                @Override
+                public void onResponse(Call<MeetingRoom> call, Response<MeetingRoom> response) {
+                    Intent intent = new Intent(getContext(), MeetingRoomActivity.class);
+                    intent.putExtra("meetingroom", response.body());
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onFailure(Call<MeetingRoom> call, Throwable t) {
+                    t.printStackTrace();
+                    toast("跳转失败");
+                }
+            });
+        }
+    }
+
+    private boolean isFourDigit(String s){
+        return s.length() == 4;
     }
 }
