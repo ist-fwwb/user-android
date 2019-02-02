@@ -95,7 +95,7 @@ public class MeetingRoomOrderAdapter extends PanelAdapter {
             viewHolder.time.setText(timeStr);
 
             String date = dates.get(column - 1);
-            if(canOrder.containsKey(date)){
+            if(canOrder.containsKey(date) && canOrder.get(date).size() >= row){
                 if(canOrder.get(date).get(row - 1)){
                     // 该cell可以预定
                     viewHolder.time.setTextColor(context.getColor(R.color.douban_gray));

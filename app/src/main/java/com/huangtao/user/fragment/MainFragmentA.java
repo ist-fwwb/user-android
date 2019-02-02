@@ -54,6 +54,8 @@ public class MainFragmentA extends MyLazyFragment
 
     @BindView(R.id.tv_test_search)
     TextView mSearchView;
+    @BindView(R.id.scan)
+    ImageView scan;
 
     @BindView(R.id.appoint)
     LinearLayout appoint;
@@ -96,6 +98,7 @@ public class MainFragmentA extends MyLazyFragment
         appointSmart.setOnClickListener(this);
         addMeeting.setOnClickListener(this);
         meetingRefresh.setOnClickListener(this);
+        scan.setOnClickListener(this);
     }
 
     @Override
@@ -229,9 +232,11 @@ public class MainFragmentA extends MyLazyFragment
         if (shown) {
             mSearchView.setBackgroundResource(R.drawable.bg_home_search_bar_gray);
             getStatusBarConfig().statusBarDarkFont(true).init();
+            scan.setImageResource(R.mipmap.ic_scan_black);
         }else {
             mSearchView.setBackgroundResource(R.drawable.bg_home_search_bar_transparent);
             getStatusBarConfig().statusBarDarkFont(false).init();
+            scan.setImageResource(R.mipmap.ic_scan_white);
         }
     }
 
@@ -273,6 +278,9 @@ public class MainFragmentA extends MyLazyFragment
             listDialog.show();
         } else if (v == meetingRefresh) {
             initMeetingList(true);
+        } else if (v == scan) {
+            Intent intent = new Intent(getFragmentActivity(), CaptureActivity.class);
+            startActivityForResult(intent, 1);
         }
     }
 
@@ -281,11 +289,21 @@ public class MainFragmentA extends MyLazyFragment
         /**
          * 处理二维码扫描结果
          */
-        if (requestCode == 0 && data != null) {
-            //处理扫描结果（在界面上显示）
+        if(data != null) {
             Bundle bundle = data.getExtras();
-            if (bundle != null && bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                processResult(bundle.getString(CodeUtils.RESULT_STRING));
+            switch (requestCode){
+                case 0:
+                    // 加入会议
+                    if (bundle != null && bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                        joinMeeting(bundle.getString(CodeUtils.RESULT_STRING));
+                    }
+                    break;
+                case 1:
+                    // 扫一扫
+                    if (bundle != null && bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                        processResult(bundle.getString(CodeUtils.RESULT_STRING));
+                    }
+                    break;
             }
         }
     }

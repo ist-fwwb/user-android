@@ -71,13 +71,22 @@
                         android:id="@+id/tv_test_search"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_weight="5"
                         android:layout_marginLeft="@dimen/space_40"
-                        android:layout_marginRight="@dimen/space_40"
+                        android:layout_marginRight="@dimen/space_20"
                         android:background="@drawable/bg_home_search_bar_transparent"
                         android:gravity="center"
                         android:text="请输入搜索关键字"
                         android:textColor="#a4a4a4"
                         android:textSize="@dimen/font_size_28px" />
+
+                    <ImageView
+                        android:id="@+id/scan"
+                        android:layout_width="50dp"
+                        android:layout_height="25dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"
+                        android:src="@mipmap/ic_scan_white"/>
 
                 </LinearLayout>
 
