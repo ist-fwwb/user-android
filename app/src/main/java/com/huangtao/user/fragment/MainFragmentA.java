@@ -23,6 +23,7 @@ import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyLazyFragment;
 import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.model.Meeting;
+import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.model.meta.Status;
 import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
@@ -293,16 +294,16 @@ public class MainFragmentA extends MyLazyFragment
         if (isFourDigit(result)) joinMeeting(result);
         //扫会议室端的码跳转到对应会议室
         else {
-            Network.getInstance().queryMeetingById(result).enqueue(new Callback<Meeting>() {
+            Network.getInstance().queryMeetingroomById(result).enqueue(new Callback<MeetingRoom>() {
                 @Override
-                public void onResponse(Call<Meeting> call, Response<Meeting> response) {
+                public void onResponse(Call<MeetingRoom> call, Response<MeetingRoom> response) {
                     Intent intent = new Intent(getContext(), MeetingRoomActivity.class);
                     intent.putExtra("meetingroom", response.body());
                     startActivity(intent);
                 }
 
                 @Override
-                public void onFailure(Call<Meeting> call, Throwable t) {
+                public void onFailure(Call<MeetingRoom> call, Throwable t) {
                     t.printStackTrace();
                     toast("跳转失败");
                 }
