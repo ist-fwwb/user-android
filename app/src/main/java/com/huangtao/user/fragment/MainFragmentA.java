@@ -1,6 +1,7 @@
 package com.huangtao.user.fragment;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -71,6 +72,8 @@ public class MainFragmentA extends MyLazyFragment
     @BindView(R.id.meeting_refresh)
     ImageView meetingRefresh;
 
+    ProgressDialog dialog;
+
     public static MainFragmentA newInstance() {
         return new MainFragmentA();
     }
@@ -87,6 +90,9 @@ public class MainFragmentA extends MyLazyFragment
 
     @Override
     protected void initView() {
+        dialog = new ProgressDialog(getFragmentActivity());
+        dialog.setMessage("正在加载中…");
+
         // 给这个ToolBar设置顶部内边距，才能和TitleBar进行对齐
         ImmersionBar.setTitleBar(getFragmentActivity(), mToolbar);
 
@@ -187,6 +193,7 @@ public class MainFragmentA extends MyLazyFragment
         Network.getInstance().joinMeeting(attendantNum, Constants.uid).enqueue(new Callback<Meeting>() {
             @Override
             public void onResponse(Call<Meeting> call, final Response<Meeting> response) {
+                dialog.dismiss();
                 if (response != null && response.body() != null) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getFragmentActivity());
                     builder.setMessage("加入成功！");
@@ -208,6 +215,7 @@ public class MainFragmentA extends MyLazyFragment
             public void onFailure(Call<Meeting> call, Throwable t) {
                 toast("加入失败");
                 t.printStackTrace();
+                dialog.dismiss();
             }
         });
     }
@@ -291,6 +299,7 @@ public class MainFragmentA extends MyLazyFragment
          */
         if(data != null) {
             Bundle bundle = data.getExtras();
+            dialog.show();
             switch (requestCode){
                 case 0:
                     // 加入会议
@@ -318,12 +327,14 @@ public class MainFragmentA extends MyLazyFragment
                     Intent intent = new Intent(getContext(), MeetingRoomActivity.class);
                     intent.putExtra("meetingroom", response.body());
                     startActivity(intent);
+                    dialog.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<MeetingRoom> call, Throwable t) {
                     t.printStackTrace();
                     toast("跳转失败");
+                    dialog.dismiss();
                 }
             });
         }
