@@ -20,6 +20,7 @@ import com.huangtao.user.R;
 import com.huangtao.user.activity.MeetingActivity;
 import com.huangtao.user.activity.MeetingRoomActivity;
 import com.huangtao.user.activity.MeetingroomListActivity;
+import com.huangtao.user.activity.SmartAppointActivity;
 import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyLazyFragment;
 import com.huangtao.user.helper.CommonUtils;
@@ -256,7 +257,7 @@ public class MainFragmentA extends MyLazyFragment
         } else if (v == appoint) {
             startActivity(MeetingroomListActivity.class);
         } else if (v == appointSmart) {
-
+            startActivity(SmartAppointActivity.class);
         } else if (v == addMeeting) {
             final String[] items = { "扫一扫","输入会议码"};
             AlertDialog.Builder listDialog = new AlertDialog.Builder(getFragmentActivity());

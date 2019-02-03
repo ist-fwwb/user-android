@@ -1,5 +1,7 @@
 package com.huangtao.user.helper;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -20,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class CommonUtils {
 
@@ -154,7 +158,7 @@ public class CommonUtils {
 
     public static String dateToWeek(String datetime) {
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        String[] weekDays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+        String[] weekDays = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
         Calendar cal = Calendar.getInstance(); // 获得一个日历
         Date datet = null;
         try {
@@ -191,6 +195,14 @@ public class CommonUtils {
         Constants.uid = "";
         Constants.user = null;
         saveSharedPreference(context, "uid", "");
+    }
+
+    public static String getClipboardText(Context context) {
+        ClipboardManager cm = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
+        ClipData data = cm.getPrimaryClip();
+        ClipData.Item item = data.getItemAt(0);
+        String content = item.getText().toString();
+        return content;
     }
 
 }
