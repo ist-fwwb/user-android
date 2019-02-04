@@ -209,6 +209,7 @@
                 android:layout_marginRight="10dp">
 
                 <RelativeLayout
+                    android:id="@+id/equipment_picker"
                     android:layout_width="match_parent"
                     android:layout_height="60dp">
 
@@ -248,6 +249,7 @@
                     android:layout_marginTop="10dp"/>
 
                 <RelativeLayout
+                    android:id="@+id/size_picker"
                     android:layout_width="match_parent"
                     android:layout_height="60dp">
 
