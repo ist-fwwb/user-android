@@ -191,6 +191,21 @@ public class CommonUtils {
         return first + "-" + last;
     }
 
+    public static String getFormatTime(String  date, int time) {
+        return date + " " + time / 2 + ":" + ((time + 1) % 2 == 0 ? "30" : "00" + ":00");
+    }
+
+    public static long getFormatTimeMill(String time) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = simpleDateFormat.parse(time);
+            return date.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public static void logout(Context context) {
         Constants.uid = "";
         Constants.user = null;

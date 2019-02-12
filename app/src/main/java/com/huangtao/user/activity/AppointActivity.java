@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.huangtao.user.R;
 import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyActivity;
+import com.huangtao.user.helper.CalenderUtils;
 import com.huangtao.user.model.Meeting;
 import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.model.meta.MeetingType;
@@ -116,6 +117,11 @@ public class AppointActivity extends MyActivity {
                                     finish();
                                 }
                             });
+
+                            // 写入系统calender
+                            CalenderUtils.addCalendarEvent(AppointActivity.this, result
+                                    .getHeading(), result.getDescription(), result.getDate(),
+                                    result.getStartTime(), result.getEndTime());
                         }
 
                     }
