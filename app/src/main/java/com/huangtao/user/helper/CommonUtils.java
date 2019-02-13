@@ -192,7 +192,7 @@ public class CommonUtils {
     }
 
     public static String getFormatTime(String  date, int time) {
-        return date + " " + time / 2 + ":" + ((time + 1) % 2 == 0 ? "30" : "00" + ":00");
+        return date + " " + time / 2 + ":" + (((time + 1) % 2 == 0 ? "30" : "00") + ":00");
     }
 
     public static long getFormatTimeMill(String time) {

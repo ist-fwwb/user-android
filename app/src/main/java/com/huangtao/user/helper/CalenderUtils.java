@@ -97,7 +97,7 @@ public class CalenderUtils {
     /**
      * 添加日历事件
      */
-    public static void addCalendarEvent(Context context, String title, String description, String date, int start, int end) {
+    public static void addCalendarEvent(Context context, String title, String description, String date, int start, int end, String location) {
         if (context == null) {
             return;
         }
@@ -120,6 +120,7 @@ public class CalenderUtils {
         event.put("calendar_id", calId); //插入账户的id
         event.put(CalendarContract.Events.DTSTART, startMill);
         event.put(CalendarContract.Events.DTEND, endMill);
+        event.put(CalendarContract.Events.EVENT_LOCATION, location);
         event.put(CalendarContract.Events.HAS_ALARM, 1);//设置有闹钟提醒
         event.put(CalendarContract.Events.EVENT_TIMEZONE, "Asia/Shanghai");//这个是时区，必须有
         Uri newEvent = context.getContentResolver().insert(Uri.parse(CALENDER_EVENT_URL), event); //添加事件

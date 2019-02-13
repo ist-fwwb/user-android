@@ -121,7 +121,7 @@ public class AppointActivity extends MyActivity {
                             // 写入系统calender
                             CalenderUtils.addCalendarEvent(AppointActivity.this, result
                                     .getHeading(), result.getDescription(), result.getDate(),
-                                    result.getStartTime(), result.getEndTime());
+                                    result.getStartTime(), result.getEndTime(), result.getLocation());
                         }
 
                     }

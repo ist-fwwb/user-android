@@ -5,6 +5,7 @@ import com.huangtao.user.model.meta.Status;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Set;
 
 public class Meeting implements Serializable {
     String id;
@@ -22,6 +23,8 @@ public class Meeting implements Serializable {
     String attendantNum;  // a four digit number to attend the meeting
     Status status;
     MeetingType type;
+    Set<String> tags;
+    long timestamp;
 
     public String getId() {
         return id;
@@ -133,6 +136,22 @@ public class Meeting implements Serializable {
 
     public void setType(MeetingType type) {
         this.type = type;
+    }
+
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     @Override
