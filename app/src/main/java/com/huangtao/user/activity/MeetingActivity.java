@@ -167,7 +167,7 @@ public class MeetingActivity extends MyActivity {
             case COMMON:
                 typeStr = "普通";
                 break;
-            case URGECY:
+            case URGENCY:
                 typeStr = "紧急";
                 type.setTextColor(getColor(R.color.douban_red_80_percent));
                 break;

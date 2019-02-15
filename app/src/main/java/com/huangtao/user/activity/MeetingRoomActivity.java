@@ -9,6 +9,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,8 +23,8 @@ import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.model.Meeting;
 import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.model.TimeSlice;
-import com.huangtao.user.model.User;
 import com.huangtao.user.model.meta.MeetingRoomUtils;
+import com.huangtao.user.model.meta.MeetingType;
 import com.huangtao.user.model.meta.Status;
 import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
@@ -166,11 +167,13 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
                         View v = LayoutInflater.from(MeetingRoomActivity.this).inflate(R.layout.layout_meetingroom_meeting, null);
 
                         TextView name = v.findViewById(R.id.name);
-                        final TextView host = v.findViewById(R.id.host);
+                        TextView host = v.findViewById(R.id.host);
                         TextView time = v.findViewById(R.id.time);
                         TextView status = v.findViewById(R.id.status);
+                        ImageView urgency = v.findViewById(R.id.urgency);
 
                         name.setText(!meeting.getHeading().isEmpty() ? meeting.getHeading() : "无主题");
+                        host.setText(meeting.getHost().getName());
                         time.setText(CommonUtils.getFormatTime(meeting.getStartTime(), meeting.getEndTime()));
 
                         switch (meeting.getStatus()){
@@ -191,19 +194,9 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
                                 break;
                         }
 
-                        Network.getInstance().queryUserById(meeting.getHostId()).enqueue(new Callback<User>() {
-                            @Override
-                            public void onResponse(Call<User> call, Response<User> response) {
-                                if(response.body() != null){
-                                    host.setText(response.body().getName());
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<User> call, Throwable t) {
-
-                            }
-                        });
+                        if (meeting.getType() == MeetingType.URGENCY) {
+                            urgency.setVisibility(View.VISIBLE);
+                        }
 
                         v.setOnClickListener(new View.OnClickListener() {
                             @Override

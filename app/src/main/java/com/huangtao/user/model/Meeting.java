@@ -25,6 +25,7 @@ public class Meeting implements Serializable {
     MeetingType type;
     Set<String> tags;
     long timestamp;
+    User host;
 
     public String getId() {
         return id;
@@ -152,6 +153,14 @@ public class Meeting implements Serializable {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public User getHost() {
+        return host;
+    }
+
+    public void setHost(User host) {
+        this.host = host;
     }
 
     @Override

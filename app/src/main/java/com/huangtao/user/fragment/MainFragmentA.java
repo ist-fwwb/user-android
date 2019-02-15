@@ -26,6 +26,7 @@ import com.huangtao.user.common.MyLazyFragment;
 import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.model.Meeting;
 import com.huangtao.user.model.MeetingRoom;
+import com.huangtao.user.model.meta.MeetingType;
 import com.huangtao.user.model.meta.Status;
 import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
@@ -133,6 +134,7 @@ public class MainFragmentA extends MyLazyFragment
                         TextView location = v.findViewById(R.id.location);
                         TextView time = v.findViewById(R.id.time);
                         TextView status = v.findViewById(R.id.status);
+                        ImageView urgency = v.findViewById(R.id.urgency);
 
                         name.setText(!meeting.getHeading().isEmpty() ? meeting.getHeading() : "无主题");
                         location.setText(meeting.getLocation());
@@ -154,6 +156,10 @@ public class MainFragmentA extends MyLazyFragment
                                 status.setText("已取消");
                                 status.setTextColor(getFragmentActivity().getColor(R.color.douban_gray_55_percent));
                                 break;
+                        }
+
+                        if (meeting.getType() == MeetingType.URGENCY) {
+                            urgency.setVisibility(View.VISIBLE);
                         }
 
                         v.setOnClickListener(new View.OnClickListener() {

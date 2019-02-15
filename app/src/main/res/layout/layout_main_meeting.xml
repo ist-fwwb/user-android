@@ -56,6 +56,16 @@
             android:textColor="@color/douban_red"
             android:textSize="12sp" />
 
+        <ImageView
+            android:id="@+id/urgency"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:src="@mipmap/ic_urgency"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
 </RelativeLayout>
