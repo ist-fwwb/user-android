@@ -150,4 +150,14 @@ public abstract class MyActivity extends UIActivity
         builder.setNegativeButton(negBtn, negListen);
         builder.show();
     }
+
+    public void showDialog(String title, String msg, String posBtn, DialogInterface.OnClickListener posListen,
+                           String negBtn, DialogInterface.OnClickListener negListen) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setPositiveButton(posBtn, posListen);
+        builder.setNegativeButton(negBtn, negListen);
+        builder.show();
+    }
 }

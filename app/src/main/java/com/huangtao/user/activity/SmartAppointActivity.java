@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -14,10 +15,16 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.huangtao.user.R;
+import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyActivity;
+import com.huangtao.user.helper.CalenderUtils;
 import com.huangtao.user.helper.CommonUtils;
+import com.huangtao.user.model.LexerResult;
+import com.huangtao.user.model.Meeting;
 import com.huangtao.user.model.meta.MeetingRoomUtils;
+import com.huangtao.user.model.meta.MeetingType;
 import com.huangtao.user.model.meta.Size;
+import com.huangtao.user.network.Network;
 import com.huangtao.widget.ClearEditText;
 
 import java.util.Calendar;
@@ -25,6 +32,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import butterknife.BindView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SmartAppointActivity extends MyActivity implements View.OnClickListener {
 
@@ -65,10 +75,15 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
     @BindView(R.id.submit)
     Button submit;
 
+    private String[] items = {"空调", "黑板", "桌子", "投影仪", "电源", "无线网络", "有线网络", "电视"};
+    private MeetingRoomUtils[] itemsEnum = {MeetingRoomUtils.AIRCONDITIONER, MeetingRoomUtils
+            .BLACKBOARD, MeetingRoomUtils.TABLE, MeetingRoomUtils.PROJECTOR, MeetingRoomUtils
+            .POWERSUPPLY};
+
     private ProgressDialog clipboardDialog;
 
     private String datePicked;
-    private int startTimePicked, endTimePicked;
+    private int startTimePicked = -1, endTimePicked = -1;
     private Set<MeetingRoomUtils> equipmentPicked;
     private Size sizePicked;
 
@@ -103,14 +118,59 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
         equipmentPicked = new HashSet<>();
         sizePicked = Size.SMALL;
 
-        analyzeClipboard();
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                analyzeClipboard();
+            }
+        }, 1000);
     }
 
     /**
      * NLP分析剪贴板内容，尽可能填充页面
      */
     private void analyzeClipboard() {
+        String clipboardText = CommonUtils.getClipboardText(this);
+        if(clipboardText.isEmpty()){
+            clipboardDialog.dismiss();
+            return;
+        }
 
+        Network.getLexerInstance().lexer(clipboardText).enqueue(new Callback<LexerResult>() {
+            @Override
+            public void onResponse(Call<LexerResult> call, Response<LexerResult> response) {
+                clipboardDialog.dismiss();
+
+                LexerResult lexerResult = response.body();
+                heading.setText(lexerResult.getHeading());
+                description.setText(lexerResult.getDescription());
+
+                if (lexerResult.getDate() != null) {
+                    datePicked = lexerResult.getDate();
+                    date.setText(datePicked);
+                }
+
+                if (lexerResult.getStartTime() >= 0) {
+                    startTimePicked = lexerResult.getStartTime();
+                    startTime.setText(CommonUtils.getFormatTime(startTimePicked));
+                }
+
+                if (lexerResult.getEndTime() >= 0) {
+                    endTimePicked = lexerResult.getEndTime();
+                    endTime.setText(CommonUtils.getFormatTime(endTimePicked));
+                }
+
+                if (lexerResult.getUtils() != null) {
+                    equipmentPicked.addAll(lexerResult.getUtils());
+                    equipment.setText(getEquipmentText());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LexerResult> call, Throwable t) {
+                clipboardDialog.dismiss();
+            }
+        });
     }
 
     @Override
@@ -158,10 +218,6 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
     }
 
     private void showEquipmentDialog() {
-        final String[] items = {"空调", "黑板", "桌子", "投影仪", "电源", "无线网络", "有线网络", "电视"};
-        final MeetingRoomUtils[] itemsEnum = {MeetingRoomUtils.AIRCONDITIONER, MeetingRoomUtils
-                .BLACKBOARD, MeetingRoomUtils.TABLE, MeetingRoomUtils.PROJECTOR, MeetingRoomUtils
-                .POWERSUPPLY};
         // 设置默认选中的选项，全为false默认均未选中
         final boolean initChoiceSets[] = new boolean[8];
         for(int i=0;i<5;i++){
@@ -182,19 +238,7 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
                             }
                         }
 
-                        String str = "";
-                        for (int i = 0; i < itemsEnum.length; i++) {
-                            if (equipmentPicked.contains(itemsEnum[i])) {
-                                str += items[i];
-                                str += ";";
-                            }
-                        }
-
-                        if(!str.isEmpty())
-                            equipment.setText(str.substring(0, str.length() - 1));
-                        else{
-                            equipment.setText("未选择");
-                        }
+                        equipment.setText(getEquipmentText());
                     }
                 });
         multiChoiceDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -232,7 +276,84 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
     }
 
     private void submit() {
+        if (date == null || startTimePicked < 0 || endTimePicked < 0) {
+            toast("日期、时间为必填项");
+            return;
+        }
+
         showProgressBar();
+
+        Meeting meeting = new Meeting();
+        meeting.setHostId(Constants.user.getId());
+        meeting.setHeading(heading.getText().toString());
+        meeting.setDescription(description.getText().toString());
+        meeting.setDate(datePicked);
+        meeting.setStartTime(startTimePicked);
+        meeting.setEndTime(endTimePicked);
+        // TODO api没加size要求
+        meeting.setNeedSignIn(radioGroup.getCheckedRadioButtonId() == R.id.radio_sign);
+        // TODO 暂时默认common
+        meeting.setType(MeetingType.COMMON);
+
+        Network.getInstance().appointMeetingroomIntelligent(equipmentPicked, meeting).enqueue(new Callback<Meeting>() {
+            @Override
+            public void onResponse(Call<Meeting> call, Response<Meeting> response) {
+                hideProgressBar();
+
+                if(response.body() != null) {
+                    Meeting result = response.body();
+                    if (result.getId() != null) {
+                        final Intent intent = new Intent(SmartAppointActivity.this, MeetingActivity.class);
+                        intent.putExtra("id", result.getId());
+
+                        showDialog("预定成功！", "确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+
+                        // 写入系统calender
+                        CalenderUtils.addCalendarEvent(SmartAppointActivity.this, result
+                                        .getHeading(), result.getDescription(), result.getDate(),
+                                result.getStartTime(), result.getEndTime(), result.getLocation());
+                    } else {
+                        showDialog("暂无符合要求的会议室", "是否进入等待队列？当有会议室空闲时将立刻为您预定", "进入", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO 排队系统
+                            }
+                        }, "取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Meeting> call, Throwable t) {
+                hideProgressBar();
+                t.printStackTrace();
+            }
+        });
     }
 
+    private String getEquipmentText() {
+        String str = "";
+        for (int i = 0; i < itemsEnum.length; i++) {
+            if (equipmentPicked.contains(itemsEnum[i])) {
+                str += items[i];
+                str += ";";
+            }
+        }
+
+        if (!str.isEmpty())
+            return str.substring(0, str.length() - 1);
+
+        return "未选择";
+    }
 }

@@ -1,14 +1,16 @@
-package com.huangtao.user.network;
+package com.huangtao.user.network.api;
 
 import com.huangtao.user.model.Meeting;
 import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.model.TimeSlice;
 import com.huangtao.user.model.User;
+import com.huangtao.user.model.meta.MeetingRoomUtils;
 import com.huangtao.user.model.meta.Size;
 import com.huangtao.user.model.meta.Status;
 import com.huangtao.user.model.meta.Type;
 
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -66,6 +68,9 @@ public interface Api {
 
     @POST("meeting/")
     Call<Meeting> appointMeetingroom(@Body Meeting meeting);
+
+    @POST("meeting/intelligent")
+    Call<Meeting> appointMeetingroomIntelligent(@Query("utils") Set<MeetingRoomUtils> utils, @Body Meeting meeting);
 
     @GET("meeting/{id}/attendants")
     Call<List<User>> queryAttendantsFromMeeting(@Path("id") String id);
