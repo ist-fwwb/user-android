@@ -21,6 +21,8 @@ import com.huangtao.user.helper.CalenderUtils;
 import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.model.LexerResult;
 import com.huangtao.user.model.Meeting;
+import com.huangtao.user.model.QueueNode;
+import com.huangtao.user.model.TimeRange;
 import com.huangtao.user.model.meta.MeetingRoomUtils;
 import com.huangtao.user.model.meta.MeetingType;
 import com.huangtao.user.model.meta.Size;
@@ -322,7 +324,7 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
                         showDialog("暂无符合要求的会议室", "是否进入等待队列？当有会议室空闲时将立刻为您预定", "进入", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                // TODO 排队系统
+                                addQueue();
                             }
                         }, "取消", new DialogInterface.OnClickListener() {
                             @Override
@@ -355,5 +357,39 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
             return str.substring(0, str.length() - 1);
 
         return "未选择";
+    }
+
+    private void addQueue(){
+        showProgressBar();
+
+        QueueNode queueNode = new QueueNode("", Constants.uid, "1", new TimeRange());
+        Network.getInstance().addQueueNode(queueNode).enqueue(new Callback<QueueNode>() {
+            @Override
+            public void onResponse(Call<QueueNode> call, final Response<QueueNode> response) {
+                hideProgressBar();
+                if(response.body() != null) {
+                    showDialog("加入队列成功！", "查看", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(SmartAppointActivity.this, QueueActivity.class);
+                            intent.putExtra("id", response.body().getId());
+                            startActivityFinish(intent);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<QueueNode> call, Throwable t) {
+                hideProgressBar();
+                showDialog("排队失败", "确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+
     }
 }

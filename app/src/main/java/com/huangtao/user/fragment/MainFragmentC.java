@@ -7,6 +7,7 @@ import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.huangtao.user.R;
+import com.huangtao.user.activity.QueueActivity;
 import com.huangtao.user.common.MyLazyFragment;
 import com.huangtao.user.common.UIActivity;
 
@@ -71,6 +72,7 @@ public class MainFragmentC extends MyLazyFragment
     @Override
     public void onClick(View v) {
         if (v == mToastView) {
+            startActivity(QueueActivity.class);
         }else if (v == mPermissionView) {
             XXPermissions.with(getFragmentActivity())
                     //.constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝

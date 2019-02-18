@@ -102,7 +102,7 @@
         <activity android:name=".activity.MeetingroomListActivity" />
         <activity android:name=".activity.MeetingRoomActivity" />
         <activity android:name=".activity.AppointActivity" />
-        <activity android:name=".activity.MeetingActivity"></activity>
+        <activity android:name=".activity.MeetingActivity" />
 
         <!-- 阿里push -->
         <receiver
@@ -120,7 +120,8 @@
         </receiver>
 
         <activity android:name=".activity.AddressBookActivity" />
-        <activity android:name=".activity.SmartAppointActivity"/>
+        <activity android:name=".activity.SmartAppointActivity" />
+        <activity android:name=".activity.QueueActivity"></activity>
     </application>
 
 </manifest>

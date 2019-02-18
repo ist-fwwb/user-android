@@ -2,6 +2,7 @@ package com.huangtao.user.network.api;
 
 import com.huangtao.user.model.Meeting;
 import com.huangtao.user.model.MeetingRoom;
+import com.huangtao.user.model.QueueNode;
 import com.huangtao.user.model.TimeSlice;
 import com.huangtao.user.model.User;
 import com.huangtao.user.model.meta.MeetingRoomUtils;
@@ -85,5 +86,14 @@ public interface Api {
     Call<Meeting> modifyMeeting(@Body Meeting meeting, @Path("id") String id);
 
 
+    // queue
+    @POST("QueueNode/")
+    Call<QueueNode> addQueueNode(@Body QueueNode queueNode);
+
+    @GET("QueueNode/{id}")
+    Call<QueueNode> getQueueNodeById(@Path("id") String id);
+
+    @GET("QueueNode/")
+    Call<List<QueueNode>> getQueueNodes(@Query("userId") String userId);
 
 }
