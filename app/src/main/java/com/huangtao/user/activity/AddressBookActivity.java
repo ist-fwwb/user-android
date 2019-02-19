@@ -52,14 +52,19 @@ public class AddressBookActivity extends MyActivity implements SideBar.OnLetterS
     protected void initView() {
         showProgressBar();
 
-        meeting = (Meeting) getIntent().getSerializableExtra("meeting");
+        boolean isAddressBook = getIntent().getBooleanExtra("isAddressBook", false);
+        if (isAddressBook) {
+            mListContact.setAdapter(new AddressBookAdapter(this, title, null, true));
+            title.setTitle("企业通讯录");
+            title.getRightView().setVisibility(View.GONE);
+        } else {
+            meeting = (Meeting) getIntent().getSerializableExtra("meeting");
+            mListContact.setAdapter(new AddressBookAdapter(this, title, meeting.getAttendants().keySet(), false));
+            title.getRightView().setEnabled(false);
+        }
 
-        mListContact.setAdapter(new AddressBookAdapter(this, title, meeting.getAttendants().keySet()));
         mSideBar.setOnLetterSelectedListener(this);
-
         mSideBar.setDialog(mTextChar);
-
-        title.getRightView().setEnabled(false);
     }
 
     @Override

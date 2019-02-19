@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.hjq.bar.TitleBar;
 import com.huangtao.user.R;
+import com.huangtao.user.activity.AddressBookActivity;
 import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyLazyFragment;
 import com.huangtao.user.helper.CommonUtils;
@@ -45,6 +46,9 @@ public class MainFragmentDLogin extends MyLazyFragment
     TextView company;
     @BindView(R.id.phone)
     TextView phone;
+
+    @BindView(R.id.address_book)
+    RelativeLayout addressBook;
 
     @BindView(R.id.logout)
     RelativeLayout logout;
@@ -105,6 +109,7 @@ public class MainFragmentDLogin extends MyLazyFragment
             }
         }
 
+        addressBook.setOnClickListener(this);
         logout.setOnClickListener(this);
     }
 
@@ -137,6 +142,10 @@ public class MainFragmentDLogin extends MyLazyFragment
                 }
             });
             builder.show();
+        } else if (v == addressBook) {
+            Intent intent = new Intent(getActivity(), AddressBookActivity.class);
+            intent.putExtra("isAddressBook", true);
+            startActivity(intent);
         }
     }
 

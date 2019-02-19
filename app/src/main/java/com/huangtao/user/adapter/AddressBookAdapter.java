@@ -40,12 +40,15 @@ public class AddressBookAdapter extends BaseAdapter {
 
     private Set<String> attendents;
 
-    public AddressBookAdapter(Context context, TitleBar titleBar, Set<String> attendents) {
+    private boolean isAddressBook;
+
+    public AddressBookAdapter(Context context, TitleBar titleBar, Set<String> attendents, boolean isAddressBook) {
         this.context = context;
         mContactList = new ArrayList<>();
         selectedPosition = new ArrayList<>();
         this.titleBar = titleBar;
         this.attendents = attendents;
+        this.isAddressBook = isAddressBook;
     }
 
     public void addData(List<User> list) {
@@ -99,15 +102,6 @@ public class AddressBookAdapter extends BaseAdapter {
         }
         holder.mNameText.setText(contact.getName());
 
-        if(selectedPosition.contains(position)){
-            holder.checkBox.setImageResource(R.mipmap.ic_addressbook_check);
-        } else if (!attendents.contains(contact.getId())){
-            holder.checkBox.setImageResource(R.mipmap.ic_addressbook_uncheck);
-        } else {
-            holder.checkBox.setImageResource(R.mipmap.ic_addressbook_uncheckable);
-            convertView.setEnabled(false);
-        }
-
         Observable.just(FileManagement.getUserHead(context, contact))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -135,27 +129,47 @@ public class AddressBookAdapter extends BaseAdapter {
                     }
                 });
 
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(selectedPosition.contains(position)){
-                    selectedPosition.remove((Integer) position);
-                    holder.checkBox.setImageResource(R.mipmap.ic_addressbook_uncheck);
-                } else {
-                    selectedPosition.add(position);
-                    holder.checkBox.setImageResource(R.mipmap.ic_addressbook_check);
-                }
 
-                if(selectedPosition.size() == 0) {
-                    titleBar.setRightTitle("提交");
-                    titleBar.getRightView().setEnabled(false);
-                } else {
-                    titleBar.setRightTitle("提交(" + selectedPosition.size() + ")");
-                    titleBar.getRightView().setEnabled(true);
-                }
+        if(isAddressBook) {
+            holder.checkBox.setVisibility(View.GONE);
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
+                }
+            });
+        } else {
+            if (selectedPosition.contains(position)) {
+                holder.checkBox.setImageResource(R.mipmap.ic_addressbook_check);
+            } else if (!attendents.contains(contact.getId())) {
+                holder.checkBox.setImageResource(R.mipmap.ic_addressbook_uncheck);
+            } else {
+                holder.checkBox.setImageResource(R.mipmap.ic_addressbook_uncheckable);
+                convertView.setEnabled(false);
             }
-        });
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (selectedPosition.contains(position)) {
+                        selectedPosition.remove((Integer) position);
+                        holder.checkBox.setImageResource(R.mipmap.ic_addressbook_uncheck);
+                    } else {
+                        selectedPosition.add(position);
+                        holder.checkBox.setImageResource(R.mipmap.ic_addressbook_check);
+                    }
+
+                    if (selectedPosition.size() == 0) {
+                        titleBar.setRightTitle("提交");
+                        titleBar.getRightView().setEnabled(false);
+                    } else {
+                        titleBar.setRightTitle("提交(" + selectedPosition.size() + ")");
+                        titleBar.getRightView().setEnabled(true);
+                    }
+
+                }
+            });
+        }
 
         return convertView;
     }
