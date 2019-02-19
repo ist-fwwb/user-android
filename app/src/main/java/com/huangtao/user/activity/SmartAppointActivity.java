@@ -278,7 +278,7 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
     }
 
     private void submit() {
-        if (date == null || startTimePicked < 0 || endTimePicked < 0) {
+        if (datePicked == null || startTimePicked < 0 || endTimePicked < 0) {
             toast("日期、时间为必填项");
             return;
         }
@@ -362,7 +362,10 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
     private void addQueue(){
         showProgressBar();
 
-        QueueNode queueNode = new QueueNode("", Constants.uid, "1", new TimeRange());
+        QueueNode queueNode = new QueueNode(Constants.uid, "1", new TimeRange(startTimePicked,
+                endTimePicked), datePicked, sizePicked, radioGroup.getCheckedRadioButtonId() == R
+                .id.radio_sign, heading.getText().toString(), description.getText().toString(),
+                equipmentPicked);
         Network.getInstance().addQueueNode(queueNode).enqueue(new Callback<QueueNode>() {
             @Override
             public void onResponse(Call<QueueNode> call, final Response<QueueNode> response) {

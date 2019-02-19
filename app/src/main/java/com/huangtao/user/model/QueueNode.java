@@ -12,16 +12,23 @@ public class QueueNode {
     TimeRange timeRange;
     String date;
     Size size;
+    Boolean needSignIn;
+    String heading;
+    String description;
     Set<MeetingRoomUtils> meetingRoomUtilsList;
 
-    public QueueNode() {
-    }
-
-    public QueueNode(String id, String userId, String roomId, TimeRange timeRange) {
-        this.id = id;
+    public QueueNode(String userId, String roomId, TimeRange timeRange, String date, Size size,
+                     Boolean needSignIn, String heading, String description,
+                     Set<MeetingRoomUtils> meetingRoomUtilsList) {
         this.userId = userId;
         this.roomId = roomId;
         this.timeRange = timeRange;
+        this.date = date;
+        this.size = size;
+        this.needSignIn = needSignIn;
+        this.heading = heading;
+        this.description = description;
+        this.meetingRoomUtilsList = meetingRoomUtilsList;
     }
 
     public String getId() {
@@ -78,6 +85,30 @@ public class QueueNode {
 
     public void setMeetingRoomUtilsList(Set<MeetingRoomUtils> meetingRoomUtilsList) {
         this.meetingRoomUtilsList = meetingRoomUtilsList;
+    }
+
+    public Boolean getNeedSignIn() {
+        return needSignIn;
+    }
+
+    public void setNeedSignIn(Boolean needSignIn) {
+        this.needSignIn = needSignIn;
+    }
+
+    public String getHeading() {
+        return heading;
+    }
+
+    public void setHeading(String heading) {
+        this.heading = heading;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

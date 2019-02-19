@@ -96,4 +96,7 @@ public interface Api {
     @GET("QueueNode/")
     Call<List<QueueNode>> getQueueNodes(@Query("userId") String userId);
 
+    @DELETE("QueueNode/{id}")
+    Call<String> deleteQueueNodeById(@Path("id") String id);
+
 }

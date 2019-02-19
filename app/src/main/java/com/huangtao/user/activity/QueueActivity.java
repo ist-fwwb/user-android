@@ -1,5 +1,6 @@
 package com.huangtao.user.activity;
 
+import android.content.DialogInterface;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import butterknife.BindView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class QueueActivity extends MyActivity implements View.OnClickListener {
 
@@ -88,6 +90,18 @@ public class QueueActivity extends MyActivity implements View.OnClickListener {
                     informationSb.append(informationStr);
                     information.setText(informationSb.toString());
 
+                    if (queueNode.getHeading() == null || queueNode.getHeading().isEmpty()) {
+                        heading.setText("无主题");
+                    } else {
+                        heading.setText(queueNode.getHeading());
+                    }
+
+                    if (queueNode.getDescription() == null || queueNode.getDescription().isEmpty()) {
+                        description.setText("无内容");
+                    } else {
+                        description.setText(queueNode.getDescription());
+                    }
+
                     date.setText(queueNode.getDate());
                     time.setText(CommonUtils.getFormatTime(queueNode.getTimeRange().getStart(), queueNode.getTimeRange().getEnd()));
 
@@ -126,6 +140,8 @@ public class QueueActivity extends MyActivity implements View.OnClickListener {
                             break;
                     }
 
+                    sign.setText(queueNode.getNeedSignIn() ? "是" : "否");
+
                 } else {
                     toast("无数据");
                 }
@@ -144,7 +160,33 @@ public class QueueActivity extends MyActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v == quit) {
+            showDialog("正在为您实时监控，确定要取消排队吗？", "退出", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Network.getInstance(ScalarsConverterFactory.create()).deleteQueueNodeById(queueNode.getId()).enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            showDialog("取消成功", "确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            });
+                        }
 
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            toast("取消失败");
+                            t.printStackTrace();
+                        }
+                    });
+                }
+            }, "取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
         }
     }
 }
