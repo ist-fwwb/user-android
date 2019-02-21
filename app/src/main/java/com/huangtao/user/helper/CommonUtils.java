@@ -224,4 +224,10 @@ public class CommonUtils {
         return content;
     }
 
+    public static void setClipboardText(Context context, String text) {
+        ClipboardManager cm = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
+        ClipData data = ClipData.newPlainText("text", text);
+        cm.setPrimaryClip(data);
+    }
+
 }

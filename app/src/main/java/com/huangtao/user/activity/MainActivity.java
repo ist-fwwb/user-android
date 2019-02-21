@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.huangtao.user.R;
 import com.huangtao.user.adapter.MainFragmentAdapter;
 import com.huangtao.user.common.Constants;
@@ -81,7 +82,7 @@ public class MainActivity extends MyActivity implements
         };
         registerReceiver(receiver, intentFilter);
 
-        if(!Constants.uid.isEmpty()){
+        if(!StringUtils.isEmpty(Constants.uid)){
             Network.getInstance().queryUserById(Constants.uid).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {

@@ -9,6 +9,8 @@ import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.hjq.toast.ToastUtils;
 
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -159,5 +161,11 @@ public abstract class MyActivity extends UIActivity
         builder.setPositiveButton(posBtn, posListen);
         builder.setNegativeButton(negBtn, negListen);
         builder.show();
+    }
+
+    public void showListDialog(List<String> items, DialogInterface.OnClickListener listener) {
+        AlertDialog.Builder listDialog = new AlertDialog.Builder(this);
+        listDialog.setItems(items.toArray(new String[0]), listener);
+        listDialog.show();
     }
 }

@@ -1,13 +1,17 @@
 package com.huangtao.user.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.hjq.bar.TitleBar;
 import com.huangtao.user.R;
 import com.huangtao.user.helper.CommonUtils;
@@ -75,7 +79,7 @@ public class AddressBookAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
-        User contact = mContactList.get(position);
+        final User contact = mContactList.get(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_address_book, parent, false);
@@ -131,14 +135,33 @@ public class AddressBookAdapter extends BaseAdapter {
 
 
         if(isAddressBook) {
+            // 只是通讯录
             holder.checkBox.setVisibility(View.GONE);
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    final List<String> contactInformation = new ArrayList<>();
+                    if(!StringUtils.isEmpty(contact.getName())){
+                        contactInformation.add(contact.getName());
+                    }
 
+                    if(!StringUtils.isEmpty(contact.getPhone())){
+                        contactInformation.add(contact.getPhone());
+                    }
+
+                    AlertDialog.Builder listDialog = new AlertDialog.Builder(context);
+                    listDialog.setItems(contactInformation.toArray(new String[0]), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            CommonUtils.setClipboardText(context, contactInformation.get(which));
+                            Toast.makeText(context, "已复制到剪贴板", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    listDialog.show();
                 }
             });
         } else {
+            // 联系人选择
             if (selectedPosition.contains(position)) {
                 holder.checkBox.setImageResource(R.mipmap.ic_addressbook_check);
             } else if (!attendents.contains(contact.getId())) {

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.gyf.barlibrary.ImmersionBar;
 import com.hjq.bar.TitleBar;
 import com.huangtao.user.R;
@@ -111,7 +112,7 @@ public class MainFragmentA extends MyLazyFragment
 
     @Override
     protected void initData() {
-        if(!Constants.uid.isEmpty()){
+        if(!StringUtils.isEmpty(Constants.uid)){
             initMeetingList(false);
         }
     }
