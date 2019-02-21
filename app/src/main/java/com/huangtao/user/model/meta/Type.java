@@ -5,9 +5,5 @@ public enum Type {
     UNACTIVATE,
     ORDINARY,
     SUPERIORY,
-    ADMINISTOR,
-
-    //meeting type
-    COMMON,
-    URGECY
+    ADMINISTOR
 }
