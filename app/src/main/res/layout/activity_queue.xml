@@ -83,7 +83,7 @@
                 android:layout_height="50dp"
                 app:backButton="true"
                 app:barStyle="transparent"
-                app:title="排队详情" />
+                app:title="候补排队" />
 
         </com.huangtao.user.widget.XCollapsingToolbarLayout>
 

@@ -195,8 +195,25 @@ public class CommonUtils {
         return first + "-" + last;
     }
 
-    public static String getFormatTime(String  date, int time) {
+    public static String getFormatTime(String date, int time) {
         return date + " " + time / 2 + ":" + (((time + 1) % 2 == 0 ? "30" : "00") + ":00");
+    }
+
+    public static String getFormatTimeForQueueList(String date, int start, int end) {
+        StringBuilder sb = new StringBuilder();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(simpleDateFormat.parse(date));
+            if (calendar.get(Calendar.MONTH) < 9) {
+                sb.append("0");
+            }
+            sb.append(calendar.get(Calendar.MONTH) + 1).append("月").append(calendar.get(Calendar.DAY_OF_MONTH)).append("日").append(" ");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        sb.append(getFormatTime(start, end));
+        return sb.toString();
     }
 
     public static long getFormatTimeMill(String time) {

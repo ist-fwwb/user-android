@@ -121,7 +121,8 @@
 
         <activity android:name=".activity.AddressBookActivity" />
         <activity android:name=".activity.SmartAppointActivity" />
-        <activity android:name=".activity.QueueActivity"></activity>
+        <activity android:name=".activity.QueueActivity" />
+        <activity android:name=".activity.QueueListActivity"></activity>
     </application>
 
 </manifest>

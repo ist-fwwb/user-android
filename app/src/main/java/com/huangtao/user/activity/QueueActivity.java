@@ -72,7 +72,7 @@ public class QueueActivity extends MyActivity implements View.OnClickListener {
     protected void initData() {
         String id;
         if ((id = getIntent().getStringExtra("id")) == null) {
-            finish();
+            return;
         }
 
         showProgressBar();

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +14,7 @@ import com.huangtao.user.adapter.MeetingroomListAdapter;
 import com.huangtao.user.common.MyActivity;
 import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.network.Network;
+import com.huangtao.user.widget.RecyclerViewDivider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +54,7 @@ public class MeetingroomListActivity extends MyActivity {
         recyclerView.setLayoutManager(layoutManager);
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerView.setAdapter(meetingroomListAdapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration
-                .VERTICAL));
+        recyclerView.addItemDecoration(new RecyclerViewDivider(this, LinearLayoutManager.VERTICAL, 20, getColor(R.color.douban_gray_15_percent)));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 

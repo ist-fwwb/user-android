@@ -17,6 +17,10 @@ public class QueueNode {
     String description;
     Set<MeetingRoomUtils> meetingRoomUtilsList;
 
+    public QueueNode() {
+
+    }
+
     public QueueNode(String userId, String roomId, TimeRange timeRange, String date, Size size,
                      Boolean needSignIn, String heading, String description,
                      Set<MeetingRoomUtils> meetingRoomUtilsList) {
