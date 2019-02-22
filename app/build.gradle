@@ -195,6 +195,9 @@ dependencies {
     // pinyin
     implementation 'com.belerweb:pinyin4j:2.5.0'
 
+    // calender
+    implementation 'com.haibin:calendarview:3.5.4'
+
 }
 
 repositories {

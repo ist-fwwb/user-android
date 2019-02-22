@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -182,7 +183,8 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
             DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    datePicked = year + "-" + (month + 1) + "-" + dayOfMonth;
+                    month++;
+                    datePicked = year + "-" + (month < 10 ? "0" : "") + month + "-" + dayOfMonth;
                     date.setText(datePicked + " " + CommonUtils.dateToWeek(datePicked));
                 }
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
@@ -292,15 +294,17 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
         meeting.setDate(datePicked);
         meeting.setStartTime(startTimePicked);
         meeting.setEndTime(endTimePicked);
-        // TODO api没加size要求
         meeting.setNeedSignIn(radioGroup.getCheckedRadioButtonId() == R.id.radio_sign);
         // TODO 暂时默认common
         meeting.setType(MeetingType.COMMON);
 
-        Network.getInstance().appointMeetingroomIntelligent(equipmentPicked, meeting).enqueue(new Callback<Meeting>() {
+        Log.i("appoint", meeting.toString());
+
+        Network.getInstance().appointMeetingroomIntelligent(equipmentPicked, sizePicked, meeting).enqueue(new Callback<Meeting>() {
             @Override
             public void onResponse(Call<Meeting> call, Response<Meeting> response) {
                 hideProgressBar();
+                Log.i("appoint", String.valueOf(response.body() == null));
 
                 if(response.body() != null) {
                     Meeting result = response.body();

@@ -227,6 +227,13 @@ public class CommonUtils {
         return 0;
     }
 
+    public static String getDurationString(int start, int end) {
+        int time = end - start;
+        int hour = time / 2;
+        int minute = time % 2;
+        return (hour > 0 ? hour + "小时" : "") + (minute > 0 ? "30分钟" : "");
+    }
+
     public static void logout(Context context) {
         Constants.uid = "";
         Constants.user = null;
@@ -234,11 +241,16 @@ public class CommonUtils {
     }
 
     public static String getClipboardText(Context context) {
-        ClipboardManager cm = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
-        ClipData data = cm.getPrimaryClip();
-        ClipData.Item item = data.getItemAt(0);
-        String content = item.getText().toString();
-        return content;
+        try {
+            ClipboardManager cm = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
+            ClipData data = cm.getPrimaryClip();
+            ClipData.Item item = data.getItemAt(0);
+            String content = item.getText().toString();
+            return content;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     public static void setClipboardText(Context context, String text) {

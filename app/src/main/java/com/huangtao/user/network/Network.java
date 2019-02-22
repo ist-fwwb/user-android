@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Network {
 
     private static String base_url = "http://47.106.8.44";
-//    private static String base_url = "http://192.168.1.157";
+//    private static String base_url = "http://10.0.0.188";
     private static int base_port = 31000;
 //    private static int base_port = 8080;
 

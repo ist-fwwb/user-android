@@ -162,4 +162,27 @@ public class Meeting implements Serializable {
     public void setHost(User host) {
         this.host = host;
     }
+
+    @Override
+    public String toString() {
+        return "Meeting{" +
+                "id='" + id + '\'' +
+                ", heading='" + heading + '\'' +
+                ", description='" + description + '\'' +
+                ", roomId='" + roomId + '\'' +
+                ", date='" + date + '\'' +
+                ", location='" + location + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", hostId='" + hostId + '\'' +
+                ", attendants=" + attendants +
+                ", needSignIn=" + needSignIn +
+                ", attendantNum='" + attendantNum + '\'' +
+                ", status=" + status +
+                ", type=" + type +
+                ", tags=" + tags +
+                ", timestamp=" + timestamp +
+                ", host=" + host +
+                '}';
+    }
 }
