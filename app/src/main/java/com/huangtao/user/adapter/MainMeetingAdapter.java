@@ -7,12 +7,14 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.huangtao.user.R;
 import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.model.Meeting;
+import com.huangtao.user.model.meta.MeetingType;
 import com.huangtao.user.network.FileManagement;
 
 import java.util.List;
@@ -52,12 +54,14 @@ public class MainMeetingAdapter extends RecyclerView.Adapter<MainMeetingAdapter.
 
         switch (meeting.getStatus()) {
             case Pending:
-                viewHolder.status.setBackgroundColor(mContext.getColor(R.color.douban_blue));
-                break;
-            case Running:
                 viewHolder.status.setBackgroundColor(mContext.getColor(R.color.douban_green));
                 break;
+            case Running:
+                viewHolder.status.setBackgroundColor(mContext.getColor(R.color.douban_red));
+                break;
             case Stopped:
+                viewHolder.status.setBackgroundColor(mContext.getColor(R.color.douban_blue));
+                break;
             case Cancelled:
                 viewHolder.status.setBackgroundColor(mContext.getColor(R.color.douban_gray_55_percent));
                 break;
@@ -73,6 +77,9 @@ public class MainMeetingAdapter extends RecyclerView.Adapter<MainMeetingAdapter.
                 onItemClickListener.onItemClick(meeting.getId());
             }
         });
+        if(meeting.getType() == MeetingType.URGENCY) {
+            viewHolder.urgency.setVisibility(View.VISIBLE);
+        }
 
         Observable.just(FileManagement.getUserHead(mContext, meeting.getHost()))
                 .subscribeOn(Schedulers.newThread())
@@ -137,6 +144,9 @@ public class MainMeetingAdapter extends RecyclerView.Adapter<MainMeetingAdapter.
 
         @BindView(R.id.host_head)
         CircleImageView head;
+
+        @BindView(R.id.urgency)
+        ImageView urgency;
 
         public MeetingVH(@NonNull View itemView) {
             super(itemView);

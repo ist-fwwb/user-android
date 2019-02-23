@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.huangtao.dialog.QRCodeDialog;
@@ -35,6 +36,9 @@ import retrofit2.Response;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class MeetingActivity extends MyActivity {
+
+    @BindView(R.id.wrapper)
+    RelativeLayout wrapper;
 
     @BindView(R.id.time)
     TextView time;
@@ -136,18 +140,23 @@ public class MeetingActivity extends MyActivity {
         switch (meeting.getStatus()){
             case Pending:
                 statusStr = "未开始";
+                enter.setVisibility(View.VISIBLE);
+                wrapper.setBackgroundResource(R.drawable.shape_meeting_pending);
                 break;
             case Running:
                 statusStr = "进行中";
-                enter.setEnabled(false);
+                enter.setVisibility(View.GONE);
+                wrapper.setBackgroundResource(R.drawable.shape_meeting_running);
                 break;
             case Stopped:
                 statusStr = "已结束";
-                enter.setEnabled(false);
+                enter.setVisibility(View.GONE);
+                wrapper.setBackgroundResource(R.drawable.shape_meeting_stopped);
                 break;
             case Cancelled:
                 statusStr = "已取消";
-                enter.setEnabled(false);
+                enter.setVisibility(View.GONE);
+                wrapper.setBackgroundResource(R.drawable.shape_meeting_canceled);
                 break;
         }
         status.setText(statusStr);
@@ -178,7 +187,7 @@ public class MeetingActivity extends MyActivity {
         if(meeting.getAttendants().keySet().contains(Constants.uid)){
             enter.setText("退出会议");
             enter.setBackground(getDrawable(R.drawable.selector_meeting_exit_button));
-            enter.setTextColor(getColor(R.color.douban_red_80_percent));
+            enter.setTextColor(getColor(R.color.douban_blue_40_percent));
             enter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

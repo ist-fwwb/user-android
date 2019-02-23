@@ -184,7 +184,7 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     month++;
-                    datePicked = year + "-" + (month < 10 ? "0" : "") + month + "-" + dayOfMonth;
+                    datePicked = year + "-" + (month < 10 ? "0" : "") + month + "-" + (dayOfMonth < 10 ? "0" : "") + dayOfMonth;
                     date.setText(datePicked + " " + CommonUtils.dateToWeek(datePicked));
                 }
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
@@ -381,6 +381,7 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
                             Intent intent = new Intent(SmartAppointActivity.this, QueueActivity.class);
                             intent.putExtra("id", response.body().getId());
                             startActivityFinish(intent);
+                            finish();
                         }
                     });
                 }

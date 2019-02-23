@@ -71,7 +71,7 @@ public interface Api {
     Call<Meeting> appointMeetingroom(@Body Meeting meeting);
 
     @POST("meeting/intelligent")
-    Call<Meeting> appointMeetingroomIntelligent(@Query("utils") Set<MeetingRoomUtils> utils, @Query("size") Size size, @Body Meeting meeting);
+    Call<Meeting> appointMeetingroomIntelligent(@Query("utils") Set<MeetingRoomUtils> utils, @Query("size") Size size, @Body Meeting origin);
 
     @GET("meeting/{id}/attendants")
     Call<List<User>> queryAttendantsFromMeeting(@Path("id") String id);

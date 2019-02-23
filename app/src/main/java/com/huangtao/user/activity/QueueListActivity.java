@@ -84,6 +84,5 @@ public class QueueListActivity extends MyActivity {
                 t.printStackTrace();
             }
         });
-
     }
 }

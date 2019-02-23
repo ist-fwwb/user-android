@@ -3,7 +3,9 @@ package com.huangtao.user.model;
 import com.huangtao.user.helper.ChineseUtils;
 import com.huangtao.user.model.meta.Type;
 
-public class User implements Comparable<User> {
+import java.io.Serializable;
+
+public class User implements Comparable<User>, Serializable {
     String id;
     String enterpriceId;
     String phone;

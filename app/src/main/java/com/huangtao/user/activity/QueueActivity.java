@@ -1,6 +1,7 @@
 package com.huangtao.user.activity;
 
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -72,8 +73,11 @@ public class QueueActivity extends MyActivity implements View.OnClickListener {
     protected void initData() {
         String id;
         if ((id = getIntent().getStringExtra("id")) == null) {
+            Log.i("queue", id);
             return;
         }
+
+
 
         showProgressBar();
         Network.getInstance().getQueueNodeById(id).enqueue(new Callback<QueueNode>() {
@@ -85,7 +89,7 @@ public class QueueActivity extends MyActivity implements View.OnClickListener {
 
                     StringBuilder informationSb = new StringBuilder();
                     informationSb.append("创建于 ");
-                    informationSb.append(TimeUtils.millis2String(Long.parseLong(queueNode.getId())));
+                    informationSb.append(TimeUtils.millis2String(Long.parseLong(queueNode.getId().substring(0,13))));
                     informationSb.append(" ,");
                     informationSb.append(informationStr);
                     information.setText(informationSb.toString());

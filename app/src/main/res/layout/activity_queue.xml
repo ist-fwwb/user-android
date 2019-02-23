@@ -68,7 +68,7 @@
                             android:layout_height="wrap_content"
                             android:text="将第一时间为您预定符合要求的空闲会议室"
                             android:textColor="@color/white"
-                            android:textSize="15sp"
+                            android:textSize="13sp"
                             android:layout_marginTop="5dp"/>
 
                     </LinearLayout>
