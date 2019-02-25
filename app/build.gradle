@@ -198,6 +198,9 @@ dependencies {
     // calender
     implementation 'com.haibin:calendarview:3.5.4'
 
+    // recorder
+    implementation 'com.github.adrielcafe:AndroidAudioRecorder:0.3.0'
+
 }
 
 repositories {

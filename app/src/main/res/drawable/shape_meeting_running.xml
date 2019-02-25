@@ -11,7 +11,7 @@
     android:gradientRadius="100"    渐变半径 非线性放射有效
      -->
     <gradient
-        android:startColor="@color/douban_red_50_percent"
+        android:startColor="@color/douban_red_80_percent"
         android:endColor="@color/douban_red"
         android:angle="90"
         android:type="linear"/>

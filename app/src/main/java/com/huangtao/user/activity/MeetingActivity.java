@@ -3,6 +3,7 @@ package com.huangtao.user.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.hjq.bar.TitleBar;
 import com.huangtao.dialog.QRCodeDialog;
 import com.huangtao.user.R;
 import com.huangtao.user.common.Constants;
@@ -22,9 +24,14 @@ import com.huangtao.user.network.FileManagement;
 import com.huangtao.user.network.Network;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
+import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder;
+import cafe.adriel.androidaudiorecorder.model.AudioChannel;
+import cafe.adriel.androidaudiorecorder.model.AudioSampleRate;
+import cafe.adriel.androidaudiorecorder.model.AudioSource;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -36,6 +43,11 @@ import retrofit2.Response;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class MeetingActivity extends MyActivity {
+
+    private static int REQUEST_CODE_RECORD = 101;
+
+    @BindView(R.id.title)
+    TitleBar titleBar;
 
     @BindView(R.id.wrapper)
     RelativeLayout wrapper;
@@ -76,6 +88,8 @@ public class MeetingActivity extends MyActivity {
 
     @BindView(R.id.enter)
     Button enter;
+    @BindView(R.id.record)
+    Button record;
 
     Meeting meeting;
 
@@ -142,10 +156,12 @@ public class MeetingActivity extends MyActivity {
                 statusStr = "未开始";
                 enter.setVisibility(View.VISIBLE);
                 wrapper.setBackgroundResource(R.drawable.shape_meeting_pending);
+                titleBar.getRightView().setVisibility(View.GONE);
                 break;
             case Running:
                 statusStr = "进行中";
                 enter.setVisibility(View.GONE);
+                record.setVisibility(View.VISIBLE);
                 wrapper.setBackgroundResource(R.drawable.shape_meeting_running);
                 break;
             case Stopped:
@@ -157,6 +173,7 @@ public class MeetingActivity extends MyActivity {
                 statusStr = "已取消";
                 enter.setVisibility(View.GONE);
                 wrapper.setBackgroundResource(R.drawable.shape_meeting_canceled);
+                titleBar.getRightView().setVisibility(View.GONE);
                 break;
         }
         status.setText(statusStr);
@@ -204,6 +221,51 @@ public class MeetingActivity extends MyActivity {
                 }
             });
         }
+
+        // 录音按钮
+        record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog("每个会议只保留最新录音内容，若此前已有过录音记录，将被覆盖", "确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        File dir = new File(Constants.SAVE_RECORD_DIR);
+                        if (!dir.exists()) {
+                            dir.mkdirs();
+                        }
+
+                        File recordFile = new File(getRecordPath());
+                        if (recordFile.exists()) {
+                            recordFile.delete();
+                        }
+
+                        AndroidAudioRecorder.with(MeetingActivity.this)
+                                // Required
+                                .setFilePath(getRecordPath())
+                                .setColor(ContextCompat.getColor(MeetingActivity.this, R.color.douban_red_80_percent))
+                                .setRequestCode(REQUEST_CODE_RECORD)
+
+                                // Optional
+                                .setSource(AudioSource.MIC)
+                                .setChannel(AudioChannel.STEREO)
+                                .setSampleRate(AudioSampleRate.HZ_48000)
+                                .setAutoStart(true)
+                                .setKeepDisplayOn(true)
+
+                                // Start recording
+                                .record();
+                    }
+                });
+            }
+        });
+
+        // 笔记列表
+        titleBar.getRightView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         // 会议代码
         number.setText(meeting.getAttendantNum());
@@ -424,6 +486,10 @@ public class MeetingActivity extends MyActivity {
         participantContainer.addView(v);
     }
 
+    private String getRecordPath() {
+        return Constants.SAVE_RECORD_DIR + meeting.getId() + "-" + Constants.uid + ".wav";
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -431,6 +497,26 @@ public class MeetingActivity extends MyActivity {
         if(requestCode == 100 && resultCode == RESULT_OK){
             meeting = (Meeting) data.getSerializableExtra("meeting");
             initParticipant();
+        } else if(requestCode == REQUEST_CODE_RECORD && resultCode == RESULT_OK) {
+            showProgressBar();
+            File recordFile = new File(getRecordPath());
+            if(!recordFile.exists()){
+                toast("录音失败");
+                hideProgressBar();
+                return;
+            }
+
+            boolean uploadResult = FileManagement.upload(this, recordFile, recordFile.getName());
+            if(!uploadResult){
+                toast("上传失败");
+                hideProgressBar();
+                return;
+            }
+
+            // TODO 上传服务器相关信息
+            record.setText("重新录音");
+            toast("录音已上传");
+            hideProgressBar();
         }
 
     }

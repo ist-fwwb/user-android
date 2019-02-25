@@ -140,7 +140,8 @@
                 android:layout_height="50dp"
                 app:backButton="true"
                 app:barStyle="transparent"
-                app:title="会议详情" />
+                app:title="会议详情"
+                app:rightTitle="笔记"/>
 
         </com.huangtao.user.widget.XCollapsingToolbarLayout>
 
@@ -332,6 +333,17 @@
                 android:text="加入会议"
                 android:textColor="@color/white"
                 android:textSize="14sp"/>
+
+            <Button
+                android:id="@+id/record"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_meeting_record"
+                android:text="开始录音"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

@@ -1,5 +1,7 @@
 package com.huangtao.user.fragment;
 
+import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 
@@ -7,13 +9,16 @@ import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.huangtao.user.R;
-import com.huangtao.user.activity.QueueActivity;
 import com.huangtao.user.common.MyLazyFragment;
 import com.huangtao.user.common.UIActivity;
 
 import java.util.List;
 
 import butterknife.BindView;
+import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder;
+import cafe.adriel.androidaudiorecorder.model.AudioChannel;
+import cafe.adriel.androidaudiorecorder.model.AudioSampleRate;
+import cafe.adriel.androidaudiorecorder.model.AudioSource;
 
 public class MainFragmentC extends MyLazyFragment
         implements View.OnClickListener {
@@ -72,7 +77,24 @@ public class MainFragmentC extends MyLazyFragment
     @Override
     public void onClick(View v) {
         if (v == mToastView) {
-            startActivity(QueueActivity.class);
+            String filePath = Environment.getExternalStorageDirectory() + "/recorded_audio.wav";
+            int color = getResources().getColor(R.color.colorPrimaryDark);
+            int requestCode = 0;
+            AndroidAudioRecorder.with(getFragmentActivity())
+                    // Required
+                    .setFilePath(filePath)
+                    .setColor(ContextCompat.getColor(getFragmentActivity(), R.color.douban_green_50_percent))
+                    .setRequestCode(requestCode)
+
+                    // Optional
+                    .setSource(AudioSource.MIC)
+                    .setChannel(AudioChannel.STEREO)
+                    .setSampleRate(AudioSampleRate.HZ_48000)
+                    .setAutoStart(true)
+                    .setKeepDisplayOn(true)
+
+                    // Start recording
+                    .record();
         }else if (v == mPermissionView) {
             XXPermissions.with(getFragmentActivity())
                     //.constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝

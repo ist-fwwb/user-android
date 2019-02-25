@@ -87,6 +87,7 @@ public class LauncherActivity extends MyActivity
                 .permission(Permission.CAMERA)
                 .permission(Permission.READ_CALENDAR)
                 .permission(Permission.WRITE_CALENDAR)
+                .permission(Permission.RECORD_AUDIO)
                 .request(this);
     }
 

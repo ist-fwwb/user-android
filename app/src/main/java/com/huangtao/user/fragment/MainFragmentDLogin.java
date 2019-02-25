@@ -54,6 +54,9 @@ public class MainFragmentDLogin extends MyLazyFragment
     @BindView(R.id.address_book)
     RelativeLayout addressBook;
 
+    @BindView(R.id.note)
+    RelativeLayout note;
+
     @BindView(R.id.logout)
     RelativeLayout logout;
 
@@ -115,6 +118,7 @@ public class MainFragmentDLogin extends MyLazyFragment
 
         queue.setOnClickListener(this);
         addressBook.setOnClickListener(this);
+        note.setOnClickListener(this);
         logout.setOnClickListener(this);
     }
 
@@ -153,6 +157,8 @@ public class MainFragmentDLogin extends MyLazyFragment
             startActivity(intent);
         } else if (v == queue) {
             startActivity(QueueListActivity.class);
+        } else if (v == note) {
+
         }
     }
 

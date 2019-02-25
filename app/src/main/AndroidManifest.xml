@@ -22,6 +22,10 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
+    <!-- 录音 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:name=".common.InitApplication"
         android:icon="@mipmap/icon"
@@ -122,7 +126,7 @@
         <activity android:name=".activity.AddressBookActivity" />
         <activity android:name=".activity.SmartAppointActivity" />
         <activity android:name=".activity.QueueActivity" />
-        <activity android:name=".activity.QueueListActivity"></activity>
+        <activity android:name=".activity.QueueListActivity" />
     </application>
 
 </manifest>
