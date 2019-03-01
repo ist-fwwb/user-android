@@ -14,8 +14,8 @@ import com.huangtao.user.model.User;
 import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.SideBar;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -113,22 +113,21 @@ public class AddressBookActivity extends MyActivity implements SideBar.OnLetterS
         if (users.size() > 0) {
             showProgressBar();
 
-            Network.getInstance().queryMeetingById(meeting.getId()).enqueue(new Callback<Meeting>() {
+            List<String> uids = new ArrayList<>();
+            for(User user : users) {
+                uids.add(user.getId());
+            }
+
+            Network.getInstance().addAttendants(meeting.getId(), uids).enqueue(new Callback<Meeting>() {
                 @Override
                 public void onResponse(Call<Meeting> call, Response<Meeting> response) {
-                    meeting = response.body();
-                    Map<String, String> attendents = meeting.getAttendants();
-                    for (String key : attendents.keySet()) {
-                        if (attendents.get(key) == null) {
-                            attendents.put(key, "");
-                        }
+                    if(response.body() != null){
+                        Intent intent = new Intent();
+                        intent.putExtra("meeting", response.body());
+                        setResult(RESULT_OK, intent);
+                        toast("添加成功");
+                        finish();
                     }
-                    for (User user : users) {
-                        if (!attendents.keySet().contains(user.getId())) {
-                            attendents.put(user.getId(), "");
-                        }
-                    }
-                    modifyMeeting();
                 }
 
                 @Override
@@ -137,25 +136,5 @@ public class AddressBookActivity extends MyActivity implements SideBar.OnLetterS
                 }
             });
         }
-    }
-
-    private void modifyMeeting() {
-        Network.getInstance().modifyMeeting(meeting, meeting.getId()).enqueue(new Callback<Meeting>() {
-            @Override
-            public void onResponse(Call<Meeting> call, Response<Meeting> response) {
-                if(response.body() != null){
-                    Intent intent = new Intent();
-                    intent.putExtra("meeting", response.body());
-                    setResult(RESULT_OK, intent);
-                    toast("添加成功");
-                    finish();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Meeting> call, Throwable t) {
-
-            }
-        });
     }
 }

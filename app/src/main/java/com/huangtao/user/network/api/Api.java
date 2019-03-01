@@ -73,10 +73,10 @@ public interface Api {
     @POST("meeting/intelligent")
     Call<Meeting> appointMeetingroomIntelligent(@Query("utils") Set<MeetingRoomUtils> utils, @Query("size") Size size, @Body Meeting origin);
 
-    @GET("meeting/{id}/attendants")
+    @GET("meeting/{id}/attendant")
     Call<List<User>> queryAttendantsFromMeeting(@Path("id") String id);
 
-    @POST("meeting/{attendantNum}/attendants")
+    @POST("meeting/{attendantNum}/attendant")
     Call<Meeting> joinMeeting(@Path("attendantNum") String attendantNum, @Query("userId") String uid);
 
     @DELETE("meeting/{id}/attendants/{userId}")
@@ -84,6 +84,9 @@ public interface Api {
 
     @PUT("meeting/{id}")
     Call<Meeting> modifyMeeting(@Body Meeting meeting, @Path("id") String id);
+
+    @POST("meeting/{id}/attendants")
+    Call<Meeting> addAttendants(@Path("id") String id, @Body List<String> uids);
 
 
     // queue

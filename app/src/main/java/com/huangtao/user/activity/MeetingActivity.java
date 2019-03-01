@@ -394,7 +394,7 @@ public class MeetingActivity extends MyActivity {
 
                         enter.setText("退出会议");
                         enter.setBackground(getDrawable(R.drawable.selector_meeting_exit_button));
-                        enter.setTextColor(getColor(R.color.douban_red_80_percent));
+                        enter.setTextColor(getColor(R.color.douban_blue_40_percent));
                         enter.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

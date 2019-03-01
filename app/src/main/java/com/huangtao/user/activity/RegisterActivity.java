@@ -2,6 +2,9 @@ package com.huangtao.user.activity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
@@ -22,7 +25,6 @@ import java.io.File;
 
 import butterknife.BindView;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RegisterActivity extends MyActivity
@@ -51,6 +53,8 @@ public class RegisterActivity extends MyActivity
     Button mCommitView;
 
 //    private EditTextInputHelper mEditTextInputHelper;
+
+    private MyHandler myHandler = new MyHandler();
 
     private static final String PATH_REGISTER = Constants.SAVE_IMG_DIR + "register.jpg";
 
@@ -105,45 +109,25 @@ public class RegisterActivity extends MyActivity
 
             showProgressBar();
 
-            String enterpriseId = enterprise.getText().toString();
-            String phone = mPhoneView.getText().toString();
-            String fileName = enterpriseId + phone;
-
-            File face = new File(PATH_REGISTER);
-
-            boolean faceResult = FileManagement.upload(getApplicationContext(), face, fileName + ".jpg");
-            Log.i("upload", "face upload complete " + faceResult);
-
-            if(!faceResult){
-                toast("注册失败");
-                hideProgressBar();
-                return;
-            }
-
-            Network.getInstance().register(enterpriseId, phone, mPasswordView1.getText().toString
-                    (), realName.getText().toString(), fileName + ".jpg", fileName).enqueue(new Callback<User>() {
+            new Thread(new Runnable() {
                 @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    hideProgressBar();
-                    User user = response.body();
-                    if (user != null) {
-                        toast("注册成功");
-                        finish();
-                    } else {
-                        toast("注册失败");
-                        Log.e("register", response.toString());
-                    }
+                public void run() {
+                    String enterpriseId = enterprise.getText().toString();
+                    String phone = mPhoneView.getText().toString();
+                    String fileName = enterpriseId + phone;
+
+                    File face = new File(PATH_REGISTER);
+
+                    boolean faceResult = FileManagement.upload(getApplicationContext(), face, fileName + ".jpg");
+                    Log.i("upload", "face upload complete " + faceResult);
+
+                    Message msg = new Message();
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("result", faceResult);
+                    msg.setData(bundle);
+                    myHandler.sendMessage(msg);
                 }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    hideProgressBar();
-                    toast("注册失败");
-                    t.printStackTrace();
-                }
-            });
-
-
+            }).start();
 
         } else if (v == face) {
             Intent intent = new Intent();
@@ -151,6 +135,11 @@ public class RegisterActivity extends MyActivity
             intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
             // 根据文件地址创建文件
+            File fileDir = new File(Constants.SAVE_IMG_DIR);
+            if(!fileDir.exists() || !fileDir.isDirectory()) {
+                fileDir.mkdirs();
+            }
+
             File file = new File(PATH_REGISTER);
             if (file.exists()) {
                 file.delete();
@@ -175,5 +164,45 @@ public class RegisterActivity extends MyActivity
     protected void onDestroy() {
 //        mEditTextInputHelper.removeViews();
         super.onDestroy();
+    }
+
+    private class MyHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            boolean faceResult = msg.getData().getBoolean("result");
+            if(!faceResult){
+                toast("注册失败");
+                hideProgressBar();
+                return;
+            }
+
+            String enterpriseId = enterprise.getText().toString();
+            String phone = mPhoneView.getText().toString();
+            String fileName = enterpriseId + phone;
+
+            Network.getInstance().register(enterpriseId, phone, mPasswordView1.getText().toString
+                    (), realName.getText().toString(), fileName + ".jpg", fileName).enqueue(new retrofit2.Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    hideProgressBar();
+                    User user = response.body();
+                    if (user != null) {
+                        toast("注册成功");
+                        finish();
+                    } else {
+                        toast("注册失败");
+                        Log.e("register", response.toString());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    hideProgressBar();
+                    toast("注册失败");
+                    t.printStackTrace();
+                }
+            });
+        }
     }
 }

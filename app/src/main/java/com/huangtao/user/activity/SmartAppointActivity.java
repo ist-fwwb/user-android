@@ -201,13 +201,17 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
                         startTime.setText(timeStr);
                         startTimePicked = timeInt;
                     } else {
-                        if (minute < 30) {
+                        if (minute == 0) {
+                            timeStr = hourOfDay + ":00";
+                            endTimePicked = timeInt;
+                        } else if (minute < 30) {
                             timeStr = hourOfDay + ":30";
+                            endTimePicked = timeInt + 1;
                         } else {
                             timeStr = (hourOfDay + 1) + ":00";
+                            endTimePicked = timeInt + 1;
                         }
                         endTime.setText(timeStr);
-                        endTimePicked = timeInt;
                     }
                 }
             }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
@@ -344,6 +348,7 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
             public void onFailure(Call<Meeting> call, Throwable t) {
                 hideProgressBar();
                 t.printStackTrace();
+                toast("提交失败");
             }
         });
     }
