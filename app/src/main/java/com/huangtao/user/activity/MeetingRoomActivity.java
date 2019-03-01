@@ -160,7 +160,7 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
             @Override
             public void onResponse(Call<List<Meeting>> call, Response<List<Meeting>> response) {
                 List<Meeting> meetings = response.body();
-                if (meetings.size() > 0) {
+                if (meetings != null && meetings.size() > 0) {
                     noMeeting.setVisibility(View.GONE);
 
                     for (final Meeting meeting : meetings) {

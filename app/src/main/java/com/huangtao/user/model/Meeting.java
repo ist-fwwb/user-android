@@ -4,6 +4,7 @@ import com.huangtao.user.model.meta.MeetingType;
 import com.huangtao.user.model.meta.Status;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,8 +28,7 @@ public class Meeting implements Serializable {
     Set<String> tags;
     long timestamp;
     User host;
-    List<ForeignGuest> foreignGuestList;
-    List<String> images;
+    List<ForeignGuest> foreignGuestList = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -174,14 +174,6 @@ public class Meeting implements Serializable {
         this.foreignGuestList = foreignGuestList;
     }
 
-    public List<String> getImages() {
-        return images;
-    }
-
-    public void setImages(List<String> images) {
-        this.images = images;
-    }
-
     @Override
     public String toString() {
         return "Meeting{" +
@@ -202,6 +194,7 @@ public class Meeting implements Serializable {
                 ", tags=" + tags +
                 ", timestamp=" + timestamp +
                 ", host=" + host +
+                ", foreignGuestList=" + foreignGuestList +
                 '}';
     }
 }

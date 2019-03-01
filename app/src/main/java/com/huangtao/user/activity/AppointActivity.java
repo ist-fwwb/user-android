@@ -2,6 +2,7 @@ package com.huangtao.user.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
@@ -93,6 +94,8 @@ public class AppointActivity extends MyActivity {
                 meeting.setHostId(Constants.uid);
                 meeting.setNeedSignIn(radioGroup.getCheckedRadioButtonId() == R.id.radio_sign);
                 meeting.setType(MeetingType.COMMON);
+
+                Log.i("appoint", meeting.toString());
 
                 Network.getInstance().appointMeetingroom(meeting).enqueue(new Callback<Meeting>() {
                     @Override

@@ -19,7 +19,9 @@ import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyActivity;
 import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.model.Meeting;
+import com.huangtao.user.model.MeetingNote;
 import com.huangtao.user.model.User;
+import com.huangtao.user.model.meta.MeetingNoteType;
 import com.huangtao.user.network.FileManagement;
 import com.huangtao.user.network.Network;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
@@ -156,7 +158,7 @@ public class MeetingActivity extends MyActivity {
                 statusStr = "未开始";
                 enter.setVisibility(View.VISIBLE);
                 wrapper.setBackgroundResource(R.drawable.shape_meeting_pending);
-                titleBar.getRightView().setVisibility(View.GONE);
+                // titleBar.getRightView().setVisibility(View.INVISIBLE);
                 break;
             case Running:
                 statusStr = "进行中";
@@ -173,7 +175,7 @@ public class MeetingActivity extends MyActivity {
                 statusStr = "已取消";
                 enter.setVisibility(View.GONE);
                 wrapper.setBackgroundResource(R.drawable.shape_meeting_canceled);
-                titleBar.getRightView().setVisibility(View.GONE);
+                titleBar.getRightView().setVisibility(View.INVISIBLE);
                 break;
         }
         status.setText(statusStr);
@@ -263,7 +265,10 @@ public class MeetingActivity extends MyActivity {
         titleBar.getRightView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(MeetingActivity.this, MeetingNoteListActivity.class);
+                intent.putExtra("isFromMeeting", true);
+                intent.putExtra("meetingId", meeting.getId());
+                startActivity(intent);
             }
         });
 
@@ -513,10 +518,32 @@ public class MeetingActivity extends MyActivity {
                 return;
             }
 
-            // TODO 上传服务器相关信息
-            record.setText("重新录音");
-            toast("录音已上传");
-            hideProgressBar();
+            // 上传服务器相关信息
+            MeetingNote meetingNote = new MeetingNote();
+            meetingNote.setMeetingId(meeting.getId());
+            meetingNote.setMeetingNoteType(MeetingNoteType.VOICE);
+            meetingNote.setOwnerId(Constants.uid);
+            meetingNote.setVoiceFileName(recordFile.getName());
+            Network.getInstance().addMeetingNote("", meetingNote).enqueue(new Callback<List<MeetingNote>>() {
+                @Override
+                public void onResponse(Call<List<MeetingNote>> call, Response<List<MeetingNote>> response) {
+                    hideProgressBar();
+                    if(response.body() != null){
+                        record.setText("重新录音");
+                        toast("录音已上传");
+                    } else {
+                        toast("上传失败");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<MeetingNote>> call, Throwable t) {
+                    hideProgressBar();
+                    t.printStackTrace();
+                    toast("上传失败");
+                }
+            });
+
         }
 
     }

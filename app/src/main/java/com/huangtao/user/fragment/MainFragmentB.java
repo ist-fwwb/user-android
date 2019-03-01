@@ -224,6 +224,10 @@ public class MainFragmentB extends MyLazyFragment
 
     private void filterMeetings(int year, int month, int day) {
         Log.i("filter", year + " " + month + " " + day);
+        if(meetings == null) {
+            return;
+        }
+
         datas.clear();
         for(Meeting meeting : meetings){
             java.util.Calendar cal = java.util.Calendar.getInstance();

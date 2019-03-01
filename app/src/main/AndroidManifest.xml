@@ -127,6 +127,8 @@
         <activity android:name=".activity.SmartAppointActivity" />
         <activity android:name=".activity.QueueActivity" />
         <activity android:name=".activity.QueueListActivity" />
+        <activity android:name=".activity.MeetingNoteListActivity" />
+        <activity android:name=".activity.VoiceNoteActivity"></activity>
     </application>
 
 </manifest>

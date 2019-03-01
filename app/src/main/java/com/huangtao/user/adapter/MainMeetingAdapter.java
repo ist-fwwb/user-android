@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class MainMeetingAdapter extends RecyclerView.Adapter<MainMeetingAdapter.
     @Override
     public void onBindViewHolder(@NonNull final MeetingVH viewHolder, final int i) {
         final Meeting meeting = data.get(i);
+        Log.i("calender", meeting.toString());
 
         switch (meeting.getStatus()) {
             case Pending:
@@ -81,32 +83,34 @@ public class MainMeetingAdapter extends RecyclerView.Adapter<MainMeetingAdapter.
             viewHolder.urgency.setVisibility(View.VISIBLE);
         }
 
-        Observable.just(FileManagement.getUserHead(mContext, meeting.getHost()))
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        if(meeting.getHost() != null) {
+            Observable.just(FileManagement.getUserHead(mContext, meeting.getHost()))
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(String s) {
-                        if(!s.isEmpty()){
-                            viewHolder.head.setImageBitmap(CommonUtils.getLoacalBitmap(s));
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onNext(String s) {
+                            if (!s.isEmpty()) {
+                                viewHolder.head.setImageBitmap(CommonUtils.getLoacalBitmap(s));
+                            }
+                        }
 
-                    }
+                        @Override
+                        public void onError(Throwable e) {
 
-                    @Override
-                    public void onComplete() {
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        }
     }
 
     @Override

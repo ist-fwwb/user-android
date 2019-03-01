@@ -1,6 +1,8 @@
 package com.huangtao.user.network.api;
 
 import com.huangtao.user.model.Meeting;
+import com.huangtao.user.model.MeetingNote;
+import com.huangtao.user.model.MeetingNoteWrapper;
 import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.model.QueueNode;
 import com.huangtao.user.model.TimeSlice;
@@ -101,5 +103,21 @@ public interface Api {
 
     @DELETE("QueueNode/{id}")
     Call<String> deleteQueueNodeById(@Path("id") String id);
+
+    // meeting note
+    @GET("meetingNote/")
+    Call<List<MeetingNoteWrapper>> getMeetingNotes(@Query("userId") String userId, @Query("meetingId") String meetingId, @Query("ownerId") String ownerId);
+
+    @POST("meetingNote/")
+    Call<List<MeetingNote>> addMeetingNote(@Query("fileName") String fileName, @Body MeetingNote meetingNote);
+
+    @GET("meetingNote/{id}")
+    Call<MeetingNote> getMeetingNoteById(@Path("id") String id);
+
+    @DELETE("meetingNote/{id}/collectors")
+    Call<MeetingNote> removeFavoriteNote(@Path("id") String id, @Body String userId);
+
+    @POST("meetingNote/{id}/collectors")
+    Call<MeetingNote> addFavoriteNote(@Path("id") String id, @Body String userId);
 
 }
