@@ -2,8 +2,8 @@ package com.huangtao.user.model;
 
 import com.huangtao.user.model.meta.MeetingNoteType;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MeetingNote {
     String id;
@@ -13,7 +13,7 @@ public class MeetingNote {
     String note;
     String meetingId;
     String ownerId;
-    Set<String> collectorIds = new HashSet<>();
+    List<String> collectorIds = new ArrayList<>();
 
     public String getVoiceFileName() {
         return voiceFileName;
@@ -63,11 +63,11 @@ public class MeetingNote {
         this.ownerId = ownerId;
     }
 
-    public Set<String> getCollectorIds() {
+    public List<String> getCollectorIds() {
         return collectorIds;
     }
 
-    public void setCollectorIds(Set<String> collectorIds) {
+    public void setCollectorIds(List<String> collectorIds) {
         this.collectorIds = collectorIds;
     }
 
@@ -77,5 +77,14 @@ public class MeetingNote {
 
     public void setMeetingNoteType(MeetingNoteType meetingNoteType) {
         this.meetingNoteType = meetingNoteType;
+    }
+
+    public boolean isFavorite(String uid) {
+        for (String id : collectorIds) {
+            if (id.replaceAll("\"", "").equals(uid)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

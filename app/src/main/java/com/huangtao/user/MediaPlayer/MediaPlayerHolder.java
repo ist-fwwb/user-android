@@ -18,7 +18,10 @@ package com.huangtao.user.MediaPlayer;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.util.Log;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -56,14 +59,12 @@ public final class MediaPlayerHolder implements PlayerAdapter {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
                     stopUpdatingCallbackWithPosition(true);
-                    logToUI("MediaPlayer playback completed");
                     if (mPlaybackInfoListener != null) {
                         mPlaybackInfoListener.onStateChanged(PlaybackInfoListener.State.COMPLETED);
                         mPlaybackInfoListener.onPlaybackCompleted();
                     }
                 }
             });
-            logToUI("mMediaPlayer = new MediaPlayer()");
         }
     }
 
@@ -77,27 +78,26 @@ public final class MediaPlayerHolder implements PlayerAdapter {
 
         initializeMediaPlayer();
         try {
-            logToUI("load() {1. setDataSource}");
-            mMediaPlayer.setDataSource(mediaPath);
+            File file = new File(mediaPath);
+            FileInputStream fis = new FileInputStream(file);
+            mMediaPlayer.reset();
+            mMediaPlayer.setDataSource(fis.getFD());
         } catch (Exception e) {
-            logToUI(e.toString());
+            e.printStackTrace();
         }
 
         try {
-            logToUI("load() {2. prepare}");
             mMediaPlayer.prepare();
         } catch (Exception e) {
-            logToUI(e.toString());
+            e.printStackTrace();
         }
 
         initializeProgressCallback();
-        logToUI("initializeProgressCallback()");
     }
 
     @Override
     public void release() {
         if (mMediaPlayer != null) {
-            logToUI("release() and mMediaPlayer = null");
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
@@ -125,7 +125,6 @@ public final class MediaPlayerHolder implements PlayerAdapter {
     @Override
     public void reset() {
         if (mMediaPlayer != null) {
-            logToUI("playbackReset()");
             mMediaPlayer.reset();
             loadMedia(mediaPath);
             if (mPlaybackInfoListener != null) {
@@ -142,14 +141,12 @@ public final class MediaPlayerHolder implements PlayerAdapter {
             if (mPlaybackInfoListener != null) {
                 mPlaybackInfoListener.onStateChanged(PlaybackInfoListener.State.PAUSED);
             }
-            logToUI("playbackPause()");
         }
     }
 
     @Override
     public void seekTo(int position) {
         if (mMediaPlayer != null) {
-            logToUI(String.format("seekTo() %d ms", position));
             mMediaPlayer.seekTo(position);
         }
     }
@@ -204,15 +201,6 @@ public final class MediaPlayerHolder implements PlayerAdapter {
         if (mPlaybackInfoListener != null) {
             mPlaybackInfoListener.onDurationChanged(duration);
             mPlaybackInfoListener.onPositionChanged(0);
-            logToUI(String.format("firing setPlaybackDuration(%d sec)",
-                                  TimeUnit.MILLISECONDS.toSeconds(duration)));
-            logToUI("firing setPlaybackPosition(0)");
-        }
-    }
-
-    private void logToUI(String message) {
-        if (mPlaybackInfoListener != null) {
-            mPlaybackInfoListener.onLogUpdated(message);
         }
     }
 

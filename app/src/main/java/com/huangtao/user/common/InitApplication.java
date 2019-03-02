@@ -10,7 +10,9 @@ import android.util.Log;
 import com.alibaba.sdk.android.push.CloudPushService;
 import com.alibaba.sdk.android.push.CommonCallback;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
-import com.huangtao.user.activity.MainActivity;
+
+import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
+import cafe.adriel.androidaudioconverter.callback.ILoadCallback;
 
 public class InitApplication extends MyApplication {
     private static final String TAG = "Init";
@@ -18,6 +20,18 @@ public class InitApplication extends MyApplication {
     public void onCreate() {
         super.onCreate();
         initCloudChannel(this);
+
+        AndroidAudioConverter.load(this, new ILoadCallback() {
+            @Override
+            public void onSuccess() {
+                // Great!
+            }
+            @Override
+            public void onFailure(Exception error) {
+                error.printStackTrace();
+                // FFmpeg is not supported by device
+            }
+        });
     }
     /**
      * 初始化云推送通道

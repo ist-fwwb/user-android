@@ -62,9 +62,6 @@ public abstract class PlaybackInfoListener {
         return stateString;
     }
 
-    protected void onLogUpdated(String formattedMessage) {
-    }
-
     protected void onDurationChanged(int duration) {
     }
 

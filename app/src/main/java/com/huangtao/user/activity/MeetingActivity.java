@@ -30,6 +30,9 @@ import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
+import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
+import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
+import cafe.adriel.androidaudioconverter.model.AudioFormat;
 import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder;
 import cafe.adriel.androidaudiorecorder.model.AudioChannel;
 import cafe.adriel.androidaudiorecorder.model.AudioSampleRate;
@@ -94,6 +97,7 @@ public class MeetingActivity extends MyActivity {
     Button record;
 
     Meeting meeting;
+    private String recordPath;
 
     @Override
     protected int getLayoutId() {
@@ -231,19 +235,21 @@ public class MeetingActivity extends MyActivity {
                 showDialog("每个会议只保留最新录音内容，若此前已有过录音记录，将被覆盖", "确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        recordPath = getRecordPath();
+
                         File dir = new File(Constants.SAVE_RECORD_DIR);
                         if (!dir.exists()) {
                             dir.mkdirs();
                         }
 
-                        File recordFile = new File(getRecordPath());
+                        File recordFile = new File(recordPath);
                         if (recordFile.exists()) {
                             recordFile.delete();
                         }
 
                         AndroidAudioRecorder.with(MeetingActivity.this)
                                 // Required
-                                .setFilePath(getRecordPath())
+                                .setFilePath(recordPath)
                                 .setColor(ContextCompat.getColor(MeetingActivity.this, R.color.douban_red_80_percent))
                                 .setRequestCode(REQUEST_CODE_RECORD)
 
@@ -491,8 +497,14 @@ public class MeetingActivity extends MyActivity {
         participantContainer.addView(v);
     }
 
+    /**
+     * meeting id + user id + timestamp
+     * @return
+     */
     private String getRecordPath() {
-        return Constants.SAVE_RECORD_DIR + meeting.getId() + "-" + Constants.uid + ".wav";
+        String tms = String.valueOf(System.currentTimeMillis());
+        return Constants.SAVE_RECORD_DIR + meeting.getId() + "-" + Constants.uid + "-" + tms
+                .substring(tms.length() - 5, tms.length()) + ".wav";
     }
 
     @Override
@@ -504,45 +516,62 @@ public class MeetingActivity extends MyActivity {
             initParticipant();
         } else if(requestCode == REQUEST_CODE_RECORD && resultCode == RESULT_OK) {
             showProgressBar();
-            File recordFile = new File(getRecordPath());
+            File recordFile = new File(recordPath);
             if(!recordFile.exists()){
                 toast("录音失败");
                 hideProgressBar();
                 return;
             }
 
-            boolean uploadResult = FileManagement.upload(this, recordFile, recordFile.getName());
-            if(!uploadResult){
-                toast("上传失败");
-                hideProgressBar();
-                return;
-            }
-
-            // 上传服务器相关信息
-            MeetingNote meetingNote = new MeetingNote();
-            meetingNote.setMeetingId(meeting.getId());
-            meetingNote.setMeetingNoteType(MeetingNoteType.VOICE);
-            meetingNote.setOwnerId(Constants.uid);
-            meetingNote.setVoiceFileName(recordFile.getName());
-            Network.getInstance().addMeetingNote("", meetingNote).enqueue(new Callback<List<MeetingNote>>() {
+            IConvertCallback callback = new IConvertCallback() {
                 @Override
-                public void onResponse(Call<List<MeetingNote>> call, Response<List<MeetingNote>> response) {
-                    hideProgressBar();
-                    if(response.body() != null){
-                        record.setText("重新录音");
-                        toast("录音已上传");
-                    } else {
+                public void onSuccess(File convertedFile) {
+                    File recordFileMp3 = new File(recordPath.replace("wav", "mp3"));
+                    boolean uploadResult = FileManagement.upload(MeetingActivity.this, recordFileMp3, recordFileMp3.getName());
+                    if(!uploadResult){
                         toast("上传失败");
+                        hideProgressBar();
+                        return;
                     }
-                }
 
-                @Override
-                public void onFailure(Call<List<MeetingNote>> call, Throwable t) {
-                    hideProgressBar();
-                    t.printStackTrace();
-                    toast("上传失败");
+                    // 上传服务器相关信息
+                    MeetingNote meetingNote = new MeetingNote();
+                    meetingNote.setMeetingId(meeting.getId());
+                    meetingNote.setMeetingNoteType(MeetingNoteType.VOICE);
+                    meetingNote.setOwnerId(Constants.uid);
+                    meetingNote.setVoiceFileName(recordFileMp3.getName());
+                    Network.getInstance().addMeetingNote("", meetingNote).enqueue(new Callback<List<MeetingNote>>() {
+                        @Override
+                        public void onResponse(Call<List<MeetingNote>> call, Response<List<MeetingNote>> response) {
+                            hideProgressBar();
+                            if(response.body() != null){
+                                record.setText("重新录音");
+                                toast("录音已上传");
+                            } else {
+                                toast("上传失败");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<MeetingNote>> call, Throwable t) {
+                            hideProgressBar();
+                            t.printStackTrace();
+                            toast("上传失败");
+                        }
+                    });
                 }
-            });
+                @Override
+                public void onFailure(Exception error) {
+                    error.printStackTrace();
+                    toast("格式转换失败");
+                }
+            };
+
+            AndroidAudioConverter.with(this)
+                    .setFile(recordFile)
+                    .setFormat(AudioFormat.MP3)
+                    .setCallback(callback)
+                    .convert();
 
         }
 

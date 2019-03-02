@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.huangtao.user.R;
+import com.huangtao.user.common.Constants;
 import com.huangtao.user.model.MeetingNote;
 import com.huangtao.user.model.MeetingNoteWrapper;
 import com.huangtao.user.model.User;
@@ -58,7 +59,7 @@ public class MeetingNoteAdapter extends RecyclerView.Adapter<MeetingNoteAdapter.
         } else {
             viewHolder.favorite.setVisibility(View.GONE);
         }
-        viewHolder.favoriteIcon.setImageResource(meetingNoteWrapper.getCollected() ? R.mipmap.ic_note_favorite_true : R.mipmap.ic_note_favorite_false);
+        viewHolder.favoriteIcon.setImageResource(meetingNote.isFavorite(Constants.uid) ? R.mipmap.ic_note_favorite_true : R.mipmap.ic_note_favorite_false);
 
         Network.getInstance().queryUserById(meetingNote.getOwnerId()).enqueue(new Callback<User>() {
             @Override

@@ -19,6 +19,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -114,7 +115,7 @@ public interface Api {
     @GET("meetingNote/{id}")
     Call<MeetingNote> getMeetingNoteById(@Path("id") String id);
 
-    @DELETE("meetingNote/{id}/collectors")
+    @HTTP(method = "DELETE", path = "meetingNote/{id}/collectors", hasBody = true)
     Call<MeetingNote> removeFavoriteNote(@Path("id") String id, @Body String userId);
 
     @POST("meetingNote/{id}/collectors")

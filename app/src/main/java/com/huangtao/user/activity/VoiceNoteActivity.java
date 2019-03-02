@@ -1,7 +1,9 @@
 package com.huangtao.user.activity;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -13,6 +15,7 @@ import com.huangtao.user.R;
 import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyActivity;
 import com.huangtao.user.model.MeetingNote;
+import com.huangtao.user.model.User;
 import com.huangtao.user.network.FileManagement;
 import com.huangtao.user.network.Network;
 
@@ -23,7 +26,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class VoiceNoteActivity extends MyActivity {
+public class VoiceNoteActivity extends MyActivity implements View.OnClickListener {
+
+    @BindView(R.id.title)
+    TextView title;
+
+    @BindView(R.id.owner)
+    TextView owner;
+
+    @BindView(R.id.favorite)
+    TextView favorite;
+
+    @BindView(R.id.favorite_icon)
+    ImageView favoriteIcon;
 
     @BindView(R.id.text_debug)
     TextView mTextDebug;
@@ -43,8 +58,10 @@ public class VoiceNoteActivity extends MyActivity {
     @BindView(R.id.scroll_container)
     ScrollView mScrollContainer;
 
+    private MeetingNote meetingNote;
     private PlayerAdapter mPlayerAdapter;
     private boolean mUserIsSeeking = false;
+    private boolean isFavorite;
 
     @Override
     protected int getLayoutId() {
@@ -74,15 +91,37 @@ public class VoiceNoteActivity extends MyActivity {
             @Override
             public void onResponse(Call<MeetingNote> call, Response<MeetingNote> response) {
                 if(response.body() != null) {
-                    MeetingNote meetingNote = response.body();
+                    meetingNote = response.body();
                     File file = new File(Constants.SAVE_RECORD_DIR + meetingNote.getVoiceFileName());
-                    if(file.exists()){
-                        file.delete();
+                    if(!file.exists()) {
+                        FileManagement.download(VoiceNoteActivity.this, meetingNote.getVoiceFileName(), Constants.SAVE_RECORD_DIR);
                     }
-
-                    FileManagement.download(VoiceNoteActivity.this, meetingNote.getVoiceFileName(), file.getAbsolutePath());
                     mPlayerAdapter.loadMedia(file.getAbsolutePath());
 
+                    title.setText(TextUtils.isEmpty(meetingNote.getTitle()) ? "无标题" : meetingNote.getTitle());
+                    if(meetingNote.getCollectorIds() != null && meetingNote.getCollectorIds().size() > 0) {
+                        favorite.setText(meetingNote.getCollectorIds().size() + "人收藏");
+                    } else {
+                        favorite.setVisibility(View.GONE);
+                    }
+
+                    isFavorite = meetingNote.isFavorite(Constants.uid);
+                    favoriteIcon.setImageResource(isFavorite ? R.mipmap.ic_note_favorite_true : R.mipmap.ic_note_favorite_false);
+                    favoriteIcon.setOnClickListener(VoiceNoteActivity.this);
+
+                    Network.getInstance().queryUserById(meetingNote.getOwnerId()).enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            if(response.body() != null) {
+                                owner.setText(response.body().getName());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+
+                        }
+                    });
                 }
             }
 
@@ -157,6 +196,39 @@ public class VoiceNoteActivity extends MyActivity {
                 });
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v == favoriteIcon) {
+            // 收藏 or 取消收藏
+            Call<MeetingNote> call;
+            if (isFavorite) {
+                call = Network.getInstance().removeFavoriteNote(meetingNote.getId(), Constants.uid);
+            } else {
+                call = Network.getInstance().addFavoriteNote(meetingNote.getId(), Constants.uid);
+            }
+            call.enqueue(new Callback<MeetingNote>() {
+                @Override
+                public void onResponse(Call<MeetingNote> call, Response<MeetingNote> response) {
+                    if (isFavorite) {
+                        isFavorite = false;
+                        favoriteIcon.setImageResource(R.mipmap.ic_note_favorite_false);
+                        toast("取消收藏成功");
+                    } else {
+                        isFavorite = true;
+                        favoriteIcon.setImageResource(R.mipmap.ic_note_favorite_true);
+                        toast("收藏成功");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MeetingNote> call, Throwable t) {
+                    t.printStackTrace();
+                    toast("操作失败");
+                }
+            });
+        }
+    }
+
     public class PlaybackListener extends PlaybackInfoListener {
 
         @Override
@@ -174,27 +246,10 @@ public class VoiceNoteActivity extends MyActivity {
         @Override
         public void onStateChanged(@State int state) {
             String stateToString = PlaybackInfoListener.convertStateToString(state);
-            onLogUpdated(String.format("onStateChanged(%s)", stateToString));
         }
 
         @Override
         public void onPlaybackCompleted() {
-        }
-
-        @Override
-        public void onLogUpdated(String message) {
-//            if (mTextDebug != null) {
-//                mTextDebug.append(message);
-//                mTextDebug.append("\n");
-//                // Moves the scrollContainer focus to the end.
-//                mScrollContainer.post(
-//                        new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                mScrollContainer.fullScroll(ScrollView.FOCUS_DOWN);
-//                            }
-//                        });
-//            }
         }
     }
 }
