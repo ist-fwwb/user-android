@@ -26,7 +26,7 @@
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:src="@mipmap/ic_note_voice"
+            android:src="@mipmap/ic_note_text"
             app:civ_border_color="@color/douban_gray_28_percent"
             app:civ_border_width="1dp"/>
 
@@ -84,65 +84,11 @@
 
     </RelativeLayout>
 
-    <ScrollView
-        android:id="@+id/scroll_container"
+    <org.sufficientlysecure.htmltextview.HtmlTextView
+        android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp"
-        android:layout_weight="1">
-
-        <TextView
-            android:id="@+id/text_debug"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:textSize="12sp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-
-    </ScrollView>
-
-    <SeekBar
-        android:id="@+id/seekbar_audio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button_pause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="暂停"
-            style="@style/ButtonStyle"
-            android:layout_marginLeft="5dp"/>
-
-        <Button
-            android:id="@+id/button_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:text="播放"
-            style="@style/ButtonStyle"
-            android:layout_marginLeft="5dp"/>
-
-        <Button
-            android:id="@+id/button_reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="重置"
-            style="@style/ButtonStyle"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
-
-    </LinearLayout>
+        android:layout_margin="10dp"
+        android:textAppearance="@android:style/TextAppearance.Small" />
 
 </LinearLayout>

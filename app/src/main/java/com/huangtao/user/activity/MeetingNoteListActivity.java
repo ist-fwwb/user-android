@@ -11,7 +11,9 @@ import com.huangtao.user.R;
 import com.huangtao.user.adapter.MeetingNoteAdapter;
 import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyActivity;
+import com.huangtao.user.model.MeetingNote;
 import com.huangtao.user.model.MeetingNoteWrapper;
+import com.huangtao.user.model.meta.MeetingNoteType;
 import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.RecyclerViewDivider;
 
@@ -60,7 +62,13 @@ public class MeetingNoteListActivity extends MyActivity {
         meetingNoteAdapter.setOnItemClickListener(new MeetingNoteAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent intent = new Intent(MeetingNoteListActivity.this, VoiceNoteActivity.class);
+                MeetingNote meetingNote = datas.get(position).getMeetingNote();
+                Intent intent;
+                if(meetingNote.getMeetingNoteType() == MeetingNoteType.VOICE) {
+                    intent = new Intent(MeetingNoteListActivity.this, VoiceNoteActivity.class);
+                } else {
+                    intent = new Intent(MeetingNoteListActivity.this, HtmlNoteActivity.class);
+                }
                 intent.putExtra("id", datas.get(position).getMeetingNote().getId());
                 startActivity(intent);
             }

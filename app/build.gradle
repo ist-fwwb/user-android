@@ -202,6 +202,9 @@ dependencies {
     implementation 'com.github.adrielcafe:AndroidAudioRecorder:0.3.0'
     implementation 'com.github.adrielcafe:AndroidAudioConverter:0.0.8'
 
+    // html for android
+    implementation 'org.sufficientlysecure:html-textview:3.6'
+
 }
 
 repositories {
