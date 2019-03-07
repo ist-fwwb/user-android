@@ -76,7 +76,7 @@
                         android:layout_marginRight="@dimen/space_20"
                         android:background="@drawable/bg_home_search_bar_transparent"
                         android:gravity="center"
-                        android:text="请输入搜索关键字"
+                        android:text="搜索会议 笔记 用户 会议室等"
                         android:textColor="#a4a4a4"
                         android:textSize="@dimen/font_size_28px" />
 

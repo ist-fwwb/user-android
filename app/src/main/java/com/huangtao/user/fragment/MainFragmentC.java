@@ -79,6 +79,8 @@ public class MainFragmentC extends MyLazyFragment {
                 }
             }
         });
+
+        titleBar.setTitle(Constants.user.getName() + "的消息箱");
     }
 
     @Override

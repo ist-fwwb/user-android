@@ -130,6 +130,7 @@
         <activity android:name=".activity.MeetingNoteListActivity" />
         <activity android:name=".activity.VoiceNoteActivity" />
         <activity android:name=".activity.HtmlNoteActivity" />
+        <activity android:name=".activity.SearchActivity"></activity>
     </application>
 
 </manifest>

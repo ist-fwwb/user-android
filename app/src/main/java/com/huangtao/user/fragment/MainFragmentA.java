@@ -21,6 +21,7 @@ import com.huangtao.user.R;
 import com.huangtao.user.activity.MeetingActivity;
 import com.huangtao.user.activity.MeetingRoomActivity;
 import com.huangtao.user.activity.MeetingroomListActivity;
+import com.huangtao.user.activity.SearchActivity;
 import com.huangtao.user.activity.SmartAppointActivity;
 import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyLazyFragment;
@@ -260,7 +261,7 @@ public class MainFragmentA extends MyLazyFragment
     @Override
     public void onClick(View v) {
         if (v == mSearchView) {
-
+            startActivity(SearchActivity.class);
         } else if (v == appoint) {
             startActivity(MeetingroomListActivity.class);
         } else if (v == appointSmart) {

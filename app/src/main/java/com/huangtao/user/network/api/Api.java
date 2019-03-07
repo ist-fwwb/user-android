@@ -6,6 +6,7 @@ import com.huangtao.user.model.MeetingNoteWrapper;
 import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.model.Message;
 import com.huangtao.user.model.QueueNode;
+import com.huangtao.user.model.SearchResult;
 import com.huangtao.user.model.TimeSlice;
 import com.huangtao.user.model.User;
 import com.huangtao.user.model.meta.MeetingRoomUtils;
@@ -130,5 +131,8 @@ public interface Api {
     @PUT("message/{id}/messageStatus")
     Call<String> modifyMessageStatus(@Path("id") String id, @Query("status") MessageStatus messageStatus);
 
+    // search
+    @GET("search/")
+    Call<List<SearchResult>> search(@Query("request") String request);
 
 }
