@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         app:backButton="true"
-        app:title="录音笔记"
+        app:title="富文本笔记"
         app:titleSize="16sp"/>
 
     <RelativeLayout
