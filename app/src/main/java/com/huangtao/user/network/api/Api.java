@@ -4,10 +4,12 @@ import com.huangtao.user.model.Meeting;
 import com.huangtao.user.model.MeetingNote;
 import com.huangtao.user.model.MeetingNoteWrapper;
 import com.huangtao.user.model.MeetingRoom;
+import com.huangtao.user.model.Message;
 import com.huangtao.user.model.QueueNode;
 import com.huangtao.user.model.TimeSlice;
 import com.huangtao.user.model.User;
 import com.huangtao.user.model.meta.MeetingRoomUtils;
+import com.huangtao.user.model.meta.MessageStatus;
 import com.huangtao.user.model.meta.Size;
 import com.huangtao.user.model.meta.Status;
 import com.huangtao.user.model.meta.Type;
@@ -120,5 +122,13 @@ public interface Api {
 
     @POST("meetingNote/{id}/collectors")
     Call<MeetingNote> addFavoriteNote(@Path("id") String id, @Body String userId);
+
+    // message
+    @GET("message/")
+    Call<List<Message>> getMessages(@Query("userId") String userId);
+
+    @PUT("message/{id}/messageStatus")
+    Call<String> modifyMessageStatus(@Path("id") String id, @Query("status") MessageStatus messageStatus);
+
 
 }

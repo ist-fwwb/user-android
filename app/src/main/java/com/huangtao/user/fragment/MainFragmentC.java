@@ -1,40 +1,39 @@
 package com.huangtao.user.fragment;
 
-import android.os.Environment;
-import android.support.v4.content.ContextCompat;
-import android.view.View;
-import android.widget.Button;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 
-import com.hjq.permissions.OnPermission;
-import com.hjq.permissions.Permission;
-import com.hjq.permissions.XXPermissions;
+import com.hjq.bar.TitleBar;
 import com.huangtao.user.R;
+import com.huangtao.user.adapter.MessageAdapter;
+import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyLazyFragment;
-import com.huangtao.user.common.UIActivity;
+import com.huangtao.user.model.Message;
+import com.huangtao.user.model.meta.MessageStatus;
+import com.huangtao.user.network.Network;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder;
-import cafe.adriel.androidaudiorecorder.model.AudioChannel;
-import cafe.adriel.androidaudiorecorder.model.AudioSampleRate;
-import cafe.adriel.androidaudiorecorder.model.AudioSource;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class MainFragmentC extends MyLazyFragment
-        implements View.OnClickListener {
+public class MainFragmentC extends MyLazyFragment {
 
-    @BindView(R.id.btn_test_toast)
-    Button mToastView;
-    @BindView(R.id.btn_test_permission)
-    Button mPermissionView;
-    @BindView(R.id.btn_test_state_black)
-    Button mStateBlackView;
-    @BindView(R.id.btn_test_state_white)
-    Button mStateWhiteView;
-    @BindView(R.id.btn_test_swipe_enabled)
-    Button mSwipeEnabledView;
-    @BindView(R.id.btn_test_swipe_disable)
-    Button mSwipeDisableView;
+    @BindView(R.id.title)
+    TitleBar titleBar;
+
+    @BindView(R.id.list)
+    RecyclerView recyclerView;
+
+    MessageAdapter messageAdapter;
+
+    List<Message> datas;
 
     public static MainFragmentC newInstance() {
         return new MainFragmentC();
@@ -42,100 +41,70 @@ public class MainFragmentC extends MyLazyFragment
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_test_c;
+        return R.layout.fragment_main_message;
     }
 
     @Override
     protected int getTitleBarId() {
-        return R.id.tb_test_c_title;
+        return R.id.title;
     }
 
     @Override
     protected void initView() {
-        mToastView.setOnClickListener(this);
-        mPermissionView.setOnClickListener(this);
-        mStateBlackView.setOnClickListener(this);
-        mStateWhiteView.setOnClickListener(this);
-        mSwipeEnabledView.setOnClickListener(this);
-        mSwipeDisableView.setOnClickListener(this);
+        datas = new ArrayList<>();
+        messageAdapter = new MessageAdapter(getFragmentActivity(), datas);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getFragmentActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        layoutManager.setOrientation(OrientationHelper.VERTICAL);
+        recyclerView.setAdapter(messageAdapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        messageAdapter.setListener(new MessageAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Message msg) {
+                if(msg.getMessageStatus() == MessageStatus.NEW){
+                    msg.setMessageStatus(MessageStatus.READ);
+                    Network.getInstance(ScalarsConverterFactory.create()).modifyMessageStatus(msg.getId(), MessageStatus.READ).enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @Override
     protected void initData() {
+        Network.getInstance().getMessages(Constants.uid).enqueue(new Callback<List<Message>>() {
+            @Override
+            public void onResponse(Call<List<Message>> call, Response<List<Message>> response) {
+                if(response.body() != null) {
+                    for (int i = response.body().size() - 1; i >= 0; i--) {
+                        datas.add(response.body().get(i));
+                    }
+                    messageAdapter.notifyDataSetChanged();
+                }
+            }
 
+            @Override
+            public void onFailure(Call<List<Message>> call, Throwable t) {
+                t.printStackTrace();
+                toast("加载失败");
+            }
+        });
     }
 
     @Override
     public boolean isStatusBarEnabled() {
         // 使用沉浸式状态栏
         return !super.isStatusBarEnabled();
-    }
-
-    /**
-     * {@link View.OnClickListener}
-     */
-    @Override
-    public void onClick(View v) {
-        if (v == mToastView) {
-            String filePath = Environment.getExternalStorageDirectory() + "/recorded_audio.wav";
-            int color = getResources().getColor(R.color.colorPrimaryDark);
-            int requestCode = 0;
-            AndroidAudioRecorder.with(getFragmentActivity())
-                    // Required
-                    .setFilePath(filePath)
-                    .setColor(ContextCompat.getColor(getFragmentActivity(), R.color.douban_green_50_percent))
-                    .setRequestCode(requestCode)
-
-                    // Optional
-                    .setSource(AudioSource.MIC)
-                    .setChannel(AudioChannel.STEREO)
-                    .setSampleRate(AudioSampleRate.HZ_48000)
-                    .setAutoStart(true)
-                    .setKeepDisplayOn(true)
-
-                    // Start recording
-                    .record();
-        }else if (v == mPermissionView) {
-            XXPermissions.with(getFragmentActivity())
-                    //.constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
-                    //.permission(Permission.SYSTEM_ALERT_WINDOW, Permission.REQUEST_INSTALL_PACKAGES) //支持请求6.0悬浮窗权限8.0请求安装权限
-                    .permission(Permission.CAMERA) //不指定权限则自动获取清单中的危险权限
-                    .request(new OnPermission() {
-
-                        @Override
-                        public void hasPermission(List<String> granted, boolean isAll) {
-                            if (isAll) {
-                                toast("获取权限成功");
-                            }else {
-                                toast("获取权限成功，部分权限未正常授予");
-                            }
-                        }
-
-                        @Override
-                        public void noPermission(List<String> denied, boolean quick) {
-                            if(quick) {
-                                toast("被永久拒绝授权，请手动授予权限");
-                                //如果是被永久拒绝就跳转到应用权限系统设置页面
-                                XXPermissions.gotoPermissionSettings(getFragmentActivity());
-                            }else {
-                                toast("获取权限失败");
-                            }
-                        }
-                    });
-        }else if (v == mStateBlackView) {
-            UIActivity activity = (UIActivity) getFragmentActivity();
-            activity.getStatusBarConfig().statusBarDarkFont(true).init();
-        }else if (v == mStateWhiteView) {
-            UIActivity activity = (UIActivity) getFragmentActivity();
-            activity.getStatusBarConfig().statusBarDarkFont(false).init();
-        }else if (v == mSwipeEnabledView) {
-            UIActivity activity = (UIActivity) getFragmentActivity();
-            activity.getSwipeBackHelper().setSwipeBackEnable(true);
-            toast("当前界面不会生效，其他界面调用才会有效果");
-        }else if (v == mSwipeDisableView) {
-            UIActivity activity = (UIActivity) getFragmentActivity();
-            activity.getSwipeBackHelper().setSwipeBackEnable(false);
-            toast("当前界面不会生效，其他界面调用才会有效果");
-        }
     }
 }
