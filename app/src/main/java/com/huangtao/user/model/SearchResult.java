@@ -1,18 +1,19 @@
 package com.huangtao.user.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResult {
 
     int totalCount;
 
-    List<Meeting> meetings;
+    List<Meeting> meetings = new ArrayList<>();
 
-    List<MeetingNote> meetingNotes;
+    List<MeetingNote> meetingNotes = new ArrayList<>();
 
-    List<User> users;
+    List<User> users = new ArrayList<>();
 
-    List<MeetingRoom> meetingRooms;
+    List<MeetingRoom> meetingRooms = new ArrayList<>();
 
     public int getTotalCount() {
         return totalCount;

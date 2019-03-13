@@ -133,6 +133,6 @@ public interface Api {
 
     // search
     @GET("search/")
-    Call<List<SearchResult>> search(@Query("request") String request);
+    Call<SearchResult> search(@Query("request") String request);
 
 }
