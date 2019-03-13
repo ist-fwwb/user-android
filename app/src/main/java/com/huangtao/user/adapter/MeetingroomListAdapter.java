@@ -1,5 +1,6 @@
 package com.huangtao.user.adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,10 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.huangtao.user.R;
+import com.huangtao.user.common.Constants;
+import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.model.Meeting;
 import com.huangtao.user.model.MeetingRoom;
 import com.huangtao.user.model.meta.MeetingRoomUtils;
 import com.huangtao.user.model.meta.Status;
+import com.huangtao.user.network.FileManagement;
 import com.huangtao.user.network.Network;
 
 import java.text.SimpleDateFormat;
@@ -23,15 +27,22 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MeetingroomListAdapter extends RecyclerView.Adapter<MeetingroomListAdapter.MeetingroomVH> {
 
+    Context mContext;
     List<MeetingRoom> data;
 
-    public MeetingroomListAdapter(List<MeetingRoom> data) {
+    public MeetingroomListAdapter(Context context, List<MeetingRoom> data) {
+        mContext = context;
         this.data = data;
     }
 
@@ -102,6 +113,36 @@ public class MeetingroomListAdapter extends RecyclerView.Adapter<MeetingroomList
 
             }
         });
+
+        if(meetingRoom.getImages() != null && meetingRoom.getImages().size() > 0) {
+            Observable.just(FileManagement.getFile(mContext, meetingRoom.getImages().get(0),
+                    Constants.MEETING_ROOM_DIR))
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(String s) {
+                            if(!s.isEmpty()){
+                                viewHolder.pic.setImageBitmap(CommonUtils.getLoacalBitmap(s));
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        }
     }
 
     @Override

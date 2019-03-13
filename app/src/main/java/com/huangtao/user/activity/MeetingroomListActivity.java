@@ -48,7 +48,7 @@ public class MeetingroomListActivity extends MyActivity {
     @Override
     protected void initView() {
         datas = new ArrayList<>();
-        meetingroomListAdapter = new MeetingroomListAdapter(datas);
+        meetingroomListAdapter = new MeetingroomListAdapter(this, datas);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

@@ -251,7 +251,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     }
 
     private void initMeetingRoom(final MeetingRoom meetingRoom, final SearchResultVH viewHolder) {
-        ImageView pic = viewHolder.meetingroom.findViewById(R.id.meetingroom_pic);
+        final ImageView pic = viewHolder.meetingroom.findViewById(R.id.meetingroom_pic);
         TextView location = viewHolder.meetingroom.findViewById(R.id.meetingroom_location);
         final TextView status = viewHolder.meetingroom.findViewById(R.id.meetingroom_status);
         ImageView airConditioner = viewHolder.meetingroom.findViewById(R.id.air_conditioner);
@@ -309,6 +309,36 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
             }
         });
+
+        if(meetingRoom.getImages() != null && meetingRoom.getImages().size() > 0) {
+            Observable.just(FileManagement.getFile(mContext, meetingRoom.getImages().get(0),
+                    Constants.MEETING_ROOM_DIR))
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(String s) {
+                            if (!s.isEmpty()) {
+                                pic.setImageBitmap(CommonUtils.getLoacalBitmap(s));
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        }
     }
 
     public static class SearchResultVH extends RecyclerView.ViewHolder{

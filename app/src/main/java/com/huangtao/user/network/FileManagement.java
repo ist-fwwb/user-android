@@ -184,5 +184,14 @@ public class FileManagement {
         return "";
     }
 
-
+    public static String getFile(Context context, String fileName, String saveDir) {
+        boolean result = FileManagement.download(context, fileName, saveDir);
+        if (result) {
+            File file = new File(saveDir + fileName);
+            if (file.exists()) {
+                return file.getAbsolutePath();
+            }
+        }
+        return "";
+    }
 }

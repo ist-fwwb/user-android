@@ -24,6 +24,7 @@ public class Constants {
     public static final String SAVE_FEATURE_DIR = ROOT_DIR + "features" + File.separator;
     public static final String HEAD_DIR = ROOT_DIR + "head" + File.separator;
     public static final String SAVE_RECORD_DIR = ROOT_DIR + "records" + File.separator;
+    public static final String MEETING_ROOM_DIR = ROOT_DIR + "meetingroom" + File.separator;
 
     // ali oss
     public static final String OSS_AccessKeyId = "LTAIqMIT5KX4oGAT";

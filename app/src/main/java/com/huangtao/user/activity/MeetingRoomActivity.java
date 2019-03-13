@@ -18,6 +18,7 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.hjq.bar.TitleBar;
 import com.huangtao.user.R;
 import com.huangtao.user.adapter.MeetingRoomOrderAdapter;
+import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyActivity;
 import com.huangtao.user.helper.CommonUtils;
 import com.huangtao.user.model.Meeting;
@@ -26,6 +27,7 @@ import com.huangtao.user.model.TimeSlice;
 import com.huangtao.user.model.meta.MeetingRoomUtils;
 import com.huangtao.user.model.meta.MeetingType;
 import com.huangtao.user.model.meta.Status;
+import com.huangtao.user.network.FileManagement;
 import com.huangtao.user.network.Network;
 import com.huangtao.user.widget.XCollapsingToolbarLayout;
 import com.kelin.scrollablepanel.library.ScrollablePanel;
@@ -40,6 +42,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,6 +74,8 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
 
     @BindView(R.id.name)
     TextView name;
+    @BindView(R.id.pic)
+    ImageView pic;
 
     @BindView(R.id.air_conditioner)
     LinearLayout airConditioner;
@@ -151,6 +160,37 @@ public class MeetingRoomActivity extends MyActivity implements View.OnClickListe
                     power.setAlpha(1);
                     break;
             }
+        }
+
+        // 封面图
+        if(meetingRoom.getImages() != null && meetingRoom.getImages().size() > 0) {
+            Observable.just(FileManagement.getFile(this, meetingRoom.getImages().get(0),
+                    Constants.MEETING_ROOM_DIR))
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(String s) {
+                            if (!s.isEmpty()) {
+                                pic.setImageBitmap(CommonUtils.getLoacalBitmap(s));
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
         }
 
         // 今日会议
