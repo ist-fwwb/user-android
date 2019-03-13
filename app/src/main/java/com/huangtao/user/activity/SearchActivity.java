@@ -3,6 +3,8 @@ package com.huangtao.user.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -63,6 +65,10 @@ public class SearchActivity extends MyActivity implements View.OnClickListener {
     protected void initData() {
         datas = new ArrayList<>();
         searchResultAdapter = new SearchResultAdapter(this, datas);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        layoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerView.setAdapter(searchResultAdapter);
         searchResultAdapter.setListener(new SearchResultAdapter.OnItemClickListener() {
             @Override

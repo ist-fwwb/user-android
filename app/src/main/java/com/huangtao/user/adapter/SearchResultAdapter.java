@@ -69,6 +69,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
         if(item.isFirst()) {
             viewHolder.header.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.header.setVisibility(View.GONE);
         }
 
         switch (item.getType()) {
@@ -116,6 +118,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     }
 
     private void initMeeting(final Meeting meeting, final SearchResultVH viewHolder) {
+        viewHolder.meeting.setVisibility(View.VISIBLE);
+        viewHolder.meetingroom.setVisibility(View.GONE);
+        viewHolder.note.setVisibility(View.GONE);
+        viewHolder.user.setVisibility(View.GONE);
+
         View status = viewHolder.meeting.findViewById(R.id.meeting_status);
         TextView time = viewHolder.meeting.findViewById(R.id.meeting_time);
         TextView date = viewHolder.meeting.findViewById(R.id.meeting_date);
@@ -179,6 +186,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     }
 
     private void initNote(final MeetingNote meetingNote, final SearchResultVH viewHolder) {
+        viewHolder.meeting.setVisibility(View.GONE);
+        viewHolder.meetingroom.setVisibility(View.GONE);
+        viewHolder.note.setVisibility(View.VISIBLE);
+        viewHolder.user.setVisibility(View.GONE);
+
         ImageView type = viewHolder.note.findViewById(R.id.note_type);
         TextView title= viewHolder.note.findViewById(R.id.note_title);
         final TextView owner= viewHolder.note.findViewById(R.id.note_owner);
@@ -218,6 +230,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     }
 
     private void initUser(final User user, SearchResultVH viewHolder) {
+        viewHolder.meeting.setVisibility(View.GONE);
+        viewHolder.meetingroom.setVisibility(View.GONE);
+        viewHolder.note.setVisibility(View.GONE);
+        viewHolder.user.setVisibility(View.VISIBLE);
+
         final ImageView head = viewHolder.user.findViewById(R.id.user_head);
         TextView name = viewHolder.user.findViewById(R.id.user_name);
 
@@ -251,6 +268,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     }
 
     private void initMeetingRoom(final MeetingRoom meetingRoom, final SearchResultVH viewHolder) {
+        viewHolder.meeting.setVisibility(View.GONE);
+        viewHolder.meetingroom.setVisibility(View.VISIBLE);
+        viewHolder.note.setVisibility(View.GONE);
+        viewHolder.user.setVisibility(View.GONE);
+
         final ImageView pic = viewHolder.meetingroom.findViewById(R.id.meetingroom_pic);
         TextView location = viewHolder.meetingroom.findViewById(R.id.meetingroom_location);
         final TextView status = viewHolder.meetingroom.findViewById(R.id.meetingroom_status);
