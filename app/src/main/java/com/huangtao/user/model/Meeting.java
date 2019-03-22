@@ -10,20 +10,20 @@ import java.util.Map;
 import java.util.Set;
 
 public class Meeting implements Serializable {
-    String id;
+    String id = "string";
 
-    String heading;
-    String description;
-    String roomId;
-    String date;
-    String location;
+    String heading = "string";
+    String description = "string";
+    String roomId = "string";
+    String date = "string";
+    String location = "string";
     int startTime;
     int endTime;
-    String hostId;
+    String hostId = "string";
     Map<String, String> attendants;
     boolean needSignIn;
-    String attendantNum;  // a four digit number to attend the meeting
-    Status status;
+    String attendantNum = "string";  // a four digit number to attend the meeting
+    Status status = Status.Pending;
     MeetingType type;
     Set<String> tags;
     long timestamp;

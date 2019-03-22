@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.blankj.utilcode.util.TimeUtils;
 import com.huangtao.user.R;
 import com.huangtao.user.common.Constants;
 import com.huangtao.user.common.MyActivity;
@@ -30,6 +31,7 @@ import com.huangtao.user.model.meta.Size;
 import com.huangtao.user.network.Network;
 import com.huangtao.widget.ClearEditText;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -295,7 +297,10 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
         meeting.setHostId(Constants.user.getId());
         meeting.setHeading(heading.getText().toString());
         meeting.setDescription(description.getText().toString());
-        meeting.setDate(datePicked);
+
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        meeting.setDate(TimeUtils.date2String(TimeUtils.string2Date(datePicked, simpleDateFormat), simpleDateFormat));
         meeting.setStartTime(startTimePicked);
         meeting.setEndTime(endTimePicked);
         meeting.setNeedSignIn(radioGroup.getCheckedRadioButtonId() == R.id.radio_sign);
@@ -312,6 +317,7 @@ public class SmartAppointActivity extends MyActivity implements View.OnClickList
 
                 if(response.body() != null) {
                     Meeting result = response.body();
+                    Log.i("aapoint", result.toString());
                     if (result.getId() != null) {
                         final Intent intent = new Intent(SmartAppointActivity.this, MeetingActivity.class);
                         intent.putExtra("id", result.getId());
